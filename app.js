@@ -1,5 +1,6 @@
 // ========================================
 // FIREBASE SURVEY - ULTIMATE ENHANCED VERSION FOR COMMUNICATIVE PROSODY ASSESSMENT
+// PHASE 3.1: COLLAPSIBLE SCORING SCALES + PDF-ACCURATE STRUCTURE
 // ========================================
 const firebaseConfig = {
   apiKey: "AIzaSyBLZwdGQ_OSC_kiwmjqTU1vLiNn_REUcoQ",
@@ -14,14 +15,14 @@ const firebaseConfig = {
 
 const surveyData = {
   demographics: {},
-  dialogues: [{}, {}, {}, {}]  // For 4 sets/dialogues
+  dialogues: [{}, {}, {}, {}]
 };
 
 let currentSet = 0;
 let totalQuestions = 0;
 
 // ========================================
-// MODULAR DATA STRUCTURES FOR SURVEY
+// DIALOGUE SETS DATA
 // ========================================
 const dialogueSetsData = [
   {
@@ -96,7 +97,9 @@ const dialogueSetsData = [
   }
 ];
 
-// Survey Questions Data (Full 8 Criteria from PDF)
+// ========================================
+// SURVEY QUESTIONS DATA (FULL 8 CRITERIA FROM PDF)
+// ========================================
 const surveyQuestionsData = {
   sectionA: [
     {
@@ -275,7 +278,7 @@ const surveyQuestionsData = {
 // CALCULATE TOTAL QUESTIONS
 // ========================================
 function calculateTotalQuestions() {
-  totalQuestions = 4; // raterName, email (optional), qualifications, nationality
+  totalQuestions = 4; // raterName, email, qualifications, nationality
   const perSet = surveyQuestionsData.sectionA.length + surveyQuestionsData.sectionB.length + surveyQuestionsData.sectionC.length;
   totalQuestions += perSet * 4;
 }
@@ -429,25 +432,76 @@ function generateSurveyQuestions(num) {
     }
   });
 
+  // === SECTION B: DETAILED CRITERIA (COLLAPSIBLE) ===
   html += '<h3>Section B: Detailed Criteria</h3>';
+
+  // Dialogue Info Header (PDF Match)
+  const currentDialogue = dialogueSetsData.find(d => d.setId === num);
+  html += `
+    <div class="dialogue-info-header">
+      <p><strong>Dialogue Set:</strong> ${num} &nbsp;&nbsp; <strong>Filename:</strong> ${currentDialogue.audioSrc} &nbsp;&nbsp; <strong>Duration:</strong> __ seconds</p>
+    </div>
+  `;
+
   surveyQuestionsData.sectionB.forEach(crit => {
+    const critId = `d${num}_${crit.id}`;
+    const triggerId = `${critId}_trigger`;
+    const contentId = `${critId}_scale`;
+
     html += `
-      <div class="rating-group">
-        <label class="form-label">${crit.title}</label>
-        <p><strong>Question:</strong> ${crit.question}</p>
-        <p><strong>What to Listen For:</strong></p>
-        <ul>${crit.whatToListen.map(item => `<li>${item}</li>`).join('')}</ul>
-        <p><strong>Scoring Scale:</strong></p>
-        ${crit.scoringScale.map(desc => `<p>${desc}</p>`).join('')}
+      <div class="criterion-block" id="${critId}_block">
+        <div class="criterion-header">
+          <label class="form-label">${crit.title}</label>
+        </div>
+
+        <!-- Question & What to Listen For -->
+        <div class="criterion-content">
+          <p><strong>Question:</strong> ${crit.question}</p>
+          <p><strong>What to Listen For:</strong></p>
+          <ul>
+            ${crit.whatToListen.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+
+        <!-- Collapsible Trigger -->
+        <div class="collapsible-trigger" 
+             id="${triggerId}"
+             role="button" 
+             tabindex="0" 
+             aria-expanded="false" 
+             aria-controls="${contentId}"
+             onclick="toggleScoringScale('${critId}')"
+             onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); toggleScoringScale('${critId}'); }">
+          <span class="trigger-text">Show Scoring Scale</span>
+          <span class="arrow-icon">downward arrow</span>
+        </div>
+
+        <!-- Collapsible Scoring Scale -->
+        <div class="collapsible-content" id="${contentId}">
+          <p><strong>Scoring Scale:</strong></p>
+          ${crit.scoringScale.map(desc => `<p class="scale-item">${desc}</p>`).join('')}
+        </div>
+
+        <!-- Your Score (1–5) -->
         <div class="rating-scale">
-          ${[1,2,3,4,5].map(val => `<label class="rating-label"><input type="radio" name="d${num}_${crit.id}" value="${val}" required> ${val}</label>`).join('')}
+          ${[1,2,3,4,5].map(val => `
+            <label class="rating-label">
+              <input type="radio" name="${critId}" value="${val}" required> ${val}
+            </label>
+          `).join('')}
         </div>
         <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-        <textarea name="d${num}_${crit.id}_comments" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
+
+        <!-- Comments -->
+        <div class="form-group">
+          <label class="form-label">Comments (optional):</label>
+          <textarea name="${critId}_comments" class="form-control textarea-mobile" placeholder="Enter comments..."></textarea>
+        </div>
       </div>
     `;
   });
 
+  // === SECTION C ===
   html += '<h3>Section C: Open Comments</h3>';
   surveyQuestionsData.sectionC.forEach(q => {
     html += `
@@ -459,6 +513,22 @@ function generateSurveyQuestions(num) {
   });
 
   return html;
+}
+
+// ========================================
+// TOGGLE SCORING SCALE
+// ========================================
+function toggleScoringScale(critId) {
+  const content = document.getElementById(`${critId}_scale`);
+  const trigger = document.getElementById(`${critId}_trigger`);
+  const arrow = trigger.querySelector('.arrow-icon');
+  const text = trigger.querySelector('.trigger-text');
+
+  const isOpen = content.classList.toggle('open');
+  
+  arrow.textContent = isOpen ? 'upward arrow' : 'downward arrow';
+  text.textContent = isOpen ? 'Hide Scoring Scale' : 'Show Scoring Scale';
+  trigger.setAttribute('aria-expanded', isOpen);
 }
 
 // ========================================
@@ -557,7 +627,7 @@ async function submitSurvey() {
 }
 
 // ========================================
-// SMART AUTO-SCROLLING (Phase 2)
+// SMART AUTO-SCROLLING
 // ========================================
 function addScrollListenersToFormInputs() {
   document.querySelectorAll('input[type="radio"]').forEach(radio => {
@@ -574,21 +644,21 @@ function addScrollListenersToFormInputs() {
     if (document.activeElement) setTimeout(scrollToNextUnanswered, 100);
   });
 
-  document.querySelectorAll('.rating-group, .form-group').forEach(el => resizeObserver.observe(el));
+  document.querySelectorAll('.criterion-block, .form-group').forEach(el => resizeObserver.observe(el));
 }
 
 function handleRadioChange(e) {
-  const group = e.target.closest('.rating-group') || e.target.closest('.form-group');
+  const group = e.target.closest('.criterion-block') || e.target.closest('.form-group');
   setTimeout(() => scrollToNextUnanswered(group), 150);
 }
 
 function handleFocus(e) {
-  const parent = e.target.closest('.rating-group') || e.target.closest('.form-group');
+  const parent = e.target.closest('.criterion-block') || e.target.closest('.form-group');
   smoothScrollToElement(parent, 120);
 }
 
 function scrollToNextUnanswered(startAfter = null) {
-  const all = Array.from(document.querySelectorAll('.rating-group, .form-group'));
+  const all = Array.from(document.querySelectorAll('.criterion-block, .form-group'));
   const startIdx = startAfter ? all.indexOf(startAfter) : -1;
   const next = all.slice(startIdx + 1).find(group => {
     const radio = group.querySelector('input[type="radio"]:checked');
