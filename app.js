@@ -113,13 +113,6 @@ const surveyQuestionsData = {
       label: "How natural does the prosody in this dialogue sound? (1: Poor - 5: Excellent)",
       options: [1, 2, 3, 4, 5],
       required: true
-    },
-    {
-      type: "radio",
-      id: "q2_expectancy",
-      label: "Does the prosody meet expectancy in an EFL context?",
-      options: ["yes", "no", "maybe"],
-      required: true
     }
   ],
   sectionB: [
