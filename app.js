@@ -528,10 +528,21 @@ function toggleScoringScale(critId) {
 
   if (isOpen) {
     content.style.maxHeight = content.scrollHeight + 'px';
+    // Center on Score 3 after expansion
+    setTimeout(() => {
+      const score3 = content.querySelector('.scale-item:nth-child(3)');
+      if (score3) {
+        centerElementInViewport(score3);
+      } else {
+        fullScreenCenter(content.closest('.criterion-block'));
+      }
+    }, 500); // Increased delay for mobile animation
   } else {
     content.style.maxHeight = content.scrollHeight + 'px';
     content.offsetHeight;
     content.style.maxHeight = '0';
+    // Re-center block on collapse
+    setTimeout(() => fullScreenCenter(trigger.closest('.criterion-block')), 500);
   }
 }
 
@@ -683,14 +694,17 @@ function handleRadioChange(e) {
   const nextBlock = allBlocks[currentIndex + 1];
 
   if (nextBlock) {
+    // Next criterion - center its trigger
     const nextTrigger = nextBlock.querySelector('.collapsible-trigger');
     if (nextTrigger) {
       setTimeout(() => fullScreenCenter(nextTrigger), 200);
     }
   } else {
-    // Last criterion → go to Section C
-    const sectionC = document.querySelector('h3:contains("Section C")');
-    if (sectionC) fullScreenCenter(sectionC.parentElement);
+    // Last criterion - scroll to Next Set button
+    const buttonGroup = document.querySelector('.button-group');
+    if (buttonGroup) {
+      setTimeout(() => fullScreenCenter(buttonGroup), 200);
+    }
   }
 }
 
@@ -745,14 +759,20 @@ function debounce(fn, delay) {
     timeout = setTimeout(() => fn(...args), delay);
   };
 }
-
 function centerElementInViewport(element) {
   if (!element) return;
 
   const rect = element.getBoundingClientRect();
   const viewportHeight = window.innerHeight;
   const elementHeight = rect.height;
-  const currentTop = window.scrollY + rect.top;
+  const keyboardAdjustment = isMobile ? viewportHeight * 0.3 : 0; // Account for keyboard on mobile
+
+  const targetTop = window.scrollY + rect.top - (viewportHeight / 2) + (elementHeight / 2) - keyboardAdjustment;
+
+  window.requestAnimationFrame(() => {
+    window.scrollTo({ top: targetTop, behavior: 'smooth' });
+  });
+}
 
   // Center the element
   const targetTop = currentTop - (viewportHeight / 2) + (elementHeight / 2);
