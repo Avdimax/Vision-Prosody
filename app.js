@@ -696,6 +696,8 @@ function handleTriggerClick(e) {
   const trigger = e.currentTarget;
   const critId = trigger.id.replace('_trigger', '');
   toggleScoringScale(critId);
+  // No need to re-center here — toggleScoringScale() handles it
+}
 
   // Re-center after expansion
   setTimeout(() => {
@@ -739,6 +741,23 @@ function debounce(fn, delay) {
     clearTimeout(timeout);
     timeout = setTimeout(() => fn(...args), delay);
   };
+}
+
+function centerElementInViewport(element) {
+  if (!element) return;
+
+  const rect = element.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+  const elementHeight = rect.height;
+  const currentTop = window.scrollY + rect.top;
+
+  // Center the element
+  const targetTop = currentTop - (viewportHeight / 2) + (elementHeight / 2);
+
+  window.scrollTo({
+    top: targetTop,
+    behavior: 'smooth'
+  });
 }
 
 // ========================================
