@@ -517,7 +517,7 @@ function generateSurveyQuestions(num) {
 // ========================================
 function toggleScoringScale(critId) {
   const content = document.getElementById(`${critId}_scale`);
-  const trigger = document.getElementById(`${critId}_trigger`);
+  const trigger = document.getElementById(`${critId}_trigger`); // Ensure trigger is defined here
   const arrow = trigger.querySelector('.arrow-icon svg');
   const text = trigger.querySelector('.trigger-text');
 
@@ -534,15 +534,19 @@ function toggleScoringScale(critId) {
       if (score3) {
         centerElementInViewport(score3);
       } else {
-        fullScreenCenter(content.closest('.criterion-block'));
+        const block = trigger.closest('.criterion-block'); // Now trigger is defined
+        fullScreenCenter(block);
       }
-    }, 500); // Increased delay for mobile animation
+    }, 500);
   } else {
     content.style.maxHeight = content.scrollHeight + 'px';
     content.offsetHeight;
     content.style.maxHeight = '0';
     // Re-center block on collapse
-    setTimeout(() => fullScreenCenter(trigger.closest('.criterion-block')), 500);
+    setTimeout(() => {
+      const block = trigger.closest('.criterion-block'); // Trigger defined
+      fullScreenCenter(block);
+    }, 500);
   }
 }
 
