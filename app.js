@@ -31,7 +31,7 @@ const dialogueSetsData = [
   {
     setId: 1,
     title: "Museum of Nature and Wildlife",
-    context: "Maryam is visiting the Museum of Nature and Wildlife. She’s talking to Mr. Razavi who works in the museum.",
+    context: "Maryam is visiting the Museum of Nature and Wildlife. Sheâ€™s talking to Mr. Razavi who works in the museum.",
     audioSrc: "dialogue_1.mp3",
     transcript: [
       { speaker: "Maryam", line: "Excuse me, what is it? Is it a leopard?" },
@@ -51,10 +51,10 @@ const dialogueSetsData = [
     audioSrc: "dialogue_2.mp3",
     transcript: [
       { speaker: "Ms. Tabesh", line: "Are you interested in the planets?" },
-      { speaker: "Alireza", line: "Yes! They are really interesting for me, but I don’t know much about them." },
+      { speaker: "Alireza", line: "Yes! They are really interesting for me, but I donâ€™t know much about them." },
       { speaker: "Ms. Tabesh", line: "Planets are really amazing but not so much alike. Do you know how they are different?" },
       { speaker: "Alireza", line: "Umm... I know they go around the Sun in different orbits." },
-      { speaker: "Ms. Tabesh", line: "That’s right. They have different colors and sizes, too. Some are rocky like Mars, some have rings like Saturn and some have moons like Uranus." },
+      { speaker: "Ms. Tabesh", line: "Thatâ€™s right. They have different colors and sizes, too. Some are rocky like Mars, some have rings like Saturn and some have moons like Uranus." },
       { speaker: "Alireza", line: "How wonderful! Can we see them without a telescope?" },
       { speaker: "Ms. Tabesh", line: "Yeah..., we can see the planets nearer to us without a telescope, such as Mercury, Venus, Mars, Jupiter and Saturn. We can see Uranus and Neptune only with powerful telescopes." },
       { speaker: "Alireza", line: "And which planet is the largest of all?" },
@@ -73,7 +73,7 @@ const dialogueSetsData = [
       { speaker: "Roya", line: "But such books are not very interesting." },
       { speaker: "Mahsa", line: "At first I had the same idea, believe me!" },
       { speaker: "Roya", line: "Did you find it useful?" },
-      { speaker: "Mahsa", line: "Oh yes. Actually I learned many interesting things about our scientists’ lives." },
+      { speaker: "Mahsa", line: "Oh yes. Actually I learned many interesting things about our scientistsâ€™ lives." },
       { speaker: "Roya", line: "Like what?" },
       { speaker: "Mahsa", line: "For example Razi taught medicine to many young people while he was working in Ray Hospital. Or Nasireddin Toosi built Maragheh Observatory when he was studying the planets." },
       { speaker: "Roya", line: "Cool! What was the name of the book?" },
@@ -92,7 +92,7 @@ const dialogueSetsData = [
       { speaker: "Carlos", line: "Well, you may have some choices. You can visit China. It is famous for the Great Wall." },
       { speaker: "Diego", line: "Yes, but I was in Beijing two years ago." },
       { speaker: "Carlos", line: "What about India? In fact, the Taj Mahal is a popular destination, but it is hot in summer. Probably Iran is the best choice." },
-      { speaker: "Diego", line: "I heard Iran is a great and beautiful country, but I don’t know much about it." },
+      { speaker: "Diego", line: "I heard Iran is a great and beautiful country, but I donâ€™t know much about it." },
       { speaker: "Carlos", line: "Well, Iran is a four-season country. It has many historical sites and amazing nature. Also, its people are very kind and hospitable." },
       { speaker: "Diego", line: "It seems a suitable choice. But how can I get more information about Iran?" },
       { speaker: "Carlos", line: "You can check this booklet or may see our website." }
@@ -114,14 +114,14 @@ const surveyQuestionsData = {
       options: [1, 2, 3, 4, 5],
       required: true
     },
-    
     {
-      type: "textarea",
-      id: "prosody_naturalness",
-      label: "How natural does the prosody in this dialogue sound? (Open response) *",
+      type: "radio",
+      id: "q2_expectancy",
+      label: "Does the prosody meet expectancy in an EFL context?",
+      options: ["yes", "no", "maybe"],
       required: true
     }
-    ],
+  ],
   sectionB: [
     {
       id: "c1_intonation",
@@ -135,11 +135,11 @@ const surveyQuestionsData = {
         "Overall naturalness and conversational quality"
       ],
       scoringScale: [
-        "Score 1 – Monotone or inappropriate intonation: No pitch variation or pitch patterns don’t match sentence type. Questions don’t rise, statements don’t fall. Sounds robotic/scripted. Pitch range < 20 Hz.",
-        "Score 2 – Limited pitch variation: Some pitch movement but inconsistent. Occasional questions rise/statements fall, but not reliable. Pitch range 20–40 Hz. Some monotone stretches noticeable.",
-        "Score 3 – Some variation, inconsistent patterns: Moderate pitch variation (40–60 Hz) but patterns are unpredictable. Sometimes questions rise correctly, sometimes not. Some intonation-sentence mismatches (~30% incorrect).",
-        "Score 4 – Good variation, mostly natural: Good pitch range (60–80 Hz) and mostly correct patterns. Question/statement distinction usually clear. Few intonation errors (< 10% incorrect). Mostly sounds like natural English.",
-        "Score 5 – Natural, varied, semantically appropriate: Extensive pitch variation (80+ Hz). All questions rise, all statements fall naturally. Pitch peaks align with stress. Sounds like native-like natural English conversation. Appropriate prosodic boundaries."
+        "Score 1 â€“ Monotone or inappropriate intonation: No pitch variation or pitch patterns donâ€™t match sentence type. Questions donâ€™t rise, statements donâ€™t fall. Sounds robotic/scripted. Pitch range < 20 Hz.",
+        "Score 2 â€“ Limited pitch variation: Some pitch movement but inconsistent. Occasional questions rise/statements fall, but not reliable. Pitch range 20â€“40 Hz. Some monotone stretches noticeable.",
+        "Score 3 â€“ Some variation, inconsistent patterns: Moderate pitch variation (40â€“60 Hz) but patterns are unpredictable. Sometimes questions rise correctly, sometimes not. Some intonation-sentence mismatches (~30% incorrect).",
+        "Score 4 â€“ Good variation, mostly natural: Good pitch range (60â€“80 Hz) and mostly correct patterns. Question/statement distinction usually clear. Few intonation errors (< 10% incorrect). Mostly sounds like natural English.",
+        "Score 5 â€“ Natural, varied, semantically appropriate: Extensive pitch variation (80+ Hz). All questions rise, all statements fall naturally. Pitch peaks align with stress. Sounds like native-like natural English conversation. Appropriate prosodic boundaries."
       ]
     },
     {
@@ -154,11 +154,11 @@ const surveyQuestionsData = {
         "Information focus marking"
       ],
       scoringScale: [
-        "Score 1 – Stress frequently misplaced: Many multi-syllabic words have wrong stress placement (> 50% errors). Little amplitude or duration differentiation. No pitch peak alignment with stress.",
-        "Score 2 – Limited prominence marking: 50–70% of stresses correct. Weak amplitude differentiation (< 5 dB). Some duration variation but inconsistent. Few information words clearly marked prominent.",
-        "Score 3 – Inconsistent stress placement: 70–85% of stresses correct. Moderate amplitude differentiation (5–10 dB). Pitch peaks sometimes aligned (~50%). Information focus sometimes marked but often unclear.",
-        "Score 4 – Good stress, mostly natural: 85–95% of stresses correct. Good amplitude differentiation (10–15 dB). Pitch peaks usually align with stress. Most information words clearly marked. Sounds mostly natural.",
-        "Score 5 – Consistent, accurate stress throughout: All/nearly all stresses correct (95+%). Clear amplitude differentiation (15+ dB). Pitch peaks align with stress throughout. All focus words clearly prominent. Natural stress throughout."
+        "Score 1 â€“ Stress frequently misplaced: Many multi-syllabic words have wrong stress placement (> 50% errors). Little amplitude or duration differentiation. No pitch peak alignment with stress.",
+        "Score 2 â€“ Limited prominence marking: 50â€“70% of stresses correct. Weak amplitude differentiation (< 5 dB). Some duration variation but inconsistent. Few information words clearly marked prominent.",
+        "Score 3 â€“ Inconsistent stress placement: 70â€“85% of stresses correct. Moderate amplitude differentiation (5â€“10 dB). Pitch peaks sometimes aligned (~50%). Information focus sometimes marked but often unclear.",
+        "Score 4 â€“ Good stress, mostly natural: 85â€“95% of stresses correct. Good amplitude differentiation (10â€“15 dB). Pitch peaks usually align with stress. Most information words clearly marked. Sounds mostly natural.",
+        "Score 5 â€“ Consistent, accurate stress throughout: All/nearly all stresses correct (95+%). Clear amplitude differentiation (15+ dB). Pitch peaks align with stress throughout. All focus words clearly prominent. Natural stress throughout."
       ]
     },
     {
@@ -166,18 +166,18 @@ const surveyQuestionsData = {
       title: "CRITERION 3: HESITATIONS & FILLERS (NATURAL DISFLUENCY)",
       question: "How naturally and appropriately are hesitations and fillers (um, uh, like, you know) used?",
       whatToListen: [
-        "Filler frequency (0.5–1 per 10 utterances is natural)",
+        "Filler frequency (0.5â€“1 per 10 utterances is natural)",
         "Filler variety (um, uh, like, you know, I mean, well)",
         "Placement at natural discourse junctures",
         "Acoustic quality (natural vs. forced/artificial)",
         "Fluency effect (creates sense of real-time planning)"
       ],
       scoringScale: [
-        "Score 1 – No fillers or excessive/artificial fillers: Either completely absent (speech sounds scripted) or > 2 per utterance (sounds anxious). If present, fillers sound forced/artificial with glottal clicks.",
-        "Score 2 – Few fillers, somewhat unnatural: 0.2–0.4 per 10 utterances (sparse) or 1.5–2 per 10 (slightly high). Limited filler variety (only 1–2 types). Placement sometimes awkward. Some acoustic unnaturalness.",
-        "Score 3 – Limited variety, inconsistent use: 0.3–1.8 per 10 utterances (acceptable range but not optimal). Limited filler types used. Placement at ~50% of natural junctures. Mixed acoustic quality.",
-        "Score 4 – Frequent, mostly natural: 0.4–1.5 per 10 utterances (mostly in natural range). 2–3 filler types used. Most placement at natural junctures. Generally natural acoustic quality. Creates sense of planning.",
-        "Score 5 – Natural frequency, variety, placement: 0.5–1.5 per 10 utterances (optimal range). Multiple filler types used naturally. All fillers at natural junctures. Natural acoustic quality (vocalic, schwa-like). Creates natural sense of real-time speech."
+        "Score 1 â€“ No fillers or excessive/artificial fillers: Either completely absent (speech sounds scripted) or > 2 per utterance (sounds anxious). If present, fillers sound forced/artificial with glottal clicks.",
+        "Score 2 â€“ Few fillers, somewhat unnatural: 0.2â€“0.4 per 10 utterances (sparse) or 1.5â€“2 per 10 (slightly high). Limited filler variety (only 1â€“2 types). Placement sometimes awkward. Some acoustic unnaturalness.",
+        "Score 3 â€“ Limited variety, inconsistent use: 0.3â€“1.8 per 10 utterances (acceptable range but not optimal). Limited filler types used. Placement at ~50% of natural junctures. Mixed acoustic quality.",
+        "Score 4 â€“ Frequent, mostly natural: 0.4â€“1.5 per 10 utterances (mostly in natural range). 2â€“3 filler types used. Most placement at natural junctures. Generally natural acoustic quality. Creates sense of planning.",
+        "Score 5 â€“ Natural frequency, variety, placement: 0.5â€“1.5 per 10 utterances (optimal range). Multiple filler types used naturally. All fillers at natural junctures. Natural acoustic quality (vocalic, schwa-like). Creates natural sense of real-time speech."
       ]
     },
     {
@@ -185,18 +185,18 @@ const surveyQuestionsData = {
       title: "CRITERION 4: REPAIRS & DISFLUENCY (SELF-CORRECTION)",
       question: "How natural and well-integrated are self-repairs and corrections?",
       whatToListen: [
-        "Repair frequency (0.5–1 per 10 utterances is natural)",
+        "Repair frequency (0.5â€“1 per 10 utterances is natural)",
         "Explicit repair markers (I mean, actually, well, no wait)",
         "Acoustic integration and smoothness",
         "Repair placement at clause boundaries vs. mid-utterance",
         "Acoustic continuity maintained"
       ],
       scoringScale: [
-        "Score 1 – No repairs or severely unnatural: Either no self-corrections (sounds over-planned/scripted) or repairs are extremely abrupt, unclear, and frequently mid-word. No repair markers used.",
-        "Score 2 – Repairs unintegrated, abrupt: < 0.1 or > 2.5 repairs per 10 utterances. Repairs are abrupt/jarring with no markers. Integration disrupts listening. Often mid-utterance placement. Acoustic breaks evident.",
-        "Score 3 – Mixed integration, inconsistent: 0.1–2 per 10 utterances (variable). Repair markers sometimes used, sometimes omitted. Integration is 50/50 (some smooth, some abrupt). Mixed placement (some boundaries, some mid-utterance).",
-        "Score 4 – Mostly smooth integration: 0.3–1.8 per 10 utterances. Markers often used. Most repairs integrate smoothly (~80%); occasional abrupt ones. Most at boundaries. Good acoustic continuity.",
-        "Score 5 – Natural, well-integrated repairs: 0.5–1.5 per 10 utterances (optimal). Clear markers consistently used. All repairs integrate smoothly. All at natural boundaries. Acoustic continuity perfectly maintained. Sounds like natural planning."
+        "Score 1 â€“ No repairs or severely unnatural: Either no self-corrections (sounds over-planned/scripted) or repairs are extremely abrupt, unclear, and frequently mid-word. No repair markers used.",
+        "Score 2 â€“ Repairs unintegrated, abrupt: < 0.1 or > 2.5 repairs per 10 utterances. Repairs are abrupt/jarring with no markers. Integration disrupts listening. Often mid-utterance placement. Acoustic breaks evident.",
+        "Score 3 â€“ Mixed integration, inconsistent: 0.1â€“2 per 10 utterances (variable). Repair markers sometimes used, sometimes omitted. Integration is 50/50 (some smooth, some abrupt). Mixed placement (some boundaries, some mid-utterance).",
+        "Score 4 â€“ Mostly smooth integration: 0.3â€“1.8 per 10 utterances. Markers often used. Most repairs integrate smoothly (~80%); occasional abrupt ones. Most at boundaries. Good acoustic continuity.",
+        "Score 5 â€“ Natural, well-integrated repairs: 0.5â€“1.5 per 10 utterances (optimal). Clear markers consistently used. All repairs integrate smoothly. All at natural boundaries. Acoustic continuity perfectly maintained. Sounds like natural planning."
       ]
     },
     {
@@ -204,18 +204,18 @@ const surveyQuestionsData = {
       title: "CRITERION 5: TURN-TAKING & CONVERSATION FLOW",
       question: "How natural is the timing between speaker turns and the overall conversational flow?",
       whatToListen: [
-        "Inter-turn gaps (100–300 ms is natural)",
+        "Inter-turn gaps (100â€“300 ms is natural)",
         "Overlaps and interruptions",
         "Backchannels (yeah, right, mm-hmm, uh-huh)",
         "Turn ceding signals (falling pitch, lengthening, grammatical completion)",
         "Overall conversation rhythm and smoothness"
       ],
       scoringScale: [
-        "Score 1 – Severely disrupted flow, long gaps: Inter-turn gaps > 1 second frequently. Many interruptions or excessive overlaps. No backchannels; listener completely passive. Turn exchange management very poor.",
-        "Score 2 – Frequent gaps, awkward timing: Many gaps 400–700 ms (too long). Frequent awkward overlaps or interruptions (> 50%). Few/no backchannels. Unclear turn-ceding cues. Flow choppy and unnatural.",
-        "Score 3 – Inconsistent gaps, some awkwardness: Some gaps 400–600 ms; some 100–300 ms (inconsistent). Some overlaps (~30% of turns affected). Occasional backchannels. Some turn-ceding cues clear. Flow somewhat choppy.",
-        "Score 4 – Mostly natural gaps, good flow: Most gaps 100–350 ms (mostly natural). Few overlaps (< 10%). Frequent backchannels; good engagement. Usually clear turn-ceding. Flow generally smooth; minor rough spots.",
-        "Score 5 – Natural gaps (100–300ms), smooth flow: All gaps 100–300 ms (optimal). Minimal/no awkward overlaps. Regular backchannels signal engagement. Clear turn-ceding cues. Smooth, natural conversational flow throughout."
+        "Score 1 â€“ Severely disrupted flow, long gaps: Inter-turn gaps > 1 second frequently. Many interruptions or excessive overlaps. No backchannels; listener completely passive. Turn exchange management very poor.",
+        "Score 2 â€“ Frequent gaps, awkward timing: Many gaps 400â€“700 ms (too long). Frequent awkward overlaps or interruptions (> 50%). Few/no backchannels. Unclear turn-ceding cues. Flow choppy and unnatural.",
+        "Score 3 â€“ Inconsistent gaps, some awkwardness: Some gaps 400â€“600 ms; some 100â€“300 ms (inconsistent). Some overlaps (~30% of turns affected). Occasional backchannels. Some turn-ceding cues clear. Flow somewhat choppy.",
+        "Score 4 â€“ Mostly natural gaps, good flow: Most gaps 100â€“350 ms (mostly natural). Few overlaps (< 10%). Frequent backchannels; good engagement. Usually clear turn-ceding. Flow generally smooth; minor rough spots.",
+        "Score 5 â€“ Natural gaps (100â€“300ms), smooth flow: All gaps 100â€“300 ms (optimal). Minimal/no awkward overlaps. Regular backchannels signal engagement. Clear turn-ceding cues. Smooth, natural conversational flow throughout."
       ]
     },
     {
@@ -223,18 +223,18 @@ const surveyQuestionsData = {
       title: "CRITERION 6: PAUSE TIMING & RHYTHM",
       question: "How natural are the pauses within and between utterances? Does the rhythm feel natural?",
       whatToListen: [
-        "Pause duration (within-clause: 0.3–0.6s; between-clause: 0.6–1.2s)",
+        "Pause duration (within-clause: 0.3â€“0.6s; between-clause: 0.6â€“1.2s)",
         "Pause placement at linguistic boundaries",
-        "Pause frequency (3–5 per 20 seconds is natural)",
+        "Pause frequency (3â€“5 per 20 seconds is natural)",
         "Speaking rate consistency",
         "Overall rhythm quality and engagement"
       ],
       scoringScale: [
-        "Score 1 – Unnatural pacing, poor rhythm: Either no pausing (breathless, rushed) or only very long pauses > 2.5s (monotonous). Speaking rate extremely variable (rush-then-slow). Rhythm severely disrupted.",
-        "Score 2 – Irregular pauses, disrupted rhythm: Pauses very irregular (< 0.15s or > 1.5s frequent). Many mid-word or inappropriate placements. Speaking rate highly variable. Rhythm feels choppy or erratic. > 40% of pauses awkwardly placed.",
-        "Score 3 – Some irregular pauses, variable rate: Some pauses 0.2–0.7s or 1.5–2.0s (somewhat off). Pause frequency 1–2 or 6–8 per 20s (sparse or frequent). Speaking rate somewhat variable. Rhythm inconsistent. ~30% awkward placements.",
-        "Score 4 – Mostly natural pauses, good rhythm: Most pauses 0.2–0.7s and 0.5–1.3s (mostly appropriate). Pause frequency 2–6 per 20s (acceptable). Speaking rate mostly consistent. Rhythm generally natural. Few awkward placements (< 10%).",
-        "Score 5 – Natural pauses, smooth rhythm: All pauses 0.3–1.2s (natural timing). Placement at linguistic boundaries (> 90% correct). Frequency 3–5 per 20s (natural). Speaking rate consistent. Overall rhythm natural, smooth, engaging."
+        "Score 1 â€“ Unnatural pacing, poor rhythm: Either no pausing (breathless, rushed) or only very long pauses > 2.5s (monotonous). Speaking rate extremely variable (rush-then-slow). Rhythm severely disrupted.",
+        "Score 2 â€“ Irregular pauses, disrupted rhythm: Pauses very irregular (< 0.15s or > 1.5s frequent). Many mid-word or inappropriate placements. Speaking rate highly variable. Rhythm feels choppy or erratic. > 40% of pauses awkwardly placed.",
+        "Score 3 â€“ Some irregular pauses, variable rate: Some pauses 0.2â€“0.7s or 1.5â€“2.0s (somewhat off). Pause frequency 1â€“2 or 6â€“8 per 20s (sparse or frequent). Speaking rate somewhat variable. Rhythm inconsistent. ~30% awkward placements.",
+        "Score 4 â€“ Mostly natural pauses, good rhythm: Most pauses 0.2â€“0.7s and 0.5â€“1.3s (mostly appropriate). Pause frequency 2â€“6 per 20s (acceptable). Speaking rate mostly consistent. Rhythm generally natural. Few awkward placements (< 10%).",
+        "Score 5 â€“ Natural pauses, smooth rhythm: All pauses 0.3â€“1.2s (natural timing). Placement at linguistic boundaries (> 90% correct). Frequency 3â€“5 per 20s (natural). Speaking rate consistent. Overall rhythm natural, smooth, engaging."
       ]
     },
     {
@@ -249,11 +249,11 @@ const surveyQuestionsData = {
         "Theme-rheme structure reflected in prosody"
       ],
       scoringScale: [
-        "Score 1 – No distinction; all equal emphasis: All information treated equally. No given-new marking. No reduction of repeated words. Nuclear stress random/absent. No contrastive opposition. Confusing discourse structure.",
-        "Score 2 – Little given-new marking: Minimal new information marking (< 40% marked). Given information rarely reduced. Nuclear stress sometimes misaligned (> 50%). Few contrastive items marked. Discourse confusing.",
-        "Score 3 – Inconsistent information marking: Some new information marked (~60%), some missed. Some given information reduced (~60%), some over-emphasized. Nuclear stress sometimes aligned (~50%). Some contrastive marking. Discourse clarity inconsistent.",
-        "Score 4 – Mostly clear given-new distinction: Most new information marked (~85%). Most given information reduced (~80%). Nuclear stress usually aligned (~80%). Most contrastive items marked. Discourse generally clear with occasional lapses.",
-        "Score 5 – Clear, natural information structure: All/nearly all new information clearly marked (95+%). Given information consistently reduced. Nuclear stress consistently aligned with focus. All contrastive items clearly opposed. Perfect discourse prosody alignment."
+        "Score 1 â€“ No distinction; all equal emphasis: All information treated equally. No given-new marking. No reduction of repeated words. Nuclear stress random/absent. No contrastive opposition. Confusing discourse structure.",
+        "Score 2 â€“ Little given-new marking: Minimal new information marking (< 40% marked). Given information rarely reduced. Nuclear stress sometimes misaligned (> 50%). Few contrastive items marked. Discourse confusing.",
+        "Score 3 â€“ Inconsistent information marking: Some new information marked (~60%), some missed. Some given information reduced (~60%), some over-emphasized. Nuclear stress sometimes aligned (~50%). Some contrastive marking. Discourse clarity inconsistent.",
+        "Score 4 â€“ Mostly clear given-new distinction: Most new information marked (~85%). Most given information reduced (~80%). Nuclear stress usually aligned (~80%). Most contrastive items marked. Discourse generally clear with occasional lapses.",
+        "Score 5 â€“ Clear, natural information structure: All/nearly all new information clearly marked (95+%). Given information consistently reduced. Nuclear stress consistently aligned with focus. All contrastive items clearly opposed. Perfect discourse prosody alignment."
       ]
     },
     {
@@ -268,11 +268,11 @@ const surveyQuestionsData = {
         "Communication effectiveness and engagement"
       ],
       scoringScale: [
-        "Score 1 – Obviously non-native, very unnatural: Speech is distinctly non-native. Multiple prosodic issues throughout. Prosody very distracting; interferes with comprehension. Very low confidence (< 30%) it’s native. Severely disrupts communication.",
-        "Score 2 – Noticeably non-native, frequent issues: Clearly L2 speech with noticeable prosodic problems. Listener frequently aware of/distracted by prosody. Low confidence (30–60%) it’s native. Prosody sometimes interferes with understanding.",
-        "Score 3 – Moderately natural; some L2 markers: Recognizable as L2 or careful speech, but acceptable. Listener occasionally aware of prosody. Moderate confidence (60–80%) it’s native. Some L2 features noticeable but communication adequate.",
-        "Score 4 – Mostly natural with minor issues: Mostly natural speech; only occasional prosodic oddities. Listener mostly forgets about prosody. High confidence (80–95%) it’s native. Very close to native-speaker conversation. Minor distracting elements.",
-        "Score 5 – Highly natural, native-like: Sounds indistinguishable from native English. All prosodic elements integrate smoothly. Listener forgets prosody; focuses on content. Very high confidence (95+%) it’s native. Enhances meaning and engagement naturally."
+        "Score 1 â€“ Obviously non-native, very unnatural: Speech is distinctly non-native. Multiple prosodic issues throughout. Prosody very distracting; interferes with comprehension. Very low confidence (< 30%) itâ€™s native. Severely disrupts communication.",
+        "Score 2 â€“ Noticeably non-native, frequent issues: Clearly L2 speech with noticeable prosodic problems. Listener frequently aware of/distracted by prosody. Low confidence (30â€“60%) itâ€™s native. Prosody sometimes interferes with understanding.",
+        "Score 3 â€“ Moderately natural; some L2 markers: Recognizable as L2 or careful speech, but acceptable. Listener occasionally aware of prosody. Moderate confidence (60â€“80%) itâ€™s native. Some L2 features noticeable but communication adequate.",
+        "Score 4 â€“ Mostly natural with minor issues: Mostly natural speech; only occasional prosodic oddities. Listener mostly forgets about prosody. High confidence (80â€“95%) itâ€™s native. Very close to native-speaker conversation. Minor distracting elements.",
+        "Score 5 â€“ Highly natural, native-like: Sounds indistinguishable from native English. All prosodic elements integrate smoothly. Listener forgets prosody; focuses on content. Very high confidence (95+%) itâ€™s native. Enhances meaning and engagement naturally."
       ]
     }
   ],
@@ -365,7 +365,7 @@ document.addEventListener('input', debounce(updateProgress));
 document.addEventListener('change', debounce(updateProgress));
 
 // ========================================
-// NAVIGATION (Enhanced for single Section 1 with sets - Step 4 Integration)
+// NAVIGATION (Enhanced for single Section 1 with sets)
 // ========================================
 function startSurvey() {
   hideAllSections();
@@ -392,7 +392,7 @@ function showSection(id) {
   }
 }
 
-// Submit demographics and move to Section 1, showing first set
+// Enhanced: Submit demographics and move to Section 1, showing first set
 function submitDemographics() {
   const form = document.getElementById('demographicsForm');
   if (!form.checkValidity()) {
@@ -416,28 +416,25 @@ function submitDemographics() {
   showCurrentSet();
 }
 
-// Enhanced: Show specific set in Section 1 with fade transition (if CSS has .fade class)
+// Enhanced: Show specific set in Section 1
 function showCurrentSet() {
   const setContainers = document.querySelectorAll('.set-container');
   setContainers.forEach((container, index) => {
-    if (index + 1 === currentSet) {
-      container.style.display = 'block';
-      container.classList.add('fade-in');  // Assume CSS .fade-in { animation: fadeIn 0.5s; }
-    } else {
-      container.style.display = 'none';
-      container.classList.remove('fade-in');
-    }
+    container.style.display = (index + 1 === currentSet) ? 'block' : 'none';
   });
   updateProgress();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ========================================
-// DYNAMIC GENERATION FUNCTIONS (Core Modularity)
+// DYNAMIC GENERATION FUNCTIONS (Core Modularity - Step 3 Implementation)
 // ========================================
+// Generate all sets in Section 1 container on load (loops over dialogueSetsData)
 function generateAllSets() {
   const container = document.getElementById('dialoguesContainer');
-  if (!container) return;
+  if (!container) {
+    console.error('dialoguesContainer not found - check HTML structure');
+    return;
+  }
 
   dialogueSetsData.forEach(set => {
     const setHTML = generateSetModule(set);
@@ -445,6 +442,7 @@ function generateAllSets() {
   });
 }
 
+// Generate HTML for one set (transcript + audio + form with looped questions)
 function generateSetModule(set) {
   const num = set.setId;
   const contextHTML = `<div class="dialogue-context"><p><strong>Context:</strong> ${set.context}</p></div>`;
@@ -484,6 +482,7 @@ function generateSetModule(set) {
   `;
 }
 
+// Generate questions HTML by looping over surveyQuestionsData (EFL rubric integration)
 function generateSurveyQuestions(num) {
   let html = '';
 
@@ -651,13 +650,13 @@ async function submitSurvey() {
       }
     };
 
-    console.log('📤 Submitting to Firebase...', finalData);
+    console.log('ðŸ“¤ Submitting to Firebase...', finalData);
 
     if (typeof firebase !== 'undefined' && firebase.database) {
       const database = firebase.database();
       const dbPath = `responses/${participantID}`;
       await database.ref(dbPath).set(finalData);
-      console.log('✅ Data saved to Firebase!');
+      console.log('âœ… Data saved to Firebase!');
     } else {
       console.warn('Firebase not available - local save only');
     }
@@ -672,10 +671,10 @@ async function submitSurvey() {
     const confirmationDetails = document.getElementById('confirmationDetails');
     if (confirmationDetails) {
       confirmationDetails.innerHTML = `
-        <h2>✅ Submission Complete!</h2>
+        <h2>âœ… Submission Complete!</h2>
         <p><strong>Participant ID:</strong><br><code>${participantID}</code></p>
         <p><strong>Submitted:</strong><br>${timestamp.toLocaleString()}</p>
-        <p><strong>Status:</strong><br>✅ Saved to database</p>
+        <p><strong>Status:</strong><br>âœ… Saved to database</p>
       `;
     }
   } catch (error) {
@@ -693,13 +692,13 @@ document.addEventListener('DOMContentLoaded', function() {
   if (typeof firebase !== 'undefined') {
     try {
       firebase.initializeApp(firebaseConfig);
-      console.log('✅ Firebase initialized');
+      console.log('âœ… Firebase initialized');
     } catch (e) {
       console.log('Firebase already initialized or error:', e);
     }
   }
   
-  // Generate all sets dynamically in Section 1
+  // Generate all sets dynamically in Section 1 (core of Step 3)
   generateAllSets();
   
   // Add smooth scroll behavior to form inputs
