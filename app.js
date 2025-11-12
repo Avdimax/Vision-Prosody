@@ -317,6 +317,9 @@ document.addEventListener('change', updateProgress);
 // ========================================
 // NAVIGATION
 // ========================================
+// ========================================
+// NAVIGATION - RESTORED
+// ========================================
 function startSurvey() {
   hideAllSections();
   showSection('demographicsSection');
