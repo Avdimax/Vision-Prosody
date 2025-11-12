@@ -757,10 +757,27 @@ function toggleScoringScale(critId) {
 
   if (isOpen) {
     content.style.maxHeight = content.scrollHeight + 'px';
+
+    // === CENTER SCORE 3 AFTER EXPANSION ===
+    setTimeout(() => {
+      const score3Item = content.querySelector('.scale-item:nth-child(3)');
+      if (score3Item) {
+        centerElementInViewport(score3Item);
+      } else {
+        // Fallback: center the whole block
+        const block = trigger.closest('.criterion-block');
+        fullScreenCenter(block);
+      }
+    }, 450); // After animation
   } else {
     content.style.maxHeight = content.scrollHeight + 'px';
     content.offsetHeight;
     content.style.maxHeight = '0';
+
+    // On collapse → center the trigger
+    setTimeout(() => {
+      fullScreenCenter(trigger.closest('.criterion-block'));
+    }, 450);
   }
 }
 
