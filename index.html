@@ -18,7 +18,7 @@
                 <div class="progress-bar">
                     <div id="progressFill" class="progress-fill"></div>
                 </div>
-                <p id="progressText" class="progress-text">Demographics</p>
+                <p id="progressText" class="progress-text">0%</p> <!-- We'll update this to show percentage -->
             </div>
         </div>
 
@@ -38,10 +38,10 @@
 
             <h3 style="margin-top: 30px; margin-bottom: 20px; text-align: center;">What You'll Be Doing:</h3>
             <ul style="margin: 0 auto 30px auto; padding-left: 20px; text-align: left; max-width: 450px; line-height: 1.8;">
-                <li style="margin-bottom: 12px;">Assess <strong>5 different dialogues</strong> using <strong>8 detailed prosody criteria</strong> with ratings and comments</li>
+                <li style="margin-bottom: 12px;">Assess <strong>4 different dialogues</strong> using <strong>8 detailed prosody criteria</strong> with ratings and comments</li>
                 <li style="margin-bottom: 12px;">For each dialogue, review <strong>text and audio</strong></li>
                 <li style="margin-bottom: 12px;">Listen while reading; rate on a 1-5 scale per criterion</li>
-                <li style="margin-bottom: 12px;">Complete in ~20-25 minutes</li>
+                <li style="margin-bottom: 12px;">Complete in ~15-20 minutes</li>
             </ul>
 
             <div style="padding: 20px; background-color: #f8f9ff; border-left: 4px solid #2196F3; margin: 30px auto; border-radius: 4px; max-width: 450px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
@@ -100,7 +100,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="nativeLanguageVariety" class="form-label">Native English Variety *</label>
+                            <label for="nativeLanguageVariety" class="form-label">Native English variety *</label>
                             <select id="nativeLanguageVariety" name="nativeLanguageVariety" class="form-control" required>
                                 <option value="">-- Select Variety --</option>
                                 <option value="british">British English</option>
@@ -309,7 +309,7 @@
                                 <li>Overall rhythm quality and engagement</li>
                             </ul>
                             <p><strong>Scoring Scale:</strong></p>
-                            <p>Score 1 – Unnatural pacing, poor rhythm: Either no pausing (breathless, rushed) or only very long pauses > 2.5s (monotonous). Speaking rate extremely variable (rush-then-slow). Rhythm severely disrupted.</p>
+                            <p>Score 1 – Unnatural pacing, poor rhythm: Either no pausing (breathless, rushed) or only very very long pauses > 2.5s (monotonous). Speaking rate extremely variable (rush-then-slow). Rhythm severely disrupted.</p>
                             <p>Score 2 – Irregular pauses, disrupted rhythm: Pauses very irregular (< 0.15s or > 1.5s frequent). Many mid-word or inappropriate placements. Speaking rate highly variable. Rhythm feels choppy or erratic. > 40% of pauses awkwardly placed.</p>
                             <p>Score 3 – Some irregular pauses, variable rate: Some pauses 0.2–0.7s or 1.5–2.0s (somewhat off). Pause frequency 1–2 or 6–8 per 20s (sparse or frequent). Speaking rate somewhat variable. Rhythm inconsistent. ∼30% awkward placements.</p>
                             <p>Score 4 – Mostly natural pauses, good rhythm: Most pauses 0.2–0.7s and 0.5–1.3s (mostly appropriate). Pause frequency 2–6 per 20s (acceptable). Speaking rate mostly consistent. Rhythm generally natural. Few awkward placements (< 10%).</p>
@@ -393,43 +393,19 @@
                 </div>
             </section>
 
-            <!-- Dialogue 2 Section (Adapt transcript/context as per your data; structure identical to Dialogue 1) -->
+            <!-- Dialogue 2 Section -->
             <section id="dialogue2Section" class="section">
                 <div class="survey-container">
-                    <h2>Dialogue 2: [Insert Title/Context Here]</h2>
-                    <!-- Add context, audio, transcript similar to above -->
-                    <!-- Form id="dialogue2Form" with d2_* names, but same 8 criteria blocks -->
-                    <!-- ... (Repeat Section A, B with 8 criteria, C) ... -->
-                    <div class="button-group">
-                        <button class="btn btn-secondary" onclick="previousDialogue(2)">Back</button>
-                        <button class="btn btn-primary btn-large" onclick="nextDialogue(2)">Next</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Dialogue 3 Section (Similar) -->
-            <section id="dialogue3Section" class="section">
-                <!-- ... Identical structure ... -->
-            </section>
-
-            <!-- Dialogue 4 Section (Similar) -->
-            <section id="dialogue4Section" class="section">
-                <!-- ... Identical structure ... -->
-            </section>
-
-            <!-- Dialogue 5 Section -->
-            <section id="dialogue5Section" class="section">
-                <div class="survey-container">
-                    <h2>Dialogue 5: Camera Loan Request</h2>
+                    <h2>Dialogue 2: [Placeholder Title - e.g., Booking a Flight]</h2>
                     
                     <div class="dialogue-context">
-                        <p><strong>Context:</strong> A brief conversation about borrowing a camera for a trip.</p>
+                        <p><strong>Context:</strong> [Placeholder Context - e.g., A customer is booking a flight with an agent.]</p>
                     </div>
 
                     <div class="audio-container">
                         <h3>Audio Recording</h3>
                         <audio controls class="audio-player" style="width: 100%; margin: 16px 0;">
-                            <source src="dialogue_5.mp3" type="audio/mpeg">
+                            <source src="dialogue_2.mp3" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
                     </div>
@@ -437,21 +413,42 @@
                     <div class="dialogue-transcript">
                         <h3>Transcript</h3>
                         <div class="transcript-content">
-                            <p><strong>Person A:</strong> May I use your camera for my trip?</p>
-                            <p><strong>Person B:</strong> Honestly, no. I need it this week. You should buy a camera for yourself.</p>
-                            <p><strong>Person A:</strong> But I can't pay for it now. I should pay for the ticket and other things.</p>
-                            <p><strong>Person B:</strong> Well, you may ask Parvin. She can help you.</p>
+                            <p><strong>Speaker A:</strong> [Placeholder line]</p>
+                            <p><strong>Speaker B:</strong> [Placeholder line]</p>
+                            <!-- Add full transcript here -->
                         </div>
                     </div>
 
-                    <form id="dialogue5Form" class="survey-form">
-                        <!-- Section A same as above -->
-                        <!-- Section B with 8 criteria, names d5_c1_* etc. -->
-                        <!-- Section C same -->
+                    <form id="dialogue2Form" class="survey-form">
+                        <!-- Repeat Section A, B (8 criteria with d2_ names), C identical to Dialogue 1 -->
                     </form>
 
                     <div class="button-group">
-                        <button class="btn btn-secondary" onclick="previousDialogue(5)">Back</button>
+                        <button class="btn btn-secondary" onclick="previousDialogue(2)">Back</button>
+                        <button class="btn btn-primary btn-large" onclick="nextDialogue(2)">Next</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dialogue 3 Section -->
+            <section id="dialogue3Section" class="section">
+                <div class="survey-container">
+                    <h2>Dialogue 3: [Placeholder Title - e.g., Discussing a Movie]</h2>
+                    <!-- Similar structure: context, audio, transcript, form with d3_ names -->
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="previousDialogue(3)">Back</button>
+                        <button class="btn btn-primary btn-large" onclick="nextDialogue(3)">Next</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dialogue 4 Section -->
+            <section id="dialogue4Section" class="section">
+                <div class="survey-container">
+                    <h2>Dialogue 4: [Placeholder Title - e.g., Ordering Food]</h2>
+                    <!-- Similar structure: context, audio, transcript, form with d4_ names -->
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="previousDialogue(4)">Back</button>
                         <button class="btn btn-primary btn-large" onclick="submitSurvey()">Submit Survey</button>
                     </div>
                 </div>
