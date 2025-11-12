@@ -225,7 +225,7 @@ const surveyQuestionsData = {
       scoringScale: [
         "Score 1 – Unnatural pacing, poor rhythm: Either no pausing (breathless, rushed) or only very long pauses > 2.5s (monotonous). Speaking rate extremely variable (rush-then-slow). Rhythm severely disrupted.",
         "Score 2 – Irregular pauses, disrupted rhythm: Pauses very irregular (< 0.15s or > 1.5s frequent). Many mid-word or inappropriate placements. Speaking rate highly variable. Rhythm feels choppy or erratic. > 40% of pauses awkwardly placed.",
-        "Score 3 – Some irregular pauses, variable rate: Some pauses 0.2–0.7s or 1.5–2.0s (somewhat off). Pause frequency 1–2 or 6–8 per 20s (sparse or frequent). Speaking rate somewhat variable. Rhythm inconsistent. ~30% awkward placements.",
+        "Score 3 – Some irregular pauses, variable rate: Some gaps 0.2–0.7s or 1.5–2.0s (somewhat off). Pause frequency 1–2 or 6–8 per 20s (sparse or frequent). Speaking rate somewhat variable. Rhythm inconsistent. ~30% awkward placements.",
         "Score 4 – Mostly natural pauses, good rhythm: Most pauses 0.2–0.7s and 0.5–1.3s (mostly appropriate). Pause frequency 2–6 per 20s (acceptable). Speaking rate mostly consistent. Rhythm generally natural. Few awkward placements (< 10%).",
         "Score 5 – Natural pauses, smooth rhythm: All pauses 0.3–1.2s (natural timing). Placement at linguistic boundaries (> 90% correct). Frequency 3–5 per 20s (natural). Speaking rate consistent. Overall rhythm natural, smooth, engaging."
       ]
@@ -394,6 +394,9 @@ function showCurrentSet() {
   });
   updateProgress();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => {
+    addScrollListenersToFormInputs();
+  }, 300);  // Added delay for content render in sets
 }
 
 // ========================================
@@ -648,6 +651,47 @@ async function submitSurvey() {
     btn.disabled = false;
     alert('Error submitting survey. Please try again or check console.');
   }
+}
+
+// ========================================
+// ENHANCED AUTO-SCROLLING FOR UX (Phase 2 Addition)
+// ========================================
+function addScrollListenersToFormInputs() {
+  const inputs = document.querySelectorAll('input, textarea, select');
+  inputs.forEach(input => {
+    input.addEventListener('focus', (e) => {
+      const target = e.target;
+      const parentGroup = target.closest('.form-group, .rating-group');  // Find parent for context
+      let offset = target.getBoundingClientRect().top - 100;  // Base offset for headers
+
+      // Dynamic adjustment: If parent is long (e.g., rubric > half viewport), center it
+      if (parentGroup) {
+        const groupHeight = parentGroup.offsetHeight;
+        const viewportHeight = window.innerHeight;
+        if (groupHeight > viewportHeight / 2) {
+          offset = parentGroup.getBoundingClientRect().top - (viewportHeight / 2) + (target.offsetHeight / 2);
+        }
+      }
+
+      window.scrollTo({ top: window.scrollY + offset, behavior: 'smooth' });
+    });
+  });
+
+  // Add ResizeObserver for dynamic content (e.g., rubric expansion on load/resize)
+  const resizeObserver = new ResizeObserver(entries => {
+    entries.forEach(entry => {
+      if (document.activeElement) {
+        // Re-trigger scroll if focused element's parent resizes
+        const focused = document.activeElement;
+        const offset = focused.getBoundingClientRect().top - 100;
+        window.scrollTo({ top: window.scrollY + offset, behavior: 'smooth' });
+      }
+    });
+  });
+
+  document.querySelectorAll('.rating-group').forEach(group => {
+    resizeObserver.observe(group);
+  });
 }
 
 // ========================================
