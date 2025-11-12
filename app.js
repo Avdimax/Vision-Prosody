@@ -714,25 +714,49 @@ function handleRadioChange(e) {
 
 // Trigger click → expand + center the whole block
 function handleTriggerClick(e) {
-  const trigger = e.currentTarget;
+  const trigger = e.currentTarget; // Define trigger here
   const critId = trigger.id.replace('_trigger', '');
-  toggleScoringScale(critId);
-  // No need to re-center here — toggleScoringScale() handles it
+ function toggleScoringScale(critId) {
+  const content = document.getElementById(`${critId}_scale`);
+  const trigger = document.getElementById(`${critId}_trigger`); // Define trigger here to fix error
+  console.log('toggleScoringScale: Trigger defined', trigger); // Debug: Confirm trigger exists
+
+  if (!trigger) {
+    console.error('Trigger not found for critId:', critId);
+    return; // Prevent further errors
+  }
+
+  const arrow = trigger.querySelector('.arrow-icon svg');
+  const text = trigger.querySelector('.trigger-text');
+
+  const isOpen = content.classList.toggle('open');
+  
+  text.textContent = isOpen ? 'Hide Scoring Scale' : 'Show Scoring Scale';
+  trigger.setAttribute('aria-expanded', isOpen);
+
+  if (isOpen) {
+    content.style.maxHeight = content.scrollHeight + 'px';
+    // Center on Score 3 after expansion
+    setTimeout(() => {
+      const score3 = content.querySelector('.scale-item:nth-child(3)');
+      if (score3) {
+        centerElementInViewport(score3);
+      } else {
+        const block = trigger.closest('.criterion-block'); // Now safe
+        fullScreenCenter(block);
+      }
+    }, 500);
+  } else {
+    content.style.maxHeight = content.scrollHeight + 'px';
+    content.offsetHeight;
+    content.style.maxHeight = '0';
+    // Re-center block on collapse
+    setTimeout(() => {
+      const block = trigger.closest('.criterion-block'); // Safe
+      fullScreenCenter(block);
+    }, 500);
+  }
 }
-
-  // Re-center after expansion
-  setTimeout(() => {
-    const block = trigger.closest('.criterion-block');
-    fullScreenCenter(block);
-  }, 400);
-
-
-// Comment focus → center the block
-function handleFocus(e) {
-  const block = e.target.closest('.criterion-block') || e.target.closest('.form-group');
-  fullScreenCenter(block);
-}
-
 // ========================================
 // FULL-SCREEN CENTERING (MOBILE + PC)
 // ========================================
