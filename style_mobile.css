@@ -516,6 +516,127 @@ h3 {
   margin-top: var(--space-20);
 }
 
+/* ========================================
+   COLLAPSIBLE SCORING SCALES - PDF PERFECT
+   ======================================== */
+
+.criterion-block {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 28px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.criterion-title {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.criterion-content {
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.criterion-content strong {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.listen-list {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+
+.listen-list li {
+  margin: 4px 0;
+  position: relative;
+}
+
+.listen-list li::marker {
+  color: #218093;
+  font-weight: bold;
+}
+
+/* COLLAPSIBLE TRIGGER */
+.collapsible-trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #218093, #1a6f7f);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 16px 0 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.collapsible-trigger:hover {
+  background: linear-gradient(135deg, #1a6f7f, #155a68);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.collapsible-trigger:active {
+  transform: translateY(0);
+}
+
+.trigger-text {
+  font-weight: 700;
+}
+
+.arrow-icon svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.collapsible-content.open .arrow-icon svg {
+  transform: rotate(180deg);
+}
+
+/* COLLAPSIBLE CONTENT */
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  padding: 0 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px dashed #ced4da;
+}
+
+.collapsible-content.open {
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.scale-item {
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #444;
+  border-left: 3px solid #218093;
+}
+
+.scale-item strong {
+  color: #1a1a1a;
+}
+
 /* Dialogue Context */
 .dialogue-context {
   background-color: var(--color-secondary);
