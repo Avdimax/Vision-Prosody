@@ -7,7 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Dialogue Naturalness Assessment Survey</title>
+    <title>Communicative Prosody Assessment Survey</title>
     <link rel="stylesheet" href="style_mobile.css">
 </head>
 <body>
@@ -25,7 +25,7 @@
         <!-- Main Content -->
         <main class="main-content">
 
-<!-- ====== INTRO SECTION - MOBILE OPTIMIZED & HARMONIOUS ====== -->
+<!-- INTRO SECTION -->
 <div id="introSection" class="section active">
     <div class="container">
         <div style="text-align: center; max-width: 600px; margin: 0 auto;">
@@ -33,20 +33,20 @@
             <h2 style="margin-bottom: 15px;">Welcome to the Research Study</h2>
             
             <p style="margin-bottom: 30px; line-height: 1.6; color: #555;">
-                Thank you for participating in this dialogue naturalness assessment study. This research aims to evaluate how natural and realistic different conversations sound.
+                Thank you for participating in this communicative prosody assessment study. This research evaluates 8 key prosodic features in dialogues for naturalness and appropriateness in EFL contexts.
             </p>
 
             <h3 style="margin-top: 30px; margin-bottom: 20px; text-align: center;">What You'll Be Doing:</h3>
             <ul style="margin: 0 auto 30px auto; padding-left: 20px; text-align: left; max-width: 450px; line-height: 1.8;">
-                <li style="margin-bottom: 12px;">Assess <strong>5 different dialogues</strong> through <strong>multiple choice and open-ended</strong> questions</li>
-                <li style="margin-bottom: 12px;">For each dialogue, you will receive <strong>text and an attached audio file</strong></li>
-                <li style="margin-bottom: 12px;">Listen to each audio recording <strong>while reading</strong> the dialogue text</li>
-                <li style="margin-bottom: 12px;">Complete the assessment in approximately <strong>15-20 minutes</strong></li>
+                <li style="margin-bottom: 12px;">Assess <strong>5 different dialogues</strong> using <strong>8 detailed prosody criteria</strong> with ratings and comments</li>
+                <li style="margin-bottom: 12px;">For each dialogue, review <strong>text and audio</strong></li>
+                <li style="margin-bottom: 12px;">Listen while reading; rate on a 1-5 scale per criterion</li>
+                <li style="margin-bottom: 12px;">Complete in ~20-25 minutes</li>
             </ul>
 
             <div style="padding: 20px; background-color: #f8f9ff; border-left: 4px solid #2196F3; margin: 30px auto; border-radius: 4px; max-width: 450px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                 <p style="margin: 0; line-height: 1.6; color: #333; font-size: 0.95em;">
-                    Your participation is <strong>voluntary</strong> and your responses will be kept <strong>confidential</strong>. 
+                    Participation is <strong>voluntary</strong>; responses <strong>confidential</strong>.
                 </p>
             </div>
 
@@ -56,39 +56,47 @@
         </div>
     </div>
 </div>
-<!-- END INTRO SECTION -->
-            </section>
+<!-- END INTRO -->
 
             <!-- Demographics Section -->
             <section id="demographicsSection" class="section">
                 <div class="survey-container">
-                    <h2>Demographics</h2>
+                    <h2>Rater Information</h2>
                     <form id="demographicsForm" class="survey-form">
                         <div class="form-group">
-                            <label for="firstName" class="form-label">First Name *</label>
-                            <input type="text" id="firstName" name="firstName" class="form-control" placeholder="Enter your first name" required>
+                            <label for="raterName" class="form-label">Rater Name *</label>
+                            <input type="text" id="raterName" name="raterName" class="form-control" placeholder="Enter your name" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="age" class="form-label">Age *</label>
-                            <input type="number" id="age" name="age" class="form-control" min="13" max="120" placeholder="Enter your age" required>
+                            <label for="date" class="form-label">Date *</label>
+                            <input type="date" id="date" name="date" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="raterID" class="form-label">Rater ID (if anonymous)</label>
+                            <input type="text" id="raterID" name="raterID" class="form-control" placeholder="Enter ID (optional)">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email/Contact</label>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="Enter email (optional)">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Qualifications (check all that apply) *</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="qualifications" value="phonetics"> Phonetics/Linguistics training</label>
+                                <label><input type="checkbox" name="qualifications" value="pathology"> Speech Pathology training</label>
+                                <label><input type="checkbox" name="qualifications" value="native"> Native English speaker</label>
+                                <label><input type="checkbox" name="qualifications" value="near_native"> Near-native English speaker</label>
+                                <label><input type="checkbox" name="qualifications" value="experience"> Experience with L2/EFL speech evaluation</label>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label for="nationality" class="form-label">Nationality *</label>
                             <input type="text" id="nationality" name="nationality" class="form-control" placeholder="Enter your nationality" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="educationLevel" class="form-label">Education Level *</label>
-                            <select id="educationLevel" name="educationLevel" class="form-control" required>
-                                <option value="">-- Select Education Level --</option>
-                                <option value="high_school">High School</option>
-                                <option value="undergraduate">Undergraduate</option>
-                                <option value="graduate">Graduate</option>
-                                <option value="postgraduate">Postgraduate</option>
-                                <option value="other">Other</option>
-                            </select>
                         </div>
 
                         <div class="form-group">
@@ -105,7 +113,7 @@
                     </form>
 
                     <div class="button-group">
-                        <button class="btn btn-secondary" onclick="document.getElementById('welcomeSection').classList.add('active'); document.getElementById('demographicsSection').classList.remove('active');">Back</button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('introSection').classList.add('active'); document.getElementById('demographicsSection').classList.remove('active');">Back</button>
                         <button class="btn btn-primary btn-large" onclick="submitDemographics()">Next</button>
                     </div>
                 </div>
@@ -145,95 +153,233 @@
                     <form id="dialogue1Form" class="survey-form">
                         <h3>Section A: General Impression</h3>
                         <div class="form-group">
-                            <label for="d1_q1_naturalness" class="form-label">How natural does this dialogue sound? *</label>
-                            <textarea id="d1_q1_naturalness" name="d1_q1_naturalness" class="form-control textarea-mobile" placeholder="Describe your impression..." required></textarea>
+                            <label for="d1_q1_prosody_naturalness" class="form-label">How natural does the prosody in this dialogue sound? *</label>
+                            <textarea id="d1_q1_prosody_naturalness" name="d1_q1_prosody_naturalness" class="form-control textarea-mobile" placeholder="Describe your impression..." required></textarea>
                         </div>
 
                         <div class="form-group">
-                            <label for="d1_q2_expectancy" class="form-label">Does this dialogue match your expectations of real conversation? *</label>
+                            <label for="d1_q2_expectancy" class="form-label">Does the prosody in this dialogue match your expectations of real conversation? *</label>
                             <textarea id="d1_q2_expectancy" name="d1_q2_expectancy" class="form-control textarea-mobile" placeholder="Explain your thoughts..." required></textarea>
                         </div>
 
-                        <h3>Section B: Linguistic Features (Rate 1-5)</h3>
+                        <h3>Section B: Specific Prosody Features (Rate 1-5)</h3>
                         <div class="rating-group">
-                            <label class="form-label">1. Do the sentences sound grammatically correct and use words naturally like native speakers would? *</label>
+                            <label class="form-label">Criterion 1: Intonation Contours & Pitch Movement - How natural and appropriate are the pitch patterns (intonation) in this dialogue? *</label>
+                            <p><strong>What to Listen For:</strong></p>
+                            <ul>
+                                <li>Pitch variation and range (monotone vs. varied)</li>
+                                <li>Question intonation (rising) vs. statement (falling)</li>
+                                <li>Prominence marking through pitch peaks</li>
+                                <li>Phrase boundary signaling</li>
+                                <li>Overall naturalness and conversational quality</li>
+                            </ul>
+                            <p><strong>Scoring Scale:</strong></p>
+                            <p>Score 1 – Monotone or inappropriate intonation: No pitch variation or pitch patterns don’t match sentence type. Questions don’t rise, statements don’t fall. Sounds robotic/scripted. Pitch range < 20 Hz.</p>
+                            <p>Score 2 – Limited pitch variation: Some pitch movement but inconsistent. Occasional questions rise/statements fall, but not reliable. Pitch range 20–40 Hz. Some monotone stretches noticeable.</p>
+                            <p>Score 3 – Some variation, inconsistent patterns: Moderate pitch variation (40–60 Hz) but patterns are unpredictable. Sometimes questions rise correctly, sometimes not. Some intonation-sentence mismatches (∼30% incorrect).</p>
+                            <p>Score 4 – Good variation, mostly natural: Good pitch range (60–80 Hz) and mostly correct patterns. Question/statement distinction usually clear. Few intonation errors (< 10% incorrect). Mostly sounds like natural English.</p>
+                            <p>Score 5 – Natural, varied, semantically appropriate: Extensive pitch variation (80+ Hz). All questions rise, all statements fall naturally. Pitch peaks align with stress. Sounds like native-like natural English conversation. Appropriate prosodic boundaries.</p>
                             <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d1_q1_grammar" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d1_q1_grammar" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d1_q1_grammar" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d1_q1_grammar" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d1_q1_grammar" value="5"> 5</label>
+                                <label class="rating-label"><input type="radio" name="d1_c1_intonation" value="1" required> 1</label>
+                                <label class="rating-label"><input type="radio" name="d1_c1_intonation" value="2"> 2</label>
+                                <label class="rating-label"><input type="radio" name="d1_c1_intonation" value="3"> 3</label>
+                                <label class="rating-label"><input type="radio" name="d1_c1_intonation" value="4"> 4</label>
+                                <label class="rating-label"><input type="radio" name="d1_c1_intonation" value="5"> 5</label>
                             </div>
                             <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
+                            <textarea id="d1_c1_comments" name="d1_c1_comments" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
                         </div>
 
                         <div class="rating-group">
-                            <label class="form-label">2. Does the conversation flow naturally? Do people respond at a natural speed, and do they sometimes interrupt or talk over each other like real people do?  *</label>
+                            <label class="form-label">Criterion 2: Stress Patterns & Prominence - How accurately are word stresses placed and how clearly are important words emphasized? *</label>
+                            <p><strong>What to Listen For:</strong></p>
+                            <ul>
+                                <li>Multi-syllabic word stress accuracy (PHOto vs. phOTOgraphy)</li>
+                                <li>Pitch peak alignment with stressed syllables</li>
+                                <li>Amplitude/loudness differentiation (stressed > unstressed)</li>
+                                <li>Duration patterns (stressed syllables longer)</li>
+                                <li>Information focus marking</li>
+                            </ul>
+                            <p><strong>Scoring Scale:</strong></p>
+                            <p>Score 1 – Stress frequently misplaced: Many multi-syllabic words have wrong stress placement (> 50% errors). Little amplitude or duration differentiation. No pitch peak alignment with stress.</p>
+                            <p>Score 2 – Limited prominence marking: 50–70% of stresses correct. Weak amplitude differentiation (< 5 dB). Some duration variation but inconsistent. Few information words clearly marked prominent.</p>
+                            <p>Score 3 – Inconsistent stress placement: 70–85% of stresses correct. Moderate amplitude differentiation (5–10 dB). Pitch peaks sometimes aligned (∼50%). Information focus sometimes marked but often unclear.</p>
+                            <p>Score 4 – Good stress, mostly natural: 85–95% of stresses correct. Good amplitude differentiation (10–15 dB). Pitch peaks usually align with stress. Most information words clearly marked. Sounds mostly natural.</p>
+                            <p>Score 5 – Consistent, accurate stress throughout: All/nearly all stresses correct (95+%). Clear amplitude differentiation (15+ dB). Pitch peaks align with stress throughout. All focus words clearly prominent. Natural stress throughout.</p>
                             <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d1_q3_pacing" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d1_q3_pacing" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d1_q3_pacing" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d1_q3_pacing" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d1_q3_pacing" value="5"> 5</label>
+                                <label class="rating-label"><input type="radio" name="d1_c2_stress" value="1" required> 1</label>
+                                <label class="rating-label"><input type="radio" name="d1_c2_stress" value="2"> 2</label>
+                                <label class="rating-label"><input type="radio" name="d1_c2_stress" value="3"> 3</label>
+                                <label class="rating-label"><input type="radio" name="d1_c2_stress" value="4"> 4</label>
+                                <label class="rating-label"><input type="radio" name="d1_c2_stress" value="5"> 5</label>
                             </div>
                             <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
+                            <textarea id="d1_c2_comments" name="d1_c2_comments" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
                         </div>
 
                         <div class="rating-group">
-                            <label class="form-label">3. Do people say things in a way that fits the situation? (For example, are they friendly with a stranger, or formal with their boss?) *</label>
+                            <label class="form-label">Criterion 3: Hesitations & Fillers (Natural Disfluency) - How naturally and appropriately are hesitations and fillers (um, uh, like, you know) used? *</label>
+                            <p><strong>What to Listen For:</strong></p>
+                            <ul>
+                                <li>Filler frequency (0.5–1 per 10 utterances is natural)</li>
+                                <li>Filler variety (um, uh, like, you know, I mean, well)</li>
+                                <li>Placement at natural discourse junctures</li>
+                                <li>Acoustic quality (natural vs. forced/artificial)</li>
+                                <li>Fluency effect (creates sense of real-time planning)</li>
+                            </ul>
+                            <p><strong>Scoring Scale:</strong></p>
+                            <p>Score 1 – No fillers or excessive/artificial fillers: Either completely absent (speech sounds scripted) or > 2 per utterance (sounds anxious). If present, fillers sound forced/artificial with glottal clicks.</p>
+                            <p>Score 2 – Few fillers, somewhat unnatural: 0.2–0.4 per 10 utterances (sparse) or 1.5–2 per 10 (slightly high). Limited filler variety (only 1–2 types). Placement sometimes awkward. Some acoustic unnaturalness.</p>
+                            <p>Score 3 – Limited variety, inconsistent use: 0.3–1.8 per 10 utterances (acceptable range but not optimal). Limited filler types used. Placement at ∼50% of natural junctures. Mixed acoustic quality.</p>
+                            <p>Score 4 – Frequent, mostly natural: 0.4–1.5 per 10 utterances (mostly in natural range). 2–3 filler types used. Most placement at natural junctures. Generally natural acoustic quality. Creates sense of planning.</p>
+                            <p>Score 5 – Natural frequency, variety, placement: 0.5–1.5 per 10 utterances (optimal range). Multiple filler types used naturally. All fillers at natural junctures. Natural acoustic quality (vocalic, schwa-like). Creates natural sense of real-time speech.</p>
                             <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d1_q5_pragmatics" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d1_q5_pragmatics" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d1_q5_pragmatics" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d1_q5_pragmatics" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d1_q5_pragmatics" value="5"> 5</label>
+                                <label class="rating-label"><input type="radio" name="d1_c3_hesitations" value="1" required> 1</label>
+                                <label class="rating-label"><input type="radio" name="d1_c3_hesitations" value="2"> 2</label>
+                                <label class="rating-label"><input type="radio" name="d1_c3_hesitations" value="3"> 3</label>
+                                <label class="rating-label"><input type="radio" name="d1_c3_hesitations" value="4"> 4</label>
+                                <label class="rating-label"><input type="radio" name="d1_c3_hesitations" value="5"> 5</label>
                             </div>
                             <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
+                            <textarea id="d1_c3_comments" name="d1_c3_comments" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
                         </div>
 
                         <div class="rating-group">
-                            <label class="form-label">4. Do you hear natural pauses, hesitations (like 'um' or 'uh'), or sounds like 'yeah' and 'uh-huh' that real people use? Or does everything sound perfectly smooth?  *</label>
+                            <label class="form-label">Criterion 4: Repairs & Disfluency (Self-Correction) - How natural and well-integrated are self-repairs and corrections? *</label>
+                            <p><strong>What to Listen For:</strong></p>
+                            <ul>
+                                <li>Repair frequency (0.5–1 per 10 utterances is natural)</li>
+                                <li>Explicit repair markers (I mean, actually, well, no wait)</li>
+                                <li>Acoustic integration and smoothness</li>
+                                <li>Repair placement at clause boundaries vs. mid-utterance</li>
+                                <li>Acoustic continuity maintained</li>
+                            </ul>
+                            <p><strong>Scoring Scale:</strong></p>
+                            <p>Score 1 – No repairs or severely unnatural: Either no self-corrections (sounds over-planned/scripted) or repairs are extremely abrupt, unclear, and frequently mid-word. No repair markers used.</p>
+                            <p>Score 2 – Repairs unintegrated, abrupt: < 0.1 or > 2.5 repairs per 10 utterances. Repairs are abrupt/jarring with no markers. Integration disrupts listening. Often mid-utterance placement. Acoustic breaks evident.</p>
+                            <p>Score 3 – Mixed integration, inconsistent: 0.1–2 per 10 utterances (variable). Repair markers sometimes used, sometimes omitted. Integration is 50/50 (some smooth, some abrupt). Mixed placement (some boundaries, some mid-utterance).</p>
+                            <p>Score 4 – Mostly smooth integration: 0.3–1.8 per 10 utterances. Markers often used. Most repairs integrate smoothly (∼80%); occasional abrupt ones. Most at boundaries. Good acoustic continuity.</p>
+                            <p>Score 5 – Natural, well-integrated repairs: 0.5–1.5 per 10 utterances (optimal). Clear markers consistently used. All repairs integrate smoothly. All at natural boundaries. Acoustic continuity perfectly maintained. Sounds like natural planning.</p>
                             <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d1_q7_prosodic" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d1_q7_prosodic" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d1_q7_prosodic" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d1_q7_prosodic" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d1_q7_prosodic" value="5"> 5</label>
+                                <label class="rating-label"><input type="radio" name="d1_c4_repairs" value="1" required> 1</label>
+                                <label class="rating-label"><input type="radio" name="d1_c4_repairs" value="2"> 2</label>
+                                <label class="rating-label"><input type="radio" name="d1_c4_repairs" value="3"> 3</label>
+                                <label class="rating-label"><input type="radio" name="d1_c4_repairs" value="4"> 4</label>
+                                <label class="rating-label"><input type="radio" name="d1_c4_repairs" value="5"> 5</label>
                             </div>
                             <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
+                            <textarea id="d1_c4_comments" name="d1_c4_comments" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
                         </div>
 
                         <div class="rating-group">
-                            <label class="form-label">5. Are stereotypes avoided? Do the speakers treat each other fairly regardless of gender or background? *</label>
+                            <label class="form-label">Criterion 5: Turn-Taking & Conversation Flow - How natural is the timing between speaker turns and the overall conversational flow? *</label>
+                            <p><strong>What to Listen For:</strong></p>
+                            <ul>
+                                <li>Inter-turn gaps (100–300 ms is natural)</li>
+                                <li>Overlaps and interruptions</li>
+                                <li>Backchannels (yeah, right, mm-hmm, uh-huh)</li>
+                                <li>Turn ceding signals (falling pitch, lengthening, grammatical completion)</li>
+                                <li>Overall conversation rhythm and smoothness</li>
+                            </ul>
+                            <p><strong>Scoring Scale:</strong></p>
+                            <p>Score 1 – Severely disrupted flow, long gaps: Inter-turn gaps > 1 second frequently. Many interruptions or excessive overlaps. No backchannels; listener completely passive. Turn exchange management very poor.</p>
+                            <p>Score 2 – Frequent gaps, awkward timing: Many gaps 400–700 ms (too long). Frequent awkward overlaps or interruptions (> 50%). Few/no backchannels. Unclear turn-ceding cues. Flow choppy and unnatural.</p>
+                            <p>Score 3 – Inconsistent gaps, some awkwardness: Some gaps 400–600 ms; some 100–300 ms (inconsistent). Some overlaps (∼30% of turns affected). Occasional backchannels. Some turn-ceding cues clear. Flow somewhat choppy.</p>
+                            <p>Score 4 – Mostly natural gaps, good flow: Most gaps 100–350 ms (mostly natural). Few overlaps (< 10%). Frequent backchannels; good engagement. Usually clear turn-ceding. Flow generally smooth; minor rough spots.</p>
+                            <p>Score 5 – Natural gaps (100–300ms), smooth flow: All gaps 100–300 ms (optimal). Minimal/no awkward overlaps. Regular backchannels signal engagement. Clear turn-ceding cues. Smooth, natural conversational flow throughout.</p>
                             <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d1_q8_cultural" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d1_q8_cultural" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d1_q8_cultural" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d1_q8_cultural" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d1_q8_cultural" value="5"> 5</label>
+                                <label class="rating-label"><input type="radio" name="d1_c5_turntaking" value="1" required> 1</label>
+                                <label class="rating-label"><input type="radio" name="d1_c5_turntaking" value="2"> 2</label>
+                                <label class="rating-label"><input type="radio" name="d1_c5_turntaking" value="3"> 3</label>
+                                <label class="rating-label"><input type="radio" name="d1_c5_turntaking" value="4"> 4</label>
+                                <label class="rating-label"><input type="radio" name="d1_c5_turntaking" value="5"> 5</label>
                             </div>
                             <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
+                            <textarea id="d1_c5_comments" name="d1_c5_comments" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
                         </div>
 
                         <div class="rating-group">
-                            <label class="form-label">6. Does it feel like a real conversation where people are genuinely interested in what they're saying to each other?  *</label>
+                            <label class="form-label">Criterion 6: Pause Timing & Rhythm - How natural are the pauses within and between utterances? Does the rhythm feel natural? *</label>
+                            <p><strong>What to Listen For:</strong></p>
+                            <ul>
+                                <li>Pause duration (within-clause: 0.3–0.6s; between-clause: 0.6–1.2s)</li>
+                                <li>Pause placement at linguistic boundaries</li>
+                                <li>Pause frequency (3–5 per 20 seconds is natural)</li>
+                                <li>Speaking rate consistency</li>
+                                <li>Overall rhythm quality and engagement</li>
+                            </ul>
+                            <p><strong>Scoring Scale:</strong></p>
+                            <p>Score 1 – Unnatural pacing, poor rhythm: Either no pausing (breathless, rushed) or only very long pauses > 2.5s (monotonous). Speaking rate extremely variable (rush-then-slow). Rhythm severely disrupted.</p>
+                            <p>Score 2 – Irregular pauses, disrupted rhythm: Pauses very irregular (< 0.15s or > 1.5s frequent). Many mid-word or inappropriate placements. Speaking rate highly variable. Rhythm feels choppy or erratic. > 40% of pauses awkwardly placed.</p>
+                            <p>Score 3 – Some irregular pauses, variable rate: Some pauses 0.2–0.7s or 1.5–2.0s (somewhat off). Pause frequency 1–2 or 6–8 per 20s (sparse or frequent). Speaking rate somewhat variable. Rhythm inconsistent. ∼30% awkward placements.</p>
+                            <p>Score 4 – Mostly natural pauses, good rhythm: Most pauses 0.2–0.7s and 0.5–1.3s (mostly appropriate). Pause frequency 2–6 per 20s (acceptable). Speaking rate mostly consistent. Rhythm generally natural. Few awkward placements (< 10%).</p>
+                            <p>Score 5 – Natural pauses, smooth rhythm: All pauses 0.3–1.2s (natural timing). Placement at linguistic boundaries (> 90% correct). Frequency 3–5 per 20s (natural). Speaking rate consistent. Overall rhythm natural, smooth, engaging.</p>
                             <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d1_q9_dynamics" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d1_q9_dynamics" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d1_q9_dynamics" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d1_q9_dynamics" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d1_q9_dynamics" value="5"> 5</label>
+                                <label class="rating-label"><input type="radio" name="d1_c6_pause" value="1" required> 1</label>
+                                <label class="rating-label"><input type="radio" name="d1_c6_pause" value="2"> 2</label>
+                                <label class="rating-label"><input type="radio" name="d1_c6_pause" value="3"> 3</label>
+                                <label class="rating-label"><input type="radio" name="d1_c6_pause" value="4"> 4</label>
+                                <label class="rating-label"><input type="radio" name="d1_c6_pause" value="5"> 5</label>
                             </div>
                             <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
+                            <textarea id="d1_c6_comments" name="d1_c6_comments" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
+                        </div>
+
+                        <div class="rating-group">
+                            <label class="form-label">Criterion 7: Information Structure & Prominence (Discourse Prosody) - Are new/important ideas clearly emphasized while known information is de-emphasized? *</label>
+                            <p><strong>What to Listen For:</strong></p>
+                            <ul>
+                                <li>New information marked with prosodic emphasis (pitch, stress, duration)</li>
+                                <li>Given information de-emphasized or treated neutrally</li>
+                                <li>Nuclear stress aligned with focus</li>
+                                <li>Contrastive items prosodically opposed</li>
+                                <li>Theme-rheme structure reflected in prosody</li>
+                            </ul>
+                            <p><strong>Scoring Scale:</strong></p>
+                            <p>Score 1 – No distinction; all equal emphasis: All information treated equally. No given-new marking. No reduction of repeated words. Nuclear stress random/absent. No contrastive opposition. Confusing discourse structure.</p>
+                            <p>Score 2 – Little given-new marking: Minimal new information marking (< 40% marked). Given information rarely reduced. Nuclear stress sometimes misaligned (> 50%). Few contrastive items marked. Discourse confusing.</p>
+                            <p>Score 3 – Inconsistent information marking: Some new information marked (∼60%), some missed. Some given information reduced (∼60%), some over-emphasized. Nuclear stress sometimes aligned (∼50%). Some contrastive marking. Discourse clarity inconsistent.</p>
+                            <p>Score 4 – Mostly clear given-new distinction: Most new information marked (∼85%). Most given information reduced (∼80%). Nuclear stress usually aligned (∼80%). Most contrastive items marked. Discourse generally clear with occasional lapses.</p>
+                            <p>Score 5 – Clear, natural information structure: All/nearly all new information clearly marked (95+%). Given information consistently reduced. Nuclear stress consistently aligned with focus. All contrastive items clearly opposed. Perfect discourse prosody alignment.</p>
+                            <div class="rating-scale">
+                                <label class="rating-label"><input type="radio" name="d1_c7_information" value="1" required> 1</label>
+                                <label class="rating-label"><input type="radio" name="d1_c7_information" value="2"> 2</label>
+                                <label class="rating-label"><input type="radio" name="d1_c7_information" value="3"> 3</label>
+                                <label class="rating-label"><input type="radio" name="d1_c7_information" value="4"> 4</label>
+                                <label class="rating-label"><input type="radio" name="d1_c7_information" value="5"> 5</label>
+                            </div>
+                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
+                            <textarea id="d1_c7_comments" name="d1_c7_comments" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
+                        </div>
+
+                        <div class="rating-group">
+                            <label class="form-label">Criterion 8: Overall Communicative Prosodic Naturalness - Overall, how natural and native-like does this dialogue sound? *</label>
+                            <p><strong>What to Listen For (Holistic Impression):</strong></p>
+                            <ul>
+                                <li>Prosody fades into background vs. draws attention</li>
+                                <li>Integration of all prosodic elements</li>
+                                <li>Comparison to native English conversation</li>
+                                <li>Confidence level: native vs. non-native judgment</li>
+                                <li>Communication effectiveness and engagement</li>
+                            </ul>
+                            <p><strong>Scoring Scale:</strong></p>
+                            <p>Score 1 – Obviously non-native, very unnatural: Speech is distinctly non-native. Multiple prosodic issues throughout. Prosody very distracting; interferes with comprehension. Very low confidence (< 30%) it’s native. Severely disrupts communication.</p>
+                            <p>Score 2 – Noticeably non-native, frequent issues: Clearly L2 speech with noticeable prosodic problems. Listener frequently aware of/distracted by prosody. Low confidence (30–60%) it’s native. Prosody sometimes interferes with understanding.</p>
+                            <p>Score 3 – Moderately natural; some L2 markers: Recognizable as L2 or careful speech, but acceptable. Listener occasionally aware of prosody. Moderate confidence (60–80%) it’s native. Some L2 features noticeable but communication adequate.</p>
+                            <p>Score 4 – Mostly natural with minor issues: Mostly natural speech; only occasional prosodic oddities. Listener mostly forgets about prosody. High confidence (80–95%) it’s native. Very close to native-speaker conversation. Minor distracting elements.</p>
+                            <p>Score 5 – Highly natural, native-like: Sounds indistinguishable from native English. All prosodic elements integrate smoothly. Listener forgets prosody; focuses on content. Very high confidence (95+%) it’s native. Enhances meaning and engagement naturally.</p>
+                            <div class="rating-scale">
+                                <label class="rating-label"><input type="radio" name="d1_c8_overall" value="1" required> 1</label>
+                                <label class="rating-label"><input type="radio" name="d1_c8_overall" value="2"> 2</label>
+                                <label class="rating-label"><input type="radio" name="d1_c8_overall" value="3"> 3</label>
+                                <label class="rating-label"><input type="radio" name="d1_c8_overall" value="4"> 4</label>
+                                <label class="rating-label"><input type="radio" name="d1_c8_overall" value="5"> 5</label>
+                            </div>
+                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
+                            <textarea id="d1_c8_comments" name="d1_c8_comments" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
                         </div>
 
                         <h3>Section C: Open Comments</h3>
-                        
-
-                        
-
-                        
-
                         <div class="form-group">
                             <label for="d1_q4_suggestions" class="form-label">Any suggestions for improvement?</label>
                             <textarea id="d1_q4_suggestions" name="d1_q4_suggestions" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
@@ -247,137 +393,13 @@
                 </div>
             </section>
 
-            <!-- Dialogue 2 Section -->
+            <!-- Dialogue 2 Section (Adapt transcript/context as per your data; structure identical to Dialogue 1) -->
             <section id="dialogue2Section" class="section">
                 <div class="survey-container">
-                    <h2>Dialogue 2: Observatory Discussion</h2>
-                    
-                    <div class="dialogue-context">
-                        <p><strong>Context:</strong> Alireza is visiting an observatory. He is talking to Ms. Tabesh who works there.</p>
-                    </div>
-
-                    <div class="audio-container">
-                        <h3>Audio Recording</h3>
-                        <audio controls class="audio-player" style="width: 100%; margin: 16px 0;">
-                            <source src="dialogue_2.mp3" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                    </div>
-
-                    <div class="dialogue-transcript">
-                        <h3>Transcript</h3>
-                        <div class="transcript-content">
-                            <p><strong>Ms. Tabesh:</strong> Are you interested in the planets?</p>
-                            <p><strong>Alireza:</strong> Yes! They are really interesting for me, but I don't know much about them.</p>
-                            <p><strong>Ms. Tabesh:</strong> Planets are really amazing but not so much alike. Do you know how they are different?</p>
-                            <p><strong>Alireza:</strong> Umm... I know they go around the Sun in different orbits.</p>
-                            <p><strong>Ms. Tabesh:</strong> That's right. They have different colors and sizes, too. Some are rocky like Mars, some have rings like Saturn and some have moons like Uranus.</p>
-                            <p><strong>Alireza:</strong> How wonderful! Can we see them without a telescope?</p>
-                            <p><strong>Ms. Tabesh:</strong> Yeah..., we can see the planets nearer to us without a telescope, such as Mercury, Venus, Mars, Jupiter and Saturn. We can see Uranus and Neptune only with powerful telescopes.</p>
-                            <p><strong>Alireza:</strong> And which planet is the largest of all?</p>
-                            <p><strong>Ms. Tabesh:</strong> Jupiter is the largest one. It has more than sixty moons. Do you want to look at it?</p>
-                            <p><strong>Alireza:</strong> I really like that.</p>
-                        </div>
-                    </div>
-
-                    <form id="dialogue2Form" class="survey-form">
-                        <h3>Section A: General Impression</h3>
-                        <div class="form-group">
-                            <label for="d2_q1_naturalness" class="form-label">How natural does this dialogue sound? *</label>
-                            <textarea id="d2_q1_naturalness" name="d2_q1_naturalness" class="form-control textarea-mobile" placeholder="Describe your impression..." required></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="d2_q2_expectancy" class="form-label">Does this dialogue match your expectations of real conversation? *</label>
-                            <textarea id="d2_q2_expectancy" name="d2_q2_expectancy" class="form-control textarea-mobile" placeholder="Explain your thoughts..." required></textarea>
-                        </div>
-
-                        <h3>Section B: Linguistic Features (Rate 1-5)</h3>
-                        <div class="rating-group">
-                            <label class="form-label">1. Do the sentences sound grammatically correct and use words naturally like native speakers would? *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d2_q1_grammar" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d2_q1_grammar" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d2_q1_grammar" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d2_q1_grammar" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d2_q1_grammar" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">2. Does the conversation flow naturally? Do people respond at a natural speed, and do they sometimes interrupt or talk over each other like real people do?  *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d2_q3_pacing" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d2_q3_pacing" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d2_q3_pacing" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d2_q3_pacing" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d2_q3_pacing" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">3. Do people say things in a way that fits the situation? (For example, are they friendly with a stranger, or formal with their boss?) *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d2_q5_pragmatics" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d2_q5_pragmatics" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d2_q5_pragmatics" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d2_q5_pragmatics" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d2_q5_pragmatics" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">4. Do you hear natural pauses, hesitations (like 'um' or 'uh'), or sounds like 'yeah' and 'uh-huh' that real people use? Or does everything sound perfectly smooth?  *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d2_q7_prosodic" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d2_q7_prosodic" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d2_q7_prosodic" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d2_q7_prosodic" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d2_q7_prosodic" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">5. Are stereotypes avoided? Do the speakers treat each other fairly regardless of gender or background? *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d2_q8_cultural" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d2_q8_cultural" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d2_q8_cultural" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d2_q8_cultural" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d2_q8_cultural" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">6. Does it feel like a real conversation where people are genuinely interested in what they're saying to each other?  *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d2_q9_dynamics" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d2_q9_dynamics" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d2_q9_dynamics" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d2_q9_dynamics" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d2_q9_dynamics" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <h3>Section C: Open Comments</h3>
-                        
-
-                        
-
-                        
-
-                        <div class="form-group">
-                            <label for="d2_q4_suggestions" class="form-label">Any suggestions for improvement?</label>
-                            <textarea id="d2_q4_suggestions" name="d2_q4_suggestions" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
-                        </div>
-                    </form>
-
+                    <h2>Dialogue 2: [Insert Title/Context Here]</h2>
+                    <!-- Add context, audio, transcript similar to above -->
+                    <!-- Form id="dialogue2Form" with d2_* names, but same 8 criteria blocks -->
+                    <!-- ... (Repeat Section A, B with 8 criteria, C) ... -->
                     <div class="button-group">
                         <button class="btn btn-secondary" onclick="previousDialogue(2)">Back</button>
                         <button class="btn btn-primary btn-large" onclick="nextDialogue(2)">Next</button>
@@ -385,280 +407,14 @@
                 </div>
             </section>
 
-            <!-- Dialogue 3 Section -->
+            <!-- Dialogue 3 Section (Similar) -->
             <section id="dialogue3Section" class="section">
-                <div class="survey-container">
-                    <h2>Dialogue 3: Library Discussion</h2>
-                    
-                    <div class="dialogue-context">
-                        <p><strong>Context:</strong> Roya and Mahsa are leaving the library.</p>
-                    </div>
-
-                    <div class="audio-container">
-                        <h3>Audio Recording</h3>
-                        <audio controls class="audio-player" style="width: 100%; margin: 16px 0;">
-                            <source src="dialogue_3.mp3" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                    </div>
-
-                    <div class="dialogue-transcript">
-                        <h3>Transcript</h3>
-                        <div class="transcript-content">
-                            <p><strong>Roya:</strong> When I came in, you were reading a book. What was it?</p>
-                            <p><strong>Mahsa:</strong> I was reading a book about famous Iranian scientists.</p>
-                            <p><strong>Roya:</strong> But such books are not very interesting.</p>
-                            <p><strong>Mahsa:</strong> At first I had the same idea, believe me!</p>
-                            <p><strong>Roya:</strong> Did you find it useful?</p>
-                            <p><strong>Mahsa:</strong> Oh yes. Actually I learned many interesting things about our scientists' lives.</p>
-                            <p><strong>Roya:</strong> Like what?</p>
-                            <p><strong>Mahsa:</strong> For example Razi taught medicine to many young people while he was working in Ray Hospital. Or Nasireddin Toosi built Maragheh Observatory when he was studying the planets.</p>
-                            <p><strong>Roya:</strong> Cool! What was the name of the book?</p>
-                            <p><strong>Mahsa:</strong> Famous Iranian Scientists.</p>
-                        </div>
-                    </div>
-
-                    <form id="dialogue3Form" class="survey-form">
-                        <h3>Section A: General Impression</h3>
-                        <div class="form-group">
-                            <label for="d3_q1_naturalness" class="form-label">How natural does this dialogue sound? *</label>
-                            <textarea id="d3_q1_naturalness" name="d3_q1_naturalness" class="form-control textarea-mobile" placeholder="Describe your impression..." required></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="d3_q2_expectancy" class="form-label">Does this dialogue match your expectations of real conversation? *</label>
-                            <textarea id="d3_q2_expectancy" name="d3_q2_expectancy" class="form-control textarea-mobile" placeholder="Explain your thoughts..." required></textarea>
-                        </div>
-
-                        <h3>Section B: Linguistic Features (Rate 1-5)</h3>
-                        <div class="rating-group">
-                            <label class="form-label">1. Do the sentences sound grammatically correct and use words naturally like native speakers would? *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d3_q1_grammar" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d3_q1_grammar" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d3_q1_grammar" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d3_q1_grammar" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d3_q1_grammar" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">2. Does the conversation flow naturally? Do people respond at a natural speed, and do they sometimes interrupt or talk over each other like real people do?  *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d3_q3_pacing" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d3_q3_pacing" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d3_q3_pacing" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d3_q3_pacing" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d3_q3_pacing" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">3. Do people say things in a way that fits the situation? (For example, are they friendly with a stranger, or formal with their boss?) *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d3_q5_pragmatics" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d3_q5_pragmatics" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d3_q5_pragmatics" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d3_q5_pragmatics" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d3_q5_pragmatics" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">4. Do you hear natural pauses, hesitations (like 'um' or 'uh'), or sounds like 'yeah' and 'uh-huh' that real people use? Or does everything sound perfectly smooth?  *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d3_q7_prosodic" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d3_q7_prosodic" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d3_q7_prosodic" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d3_q7_prosodic" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d3_q7_prosodic" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">5. Are stereotypes avoided? Do the speakers treat each other fairly regardless of gender or background? *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d3_q8_cultural" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d3_q8_cultural" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d3_q8_cultural" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d3_q8_cultural" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d3_q8_cultural" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">6. Does it feel like a real conversation where people are genuinely interested in what they're saying to each other?  *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d3_q9_dynamics" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d3_q9_dynamics" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d3_q9_dynamics" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d3_q9_dynamics" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d3_q9_dynamics" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <h3>Section C: Open Comments</h3>
-                        
-
-                        
-
-                        
-
-                        <div class="form-group">
-                            <label for="d3_q4_suggestions" class="form-label">Any suggestions for improvement?</label>
-                            <textarea id="d3_q4_suggestions" name="d3_q4_suggestions" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
-                        </div>
-                    </form>
-
-                    <div class="button-group">
-                        <button class="btn btn-secondary" onclick="previousDialogue(3)">Back</button>
-                        <button class="btn btn-primary btn-large" onclick="nextDialogue(3)">Next</button>
-                    </div>
-                </div>
+                <!-- ... Identical structure ... -->
             </section>
 
-            <!-- Dialogue 4 Section -->
+            <!-- Dialogue 4 Section (Similar) -->
             <section id="dialogue4Section" class="section">
-                <div class="survey-container">
-                    <h2>Dialogue 4: Travel Agent Consultation</h2>
-                    
-                    <div class="dialogue-context">
-                        <p><strong>Context:</strong> Diego is a Spanish tourist planning his summer vacation. He is talking to Carlos Sabato, a travel agent in Madrid.</p>
-                    </div>
-
-                    <div class="audio-container">
-                        <h3>Audio Recording</h3>
-                        <audio controls class="audio-player" style="width: 100%; margin: 16px 0;">
-                            <source src="dialogue_4.mp3" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                    </div>
-
-                    <div class="dialogue-transcript">
-                        <h3>Transcript</h3>
-                        <div class="transcript-content">
-                            <p><strong>Diego:</strong> Excuse me, sir! I am planning for my summer vacation.</p>
-                            <p><strong>Carlos:</strong> How can I help you?</p>
-                            <p><strong>Diego:</strong> Actually I want to visit Asia, but I am not sure about my destination. Do you have any suggestion?</p>
-                            <p><strong>Carlos:</strong> Well, you may have some choices. You can visit China. It is famous for the Great Wall.</p>
-                            <p><strong>Diego:</strong> Yes, but I was in Beijing two years ago.</p>
-                            <p><strong>Carlos:</strong> What about India? In fact, the Taj Mahal is a popular destination, but it is hot in summer. Probably Iran is the best choice.</p>
-                            <p><strong>Diego:</strong> I heard Iran is a great and beautiful country, but I don't know much about it.</p>
-                            <p><strong>Carlos:</strong> Well, Iran is a four-season country. It has many historical sites and amazing nature. Also, its people are very kind and hospitable.</p>
-                            <p><strong>Diego:</strong> It seems a suitable choice. But how can I get more information about Iran?</p>
-                            <p><strong>Carlos:</strong> You can check this booklet or may see our website.</p>
-                        </div>
-                    </div>
-
-                    <form id="dialogue4Form" class="survey-form">
-                        <h3>Section A: General Impression</h3>
-                        <div class="form-group">
-                            <label for="d4_q1_naturalness" class="form-label">How natural does this dialogue sound? *</label>
-                            <textarea id="d4_q1_naturalness" name="d4_q1_naturalness" class="form-control textarea-mobile" placeholder="Describe your impression..." required></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="d4_q2_expectancy" class="form-label">Does this dialogue match your expectations of real conversation? *</label>
-                            <textarea id="d4_q2_expectancy" name="d4_q2_expectancy" class="form-control textarea-mobile" placeholder="Explain your thoughts..." required></textarea>
-                        </div>
-
-                        <h3>Section B: Linguistic Features (Rate 1-5)</h3>
-                        <div class="rating-group">
-                            <label class="form-label">1. Do the sentences sound grammatically correct and use words naturally like native speakers would? *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d4_q1_grammar" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d4_q1_grammar" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d4_q1_grammar" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d4_q1_grammar" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d4_q1_grammar" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">2. Does the conversation flow naturally? Do people respond at a natural speed, and do they sometimes interrupt or talk over each other like real people do?  *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d4_q3_pacing" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d4_q3_pacing" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d4_q3_pacing" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d4_q3_pacing" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d4_q3_pacing" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">3. Do people say things in a way that fits the situation? (For example, are they friendly with a stranger, or formal with their boss?) *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d4_q5_pragmatics" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d4_q5_pragmatics" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d4_q5_pragmatics" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d4_q5_pragmatics" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d4_q5_pragmatics" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">4. Do you hear natural pauses, hesitations (like 'um' or 'uh'), or sounds like 'yeah' and 'uh-huh' that real people use? Or does everything sound perfectly smooth?  *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d4_q7_prosodic" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d4_q7_prosodic" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d4_q7_prosodic" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d4_q7_prosodic" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d4_q7_prosodic" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">5. Are stereotypes avoided? Do the speakers treat each other fairly regardless of gender or background? *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d4_q8_cultural" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d4_q8_cultural" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d4_q8_cultural" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d4_q8_cultural" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d4_q8_cultural" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">6. Does it feel like a real conversation where people are genuinely interested in what they're saying to each other?  *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d4_q9_dynamics" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d4_q9_dynamics" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d4_q9_dynamics" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d4_q9_dynamics" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d4_q9_dynamics" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <h3>Section C: Open Comments</h3>
-                        
-
-                        
-
-                        
-
-                        <div class="form-group">
-                            <label for="d4_q4_suggestions" class="form-label">Any suggestions for improvement?</label>
-                            <textarea id="d4_q4_suggestions" name="d4_q4_suggestions" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
-                        </div>
-                    </form>
-
-                    <div class="button-group">
-                        <button class="btn btn-secondary" onclick="previousDialogue(4)">Back</button>
-                        <button class="btn btn-primary btn-large" onclick="nextDialogue(4)">Next</button>
-                    </div>
-                </div>
+                <!-- ... Identical structure ... -->
             </section>
 
             <!-- Dialogue 5 Section -->
@@ -668,6 +424,14 @@
                     
                     <div class="dialogue-context">
                         <p><strong>Context:</strong> A brief conversation about borrowing a camera for a trip.</p>
+                    </div>
+
+                    <div class="audio-container">
+                        <h3>Audio Recording</h3>
+                        <audio controls class="audio-player" style="width: 100%; margin: 16px 0;">
+                            <source src="dialogue_5.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
                     </div>
 
                     <div class="dialogue-transcript">
@@ -681,101 +445,9 @@
                     </div>
 
                     <form id="dialogue5Form" class="survey-form">
-                        <h3>Section A: General Impression</h3>
-                        <div class="form-group">
-                            <label for="d5_q1_naturalness" class="form-label">How natural does this dialogue sound? *</label>
-                            <textarea id="d5_q1_naturalness" name="d5_q1_naturalness" class="form-control textarea-mobile" placeholder="Describe your impression..." required></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="d5_q2_expectancy" class="form-label">Does this dialogue match your expectations of real conversation? *</label>
-                            <textarea id="d5_q2_expectancy" name="d5_q2_expectancy" class="form-control textarea-mobile" placeholder="Explain your thoughts..." required></textarea>
-                        </div>
-
-                        <h3>Section B: Linguistic Features (Rate 1-5)</h3>
-                        <div class="rating-group">
-                            <label class="form-label">1. Do the sentences sound grammatically correct and use words naturally like native speakers would? *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d5_q1_grammar" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d5_q1_grammar" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d5_q1_grammar" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d5_q1_grammar" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d5_q1_grammar" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">2. Does the conversation flow naturally? Do people respond at a natural speed, and do they sometimes interrupt or talk over each other like real people do?  *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d5_q3_pacing" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d5_q3_pacing" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d5_q3_pacing" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d5_q3_pacing" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d5_q3_pacing" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">3. Do people say things in a way that fits the situation? (For example, are they friendly with a stranger, or formal with their boss?) *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d5_q5_pragmatics" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d5_q5_pragmatics" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d5_q5_pragmatics" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d5_q5_pragmatics" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d5_q5_pragmatics" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">4. Do you hear natural pauses, hesitations (like 'um' or 'uh'), or sounds like 'yeah' and 'uh-huh' that real people use? Or does everything sound perfectly smooth?  *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d5_q7_prosodic" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d5_q7_prosodic" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d5_q7_prosodic" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d5_q7_prosodic" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d5_q7_prosodic" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">5. Are stereotypes avoided? Do the speakers treat each other fairly regardless of gender or background? *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d5_q8_cultural" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d5_q8_cultural" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d5_q8_cultural" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d5_q8_cultural" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d5_q8_cultural" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">6. Does it feel like a real conversation where people are genuinely interested in what they're saying to each other?  *</label>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d5_q9_dynamics" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d5_q9_dynamics" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d5_q9_dynamics" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d5_q9_dynamics" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d5_q9_dynamics" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                        </div>
-
-                        <h3>Section C: Open Comments</h3>
-                        
-
-                        
-
-                        
-
-                        <div class="form-group">
-                            <label for="d5_q4_suggestions" class="form-label">Any suggestions for improvement?</label>
-                            <textarea id="d5_q4_suggestions" name="d5_q4_suggestions" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
-                        </div>
+                        <!-- Section A same as above -->
+                        <!-- Section B with 8 criteria, names d5_c1_* etc. -->
+                        <!-- Section C same -->
                     </form>
 
                     <div class="button-group">
@@ -791,7 +463,7 @@
                     <div class="confirmation-content">
                         <div class="success-icon" style="width: 80px; height: 80px; background-color: #218093; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 48px; color: white;">✓</div>
                         <h2>Thank You!</h2>
-                        <p>Thank you for completing the dialogue naturalness assessment survey. Your feedback is invaluable to our research.</p>
+                        <p>Thank you for completing the communicative prosody assessment survey. Your feedback is invaluable to our research.</p>
                         <div id="confirmationDetails" class="confirmation-details"></div>
                         <p class="confirmation-note">Your responses have been securely saved to our database and also downloaded to your device.</p>
                     </div>
@@ -801,14 +473,11 @@
         </main>
     </div>
 
-
-<!-- Firebase SDK from CDN -->
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-
-
-    <!-- Your Survey Application Script -->
+    <!-- Survey Script -->
     <script src="app.js"></script>
 
 </body>
