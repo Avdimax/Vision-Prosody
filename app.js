@@ -365,7 +365,7 @@ document.addEventListener('input', debounce(updateProgress));
 document.addEventListener('change', debounce(updateProgress));
 
 // ========================================
-// NAVIGATION (Enhanced for single Section 1 with sets)
+// NAVIGATION (Enhanced for single Section 1 with sets - Step 4 Integration)
 // ========================================
 function startSurvey() {
   hideAllSections();
@@ -392,7 +392,7 @@ function showSection(id) {
   }
 }
 
-// Enhanced: Submit demographics and move to Section 1, showing first set
+// Submit demographics and move to Section 1, showing first set
 function submitDemographics() {
   const form = document.getElementById('demographicsForm');
   if (!form.checkValidity()) {
@@ -416,25 +416,28 @@ function submitDemographics() {
   showCurrentSet();
 }
 
-// Enhanced: Show specific set in Section 1
+// Enhanced: Show specific set in Section 1 with fade transition (if CSS has .fade class)
 function showCurrentSet() {
   const setContainers = document.querySelectorAll('.set-container');
   setContainers.forEach((container, index) => {
-    container.style.display = (index + 1 === currentSet) ? 'block' : 'none';
+    if (index + 1 === currentSet) {
+      container.style.display = 'block';
+      container.classList.add('fade-in');  // Assume CSS .fade-in { animation: fadeIn 0.5s; }
+    } else {
+      container.style.display = 'none';
+      container.classList.remove('fade-in');
+    }
   });
   updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ========================================
-// DYNAMIC GENERATION FUNCTIONS (Core Modularity - Step 3 Implementation)
+// DYNAMIC GENERATION FUNCTIONS (Core Modularity)
 // ========================================
-// Generate all sets in Section 1 container on load (loops over dialogueSetsData)
 function generateAllSets() {
   const container = document.getElementById('dialoguesContainer');
-  if (!container) {
-    console.error('dialoguesContainer not found - check HTML structure');
-    return;
-  }
+  if (!container) return;
 
   dialogueSetsData.forEach(set => {
     const setHTML = generateSetModule(set);
@@ -442,7 +445,6 @@ function generateAllSets() {
   });
 }
 
-// Generate HTML for one set (transcript + audio + form with looped questions)
 function generateSetModule(set) {
   const num = set.setId;
   const contextHTML = `<div class="dialogue-context"><p><strong>Context:</strong> ${set.context}</p></div>`;
@@ -482,7 +484,6 @@ function generateSetModule(set) {
   `;
 }
 
-// Generate questions HTML by looping over surveyQuestionsData (EFL rubric integration)
 function generateSurveyQuestions(num) {
   let html = '';
 
@@ -698,7 +699,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Generate all sets dynamically in Section 1 (core of Step 3)
+  // Generate all sets dynamically in Section 1
   generateAllSets();
   
   // Add smooth scroll behavior to form inputs
