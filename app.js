@@ -17,16 +17,12 @@ const surveyData = {
   dialogues: [{}, {}, {}, {}]  // For 4 sets/dialogues
 };
 
-let currentSet = 0;  // Track current set within Section 1
+let currentSet = 0;
 let totalQuestions = 0;
-const totalSteps = 3;  // Welcome/Demographics + Section 1 (all sets) + Confirmation
 
 // ========================================
 // MODULAR DATA STRUCTURES FOR SURVEY
 // ========================================
-// Dialogue Sets Data: Array of 4 objects for "Set x Content" modules.
-// Each includes setId, title, context, audioSrc, and transcript (array of {speaker, line} for easy looping).
-// EFL-aligned: Authentic L2 dialogues for prosody evaluation in thesis.
 const dialogueSetsData = [
   {
     setId: 1,
@@ -100,11 +96,7 @@ const dialogueSetsData = [
   }
 ];
 
-// Survey Questions Data: Object with sections for "Survey Questions" module.
-// Section A: General impression - Array of question objects (updated: removed q2_expectancy).
-// Section B: 8 criteria from PDF - Array of criterion objects with original, extensive texts (enhanced: completed all 8).
-// Section C: Open comments - Array of question objects (enhanced: added overall comments per PDF).
-// EFL-aligned for thesis: Emphasizes L2 vs. native prosody.
+// Survey Questions Data (Full 8 Criteria from PDF)
 const surveyQuestionsData = {
   sectionA: [
     {
@@ -280,19 +272,16 @@ const surveyQuestionsData = {
 };
 
 // ========================================
-// CALCULATE TOTAL QUESTIONS (For Progress Bar)
+// CALCULATE TOTAL QUESTIONS
 // ========================================
 function calculateTotalQuestions() {
-  // Demographics fields (now reduced)
-  totalQuestions = 4;  // raterName, email (optional but counted), qualifications, nationality
-
-  // Per set: Section A (1 q), Section B (8 criteria scores + 8 comments, but comments optional so count scores), Section C (1)
+  totalQuestions = 4; // raterName, email (optional), qualifications, nationality
   const perSet = surveyQuestionsData.sectionA.length + surveyQuestionsData.sectionB.length + surveyQuestionsData.sectionC.length;
-  totalQuestions += perSet * 4;  // 4 sets
+  totalQuestions += perSet * 4;
 }
 
 // ========================================
-// FORM VALIDATION & PROGRESS (Enhanced with completed count)
+// PROGRESS BAR
 // ========================================
 function getCompletedCount() {
   const forms = document.querySelectorAll('form');
@@ -318,21 +307,11 @@ function updateProgress() {
   if (progressText) progressText.textContent = `${Math.round(percentage)}%`;
 }
 
-// Debounce for performance
-function debounce(fn, delay = 300) {
-  let timeout;
-  return (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => fn(...args), delay);
-  };
-}
-
-// Live updates
-document.addEventListener('input', debounce(updateProgress));
-document.addEventListener('change', debounce(updateProgress));
+document.addEventListener('input', () => setTimeout(updateProgress, 100));
+document.addEventListener('change', updateProgress);
 
 // ========================================
-// NAVIGATION (Enhanced for single Section 1 with sets - Step 4 Integration)
+// NAVIGATION
 // ========================================
 function startSurvey() {
   hideAllSections();
@@ -342,8 +321,7 @@ function startSurvey() {
 }
 
 function hideAllSections() {
-  const sections = document.querySelectorAll('.section');
-  sections.forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
 }
 
 function showSection(id) {
@@ -352,20 +330,14 @@ function showSection(id) {
   if (section) {
     section.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setTimeout(() => {
-      addScrollListenersToFormInputs();
-    }, 100);
+    setTimeout(addScrollListenersToFormInputs, 100);
     updateProgress();
   }
 }
 
-// Submit demographics and move to Section 1, showing first set (updated: removed date, raterID, nativeLanguageVariety)
 function submitDemographics() {
   const form = document.getElementById('demographicsForm');
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
+  if (!form.checkValidity()) { form.reportValidity(); return; }
 
   surveyData.demographics = {
     raterName: document.getElementById('raterName').value.trim(),
@@ -374,41 +346,34 @@ function submitDemographics() {
     nationality: document.getElementById('nationality').value.trim()
   };
 
-  console.log('Demographics saved:', surveyData.demographics);
   currentSet = 1;
   showSection('section1');
   showCurrentSet();
 }
 
-// Enhanced: Show specific set in Section 1 with fade transition (if CSS has .fade class)
 function showCurrentSet() {
-  const setContainers = document.querySelectorAll('.set-container');
-  setContainers.forEach((container, index) => {
-    if (index + 1 === currentSet) {
-      container.style.display = 'block';
-      container.classList.add('fade-in');  // Assume CSS .fade-in { animation: fadeIn 0.5s; }
-    } else {
-      container.style.display = 'none';
-      container.classList.remove('fade-in');
-    }
+  document.querySelectorAll('.set-container').forEach((container, index) => {
+    container.style.display = (index + 1 === currentSet) ? 'block' : 'none';
+    if (index + 1 === currentSet) container.classList.add('fade-in');
+    else container.classList.remove('fade-in');
   });
   updateProgress();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
   setTimeout(() => {
     addScrollListenersToFormInputs();
-  }, 300);  // Added delay for content render in sets
+    scrollToNextUnanswered();
+  }, 300);
 }
 
 // ========================================
-// DYNAMIC GENERATION FUNCTIONS (Core Modularity)
+// DYNAMIC GENERATION
 // ========================================
 function generateAllSets() {
   const container = document.getElementById('dialoguesContainer');
   if (!container) return;
-
   dialogueSetsData.forEach(set => {
-    const setHTML = generateSetModule(set);
-    container.innerHTML += setHTML;
+    container.innerHTML += generateSetModule(set);
   });
 }
 
@@ -431,17 +396,14 @@ function generateSetModule(set) {
       </div>
     </div>`;
 
-  const formId = `set${num}Form`;
-  const questionsHTML = generateSurveyQuestions(num);
-
   return `
     <div class="set-container" id="set${num}Container" style="display: none;">
       <h2>Set ${num}: ${set.title}</h2>
       ${contextHTML}
       ${audioHTML}
       ${transcriptHTML}
-      <form id="${formId}">
-        ${questionsHTML}
+      <form id="set${num}Form">
+        ${generateSurveyQuestions(num)}
       </form>
       <div class="button-group">
         <button class="btn btn-secondary" onclick="previousSet(${num})">Back</button>
@@ -452,10 +414,7 @@ function generateSetModule(set) {
 }
 
 function generateSurveyQuestions(num) {
-  let html = '';
-
-  // Section A: General Impression (loop over array for rating/radio) - updated to only q1
-  html += '<h3>Section A: General Impression</h3>';
+  let html = '<h3>Section A: General Impression</h3>';
   surveyQuestionsData.sectionA.forEach(q => {
     if (q.type === 'rating') {
       html += `
@@ -467,19 +426,9 @@ function generateSurveyQuestions(num) {
           <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
         </div>
       `;
-    } else if (q.type === 'radio') {
-      html += `
-        <div class="form-group">
-          <label class="form-label">${q.label} *</label>
-          <div class="radio-group">
-            ${q.options.map(opt => `<label><input type="radio" name="d${num}_${q.id}" value="${opt}" ${q.required ? 'required' : ''}> ${opt.charAt(0).toUpperCase() + opt.slice(1)}</label>`).join('')}
-          </div>
-        </div>
-      `;
     }
   });
 
-  // Section B: Detailed Criteria (loop over 8 criteria with extensive rubric texts)
   html += '<h3>Section B: Detailed Criteria</h3>';
   surveyQuestionsData.sectionB.forEach(crit => {
     html += `
@@ -499,7 +448,6 @@ function generateSurveyQuestions(num) {
     `;
   });
 
-  // Section C: Open Comments (loop over array for textarea) - enhanced with overall comments
   html += '<h3>Section C: Open Comments</h3>';
   surveyQuestionsData.sectionC.forEach(q => {
     html += `
@@ -514,30 +462,18 @@ function generateSurveyQuestions(num) {
 }
 
 // ========================================
-// SAVE DIALOGUE/SET DATA (Enhanced for modularity - loops over data structures; updated for sectionA changes)
+// SAVE DATA
 // ========================================
 function saveSetData(num) {
-  const formId = `set${num}Form`;
-  const form = document.getElementById(formId);
-  if (!form) {
-    console.error(`Form ${formId} not found - check generation`);
-    return;
-  }
-
+  const form = document.getElementById(`set${num}Form`);
+  if (!form) return;
   const fd = new FormData(form);
-  const setData = {
-    setNumber: num,
-    sectionA: {},
-    sectionB: {},
-    sectionC: {}
-  };
+  const setData = { setNumber: num, sectionA: {}, sectionB: {}, sectionC: {} };
 
-  // Loop to save Section A
   surveyQuestionsData.sectionA.forEach(q => {
     setData.sectionA[q.id] = fd.get(`d${num}_${q.id}`) || '';
   });
 
-  // Loop to save Section B (scores + comments)
   surveyQuestionsData.sectionB.forEach(crit => {
     setData.sectionB[crit.id] = {
       score: parseInt(fd.get(`d${num}_${crit.id}`)) || null,
@@ -545,25 +481,19 @@ function saveSetData(num) {
     };
   });
 
-  // Loop to save Section C
   surveyQuestionsData.sectionC.forEach(q => {
     setData.sectionC[q.id] = fd.get(`d${num}_${q.id}`) || '';
   });
 
   surveyData.dialogues[num - 1] = setData;
-  console.log(`Set ${num} saved:`, setData);
 }
 
 // ========================================
-// SET NAVIGATION WITHIN SECTION 1
+// NAVIGATION
 // ========================================
 function nextSet(num) {
   const form = document.getElementById(`set${num}Form`);
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
-
+  if (!form.checkValidity()) { form.reportValidity(); return; }
   saveSetData(num);
   if (num < 4) {
     currentSet = num + 1;
@@ -584,136 +514,113 @@ function previousSet(num) {
 }
 
 // ========================================
-// SUBMIT TO FIREBASE (Enhanced with error handling)
+// SUBMIT
 // ========================================
 async function submitSurvey() {
   const lastForm = document.getElementById('set4Form');
-  if (!lastForm.checkValidity()) {
-    lastForm.reportValidity();
-    return;
-  }
-
+  if (!lastForm.checkValidity()) { lastForm.reportValidity(); return; }
   saveSetData(4);
 
   const btn = event.target;
   const originalText = btn.textContent;
-  btn.textContent = 'Submitting...';
-  btn.disabled = true;
+  btn.textContent = 'Submitting...'; btn.disabled = true;
 
   try {
     const timestamp = new Date();
-    const raterName = surveyData.demographics.raterName || surveyData.demographics.raterID || 'Anonymous';
-    const participantID = `${raterName}_${Date.now()}`;
-
+    const participantID = `${surveyData.demographics.raterName || 'Anonymous'}_${Date.now()}`;
     const finalData = {
-      participantID: participantID,
+      participantID,
       submissionTimestamp: timestamp.toISOString(),
       submissionDateLocal: timestamp.toLocaleString(),
       demographics: surveyData.demographics,
-      dialogues: surveyData.dialogues,  // Modular sets for EFL prosody data
-      deviceInfo: {
-        userAgent: navigator.userAgent,
-        language: navigator.language,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-      }
+      dialogues: surveyData.dialogues,
+      deviceInfo: { userAgent: navigator.userAgent, language: navigator.language, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }
     };
 
-    console.log('📤 Submitting to Firebase...', finalData);
-
     if (typeof firebase !== 'undefined' && firebase.database) {
-      const database = firebase.database();
-      const dbPath = `responses/${participantID}`;
-      await database.ref(dbPath).set(finalData);
-      console.log('✅ Data saved to Firebase!');
-    } else {
-      console.warn('Firebase not available - local save only');
+      await firebase.database().ref(`responses/${participantID}`).set(finalData);
     }
 
-    // Hide progress
-    const progressContainer = document.getElementById('progressContainer');
-    if (progressContainer) progressContainer.style.display = 'none';
-
-    // Show confirmation
+    document.getElementById('progressContainer').style.display = 'none';
     showSection('confirmationSection');
-
-    const confirmationDetails = document.getElementById('confirmationDetails');
-    if (confirmationDetails) {
-      confirmationDetails.innerHTML = `
-        <h2>✅ Submission Complete!</h2>
-        <p><strong>Participant ID:</strong><br><code>${participantID}</code></p>
-        <p><strong>Submitted:</strong><br>${timestamp.toLocaleString()}</p>
-        <p><strong>Status:</strong><br>✅ Saved to database</p>
-      `;
-    }
+    document.getElementById('confirmationDetails').innerHTML = `
+      <h2>Submission Complete!</h2>
+      <p><strong>Participant ID:</strong><br><code>${participantID}</code></p>
+      <p><strong>Submitted:</strong><br>${timestamp.toLocaleString()}</p>
+      <p><strong>Status:</strong><br>Saved to database</p>
+    `;
   } catch (error) {
-    console.error('Submission error:', error);
-    btn.textContent = originalText;
-    btn.disabled = false;
-    alert('Error submitting survey. Please try again or check console.');
+    console.error(error);
+    btn.textContent = originalText; btn.disabled = false;
+    alert('Error submitting survey.');
   }
 }
 
 // ========================================
-// ENHANCED AUTO-SCROLLING FOR UX (Phase 2 Addition)
+// SMART AUTO-SCROLLING (Phase 2)
 // ========================================
 function addScrollListenersToFormInputs() {
-  const inputs = document.querySelectorAll('input, textarea, select');
-  inputs.forEach(input => {
-    input.addEventListener('focus', (e) => {
-      const target = e.target;
-      const parentGroup = target.closest('.form-group, .rating-group');  // Find parent for context
-      let offset = target.getBoundingClientRect().top - 100;  // Base offset for headers
-
-      // Dynamic adjustment: If parent is long (e.g., rubric > half viewport), center it
-      if (parentGroup) {
-        const groupHeight = parentGroup.offsetHeight;
-        const viewportHeight = window.innerHeight;
-        if (groupHeight > viewportHeight / 2) {
-          offset = parentGroup.getBoundingClientRect().top - (viewportHeight / 2) + (target.offsetHeight / 2);
-        }
-      }
-
-      window.scrollTo({ top: window.scrollY + offset, behavior: 'smooth' });
-    });
+  document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.removeEventListener('change', handleRadioChange);
+    radio.addEventListener('change', handleRadioChange);
   });
 
-  // Add ResizeObserver for dynamic content (e.g., rubric expansion on load/resize)
-  const resizeObserver = new ResizeObserver(entries => {
-    entries.forEach(entry => {
-      if (document.activeElement) {
-        // Re-trigger scroll if focused element's parent resizes
-        const focused = document.activeElement;
-        const offset = focused.getBoundingClientRect().top - 100;
-        window.scrollTo({ top: window.scrollY + offset, behavior: 'smooth' });
-      }
-    });
+  document.querySelectorAll('textarea').forEach(textarea => {
+    textarea.removeEventListener('focus', handleFocus);
+    textarea.addEventListener('focus', handleFocus);
   });
 
-  document.querySelectorAll('.rating-group').forEach(group => {
-    resizeObserver.observe(group);
+  const resizeObserver = new ResizeObserver(() => {
+    if (document.activeElement) setTimeout(scrollToNextUnanswered, 100);
   });
+
+  document.querySelectorAll('.rating-group, .form-group').forEach(el => resizeObserver.observe(el));
+}
+
+function handleRadioChange(e) {
+  const group = e.target.closest('.rating-group') || e.target.closest('.form-group');
+  setTimeout(() => scrollToNextUnanswered(group), 150);
+}
+
+function handleFocus(e) {
+  const parent = e.target.closest('.rating-group') || e.target.closest('.form-group');
+  smoothScrollToElement(parent, 120);
+}
+
+function scrollToNextUnanswered(startAfter = null) {
+  const all = Array.from(document.querySelectorAll('.rating-group, .form-group'));
+  const startIdx = startAfter ? all.indexOf(startAfter) : -1;
+  const next = all.slice(startIdx + 1).find(group => {
+    const radio = group.querySelector('input[type="radio"]:checked');
+    const textarea = group.querySelector('textarea[required]');
+    return !radio && (!textarea || !textarea.value.trim());
+  });
+
+  if (next) {
+    smoothScrollToElement(next, 100);
+    const firstRadio = next.querySelector('input[type="radio"]');
+    if (firstRadio) firstRadio.focus();
+  } else {
+    const target = document.querySelector('h3:contains("Section C")')?.parentElement || document.querySelector('.btn-large');
+    if (target) smoothScrollToElement(target, 80);
+  }
+}
+
+function smoothScrollToElement(el, offset = 100) {
+  if (!el) return;
+  const top = el.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top, behavior: 'smooth' });
 }
 
 // ========================================
 // INITIALIZATION
 // ========================================
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
   if (typeof firebase !== 'undefined') {
-    try {
-      firebase.initializeApp(firebaseConfig);
-      console.log('✅ Firebase initialized');
-    } catch (e) {
-      console.log('Firebase already initialized or error:', e);
-    }
+    try { firebase.initializeApp(firebaseConfig); } catch (e) {}
   }
-  
-  // Generate all sets dynamically in Section 1
   generateAllSets();
-  
-  // Add smooth scroll behavior to form inputs
   addScrollListenersToFormInputs();
-  
-  // Initialize progress
   calculateTotalQuestions();
   updateProgress();
 });
