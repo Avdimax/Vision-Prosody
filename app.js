@@ -101,9 +101,9 @@ const dialogueSetsData = [
 ];
 
 // Survey Questions Data: Object with sections for "Survey Questions" module.
-// Section A: General impression - Array of question objects.
-// Section B: 8 criteria from PDF - Array of criterion objects with original, extensive texts.
-// Section C: Open comments - Array of question objects.
+// Section A: General impression - Array of question objects (updated: removed q2_expectancy).
+// Section B: 8 criteria from PDF - Array of criterion objects with original, extensive texts (enhanced: completed all 8).
+// Section C: Open comments - Array of question objects (enhanced: added overall comments per PDF).
 // EFL-aligned for thesis: Emphasizes L2 vs. native prosody.
 const surveyQuestionsData = {
   sectionA: [
@@ -112,13 +112,6 @@ const surveyQuestionsData = {
       id: "q1_prosody_naturalness",
       label: "How natural does the prosody in this dialogue sound? (1: Poor - 5: Excellent)",
       options: [1, 2, 3, 4, 5],
-      required: true
-    },
-    {
-      type: "radio",
-      id: "q2_expectancy",
-      label: "Does the prosody meet expectancy in an EFL context?",
-      options: ["yes", "no", "maybe"],
       required: true
     }
   ],
@@ -238,7 +231,7 @@ const surveyQuestionsData = {
       ]
     },
     {
-      id: "c7_information",
+      id: "c7_information_structure",
       title: "CRITERION 7: INFORMATION STRUCTURE & PROMINENCE (DISCOURSE PROSODY)",
       question: "Are new/important ideas clearly emphasized while known information is de-emphasized?",
       whatToListen: [
@@ -257,7 +250,7 @@ const surveyQuestionsData = {
       ]
     },
     {
-      id: "c8_overall",
+      id: "c8_overall_naturalness",
       title: "CRITERION 8: OVERALL COMMUNICATIVE PROSODIC NATURALNESS",
       question: "Overall, how natural and native-like does this dialogue sound?",
       whatToListen: [
@@ -279,63 +272,37 @@ const surveyQuestionsData = {
   sectionC: [
     {
       type: "textarea",
-      id: "q4_suggestions",
-      label: "Any suggestions for improvement?",
+      id: "overall_comments",
+      label: "Overall Comments (strengths, issues, recommendations):",
       required: false
     }
   ]
 };
 
 // ========================================
-// AUTO-SCROLL FUNCTIONALITY
-// ========================================
-function addScrollListenersToFormInputs() {
-  const inputs = document.querySelectorAll('input, textarea, select');
-  inputs.forEach(input => {
-    input.addEventListener('focus', function() {
-      setTimeout(() => {
-        this.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
-    });
-  });
-}
-
-// ========================================
-// PROGRESS BAR UPDATE - Question-Based (Enhanced for looped sets)
+// CALCULATE TOTAL QUESTIONS (For Progress Bar)
 // ========================================
 function calculateTotalQuestions() {
-  // Demographics + 4 sets * (2 in A + 8 in B + 1 in C = 11 per set)
-  const demoQuestions = 7;  // From demographics form (name, date, ID, email, qualifications, nationality, variety)
-  const perSetQuestions = surveyQuestionsData.sectionA.length + surveyQuestionsData.sectionB.length + surveyQuestionsData.sectionC.length;
-  totalQuestions = demoQuestions + (4 * perSetQuestions);
-  console.log('Total questions:', totalQuestions);
+  // Demographics fields (now reduced)
+  totalQuestions = 4;  // raterName, email (optional but counted), qualifications, nationality
+
+  // Per set: Section A (1 q), Section B (8 criteria scores + 8 comments, but comments optional so count scores), Section C (1)
+  const perSet = surveyQuestionsData.sectionA.length + surveyQuestionsData.sectionB.length + surveyQuestionsData.sectionC.length;
+  totalQuestions += perSet * 4;  // 4 sets
 }
 
+// ========================================
+// FORM VALIDATION & PROGRESS (Enhanced with completed count)
+// ========================================
 function getCompletedCount() {
+  const forms = document.querySelectorAll('form');
   let completed = 0;
-  const allRequired = document.querySelectorAll('input[required], textarea[required], select[required]');
-  const groups = {};
-  allRequired.forEach(input => {
-    const name = input.name || input.id;
-    if (!groups[name]) groups[name] = [];
-    groups[name].push(input);
+  forms.forEach(form => {
+    const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+    inputs.forEach(input => {
+      if (input.checkValidity()) completed++;
+    });
   });
-
-  for (let name in groups) {
-    const inputs = groups[name];
-    let isFilled = false;
-    const type = inputs[0].type;
-
-    if (type === 'radio' || type === 'checkbox') {
-      isFilled = inputs.some(i => i.checked);
-    } else if (inputs[0].tagName === 'TEXTAREA' || type === 'text' || type === 'date' || type === 'email') {
-      isFilled = inputs[0].value.trim() !== '';
-    } else if (inputs[0].tagName === 'SELECT') {
-      isFilled = inputs[0].value !== '';
-    }
-
-    if (isFilled) completed++;
-  }
   return completed;
 }
 
@@ -392,7 +359,7 @@ function showSection(id) {
   }
 }
 
-// Submit demographics and move to Section 1, showing first set
+// Submit demographics and move to Section 1, showing first set (updated: removed date, raterID, nativeLanguageVariety)
 function submitDemographics() {
   const form = document.getElementById('demographicsForm');
   if (!form.checkValidity()) {
@@ -402,12 +369,9 @@ function submitDemographics() {
 
   surveyData.demographics = {
     raterName: document.getElementById('raterName').value.trim(),
-    date: document.getElementById('date').value,
-    raterID: document.getElementById('raterID').value.trim(),
     email: document.getElementById('email').value.trim(),
     qualifications: Array.from(document.querySelectorAll('input[name="qualifications"]:checked')).map(cb => cb.value),
-    nationality: document.getElementById('nationality').value.trim(),
-    nativeLanguageVariety: document.getElementById('nativeLanguageVariety').value
+    nationality: document.getElementById('nationality').value.trim()
   };
 
   console.log('Demographics saved:', surveyData.demographics);
@@ -487,7 +451,7 @@ function generateSetModule(set) {
 function generateSurveyQuestions(num) {
   let html = '';
 
-  // Section A: General Impression (loop over array for rating/radio)
+  // Section A: General Impression (loop over array for rating/radio) - updated to only q1
   html += '<h3>Section A: General Impression</h3>';
   surveyQuestionsData.sectionA.forEach(q => {
     if (q.type === 'rating') {
@@ -532,7 +496,7 @@ function generateSurveyQuestions(num) {
     `;
   });
 
-  // Section C: Open Comments (loop over array for textarea)
+  // Section C: Open Comments (loop over array for textarea) - enhanced with overall comments
   html += '<h3>Section C: Open Comments</h3>';
   surveyQuestionsData.sectionC.forEach(q => {
     html += `
@@ -547,7 +511,7 @@ function generateSurveyQuestions(num) {
 }
 
 // ========================================
-// SAVE DIALOGUE/SET DATA (Enhanced for modularity - loops over data structures)
+// SAVE DIALOGUE/SET DATA (Enhanced for modularity - loops over data structures; updated for sectionA changes)
 // ========================================
 function saveSetData(num) {
   const formId = `set${num}Form`;
