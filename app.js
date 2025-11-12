@@ -512,42 +512,42 @@ function generateSurveyQuestions(num) {
   return html;
 }
 
-// ========================================
-// TOGGLE SCORING SCALE (WITH SVG + DYNAMIC HEIGHT)
-// ========================================
-function toggleScoringScale(critId) {
-  const content = document.getElementById(`${critId}_scale`);
-  const trigger = document.getElementById(`${critId}_trigger`); // Ensure trigger is defined here
-  const arrow = trigger.querySelector('.arrow-icon svg');
-  const text = trigger.querySelector('.trigger-text');
+function addScrollListenersToFormInputs() {
+  // Safe removal of old listeners to avoid undefined errors
+  document.querySelectorAll('input[type="radio"], .collapsible-trigger, textarea').forEach(el => {
+    if (typeof handleRadioChange === 'function') el.removeEventListener('change', handleRadioChange);
+    if (typeof handleTriggerClick === 'function') el.removeEventListener('click', handleTriggerClick);
+    if (typeof handleFocus === 'function') el.removeEventListener('focus', handleFocus);
+    if (isMobile && typeof handleTouchStart === 'function') el.removeEventListener('touchend', handleTouchStart); // Use touchend for mobile
+  });
 
-  const isOpen = content.classList.toggle('open');
-  
-  text.textContent = isOpen ? 'Hide Scoring Scale' : 'Show Scoring Scale';
-  trigger.setAttribute('aria-expanded', isOpen);
+  // Add optimized listeners
+  document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', debounce(handleRadioChange, 150));
+  });
 
-  if (isOpen) {
-    content.style.maxHeight = content.scrollHeight + 'px';
-    // Center on Score 3 after expansion
-    setTimeout(() => {
-      const score3 = content.querySelector('.scale-item:nth-child(3)');
-      if (score3) {
-        centerElementInViewport(score3);
-      } else {
-        const block = trigger.closest('.criterion-block'); // Now trigger is defined
-        fullScreenCenter(block);
-      }
-    }, 500);
-  } else {
-    content.style.maxHeight = content.scrollHeight + 'px';
-    content.offsetHeight;
-    content.style.maxHeight = '0';
-    // Re-center block on collapse
-    setTimeout(() => {
-      const block = trigger.closest('.criterion-block'); // Trigger defined
-      fullScreenCenter(block);
-    }, 500);
-  }
+  document.querySelectorAll('.collapsible-trigger').forEach(trigger => {
+    trigger.addEventListener('click', debounce(handleTriggerClick, 150));
+    if (isMobile) {
+      trigger.addEventListener('touchend', debounce(handleTouchStart, 150)); // Touchend for smoother mobile
+    }
+  });
+
+  document.querySelectorAll('textarea').forEach(textarea => {
+    textarea.addEventListener('focus', debounce(handleFocus, 100));
+  });
+
+  // ResizeObserver for dynamic content (e.g., rubric expansion)
+  const resizeObserver = new ResizeObserver(debounce(() => {
+    const active = document.activeElement;
+    if (active) {
+      const block = active.closest('.criterion-block');
+      if (block) fullScreenCenter(block);
+      console.log('Resize triggered for active element'); // Debug: Remove after testing
+    }
+  }, 400)); // Increased for mobile stability
+
+  document.querySelectorAll('.criterion-block').forEach(block => resizeObserver.observe(block));
 }
 
 // ========================================
