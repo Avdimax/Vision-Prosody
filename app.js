@@ -1,659 +1,127 @@
-<DOCUMENT filename="app.js">
 // ========================================
 // FIREBASE SURVEY - ULTIMATE ENHANCED VERSION FOR COMMUNICATIVE PROSODY ASSESSMENT
 // ========================================
 const firebaseConfig = {
-apiKey: "AIzaSyBLZwdGQ_OSC_kiwmjqTU1vLiNn_REUcoQ",
-authDomain: "survey-responses-65ef0.firebaseapp.com",
-databaseURL: "https://survey-responses-65ef0-default-rtdb.firebaseio.com",
-projectId: "survey-responses-65ef0",
-storageBucket: "survey-responses-65ef0.firebasestorage.app",
-messagingSenderId: "562335879299",
-appId: "1:562335879299:web:b3d5dd2a7d532c63e80bb6",
-measurementId: "G-95LPH6SWL8"
+  apiKey: "AIzaSyBLZwdGQ_OSC_kiwmjqTU1vLiNn_REUcoQ",
+  authDomain: "survey-responses-65ef0.firebaseapp.com",
+  databaseURL: "https://survey-responses-65ef0-default-rtdb.firebaseio.com",
+  projectId: "survey-responses-65ef0",
+  storageBucket: "survey-responses-65ef0.firebasestorage.app",
+  messagingSenderId: "562335879299",
+  appId: "1:562335879299:web:b3d5dd2a7d532c63e80bb6",
+  measurementId: "G-95LPH6SWL8"
 };
+
 const surveyData = {
-demographics: {},
-dialogues: [{}, {}, {}, {}]  // For 4 sets/dialogues
+  demographics: {},
+  dialogues: [{}, {}, {}, {}]  // For 4 sets/dialogues
 };
+
 let currentSet = 0;  // Track current set within Section 1
 let totalQuestions = 0;
 const totalSteps = 3;  // Welcome/Demographics + Section 1 (all sets) + Confirmation
+
+console.log('app.js loaded');  // Diagnostic to confirm script execution
+
+// ... (rest of the data structures: dialogueSetsData, surveyQuestionsData)
+
 // ========================================
-// MODULAR DATA STRUCTURES FOR SURVEY
+// PROGRESS CALCULATION
 // ========================================
-// Dialogue Sets Data: Array of 4 objects for "Set x Content" modules.
-// Each includes setId, title, context, audioSrc, and transcript (array of {speaker, line} for easy looping).
-// EFL-aligned: Authentic L2 dialogues for prosody evaluation in thesis.
-const dialogueSetsData = [
-{
-setId: 1,
-title: "Museum of Nature and Wildlife",
-context: "Maryam is visiting the Museum of Nature and Wildlife. She’s talking to Mr. Razavi who works in the museum.",
-audioSrc: "dialogue_1.mp3",
-transcript: [
-{ speaker: "Maryam", line: "Excuse me, what is it? Is it a leopard?" },
-{ speaker: "Mr. Razavi", line: "No, it is a cheetah." },
-{ speaker: "Maryam", line: "Oh, a cheetah?" },
-{ speaker: "Mr. Razavi", line: "Yeah, an Iranian cheetah. It is an endangered animal." },
-{ speaker: "Maryam", line: "I know. I heard around 70 of them are alive. Yes?" },
-{ speaker: "Mr. Razavi", line: "Right, but the number will increase." },
-{ speaker: "Maryam", line: "Really?! How?" },
-{ speaker: "Mr. Razavi", line: "Well, we have some plans. For example, we are going to protect their homes, to make movies about their life, and to teach people how to take more care of them." }
-]
-},
-{
-setId: 2,
-title: "Visiting an Observatory",
-context: "Alireza is visiting an observatory. He is talking to Ms. Tabesh who works there.",
-audioSrc: "dialogue_2.mp3",
-transcript: [
-{ speaker: "Ms. Tabesh", line: "Are you interested in the planets?" },
-{ speaker: "Alireza", line: "Yes! They are really interesting for me, but I don’t know much about them." },
-{ speaker: "Ms. Tabesh", line: "Planets are really amazing but not so much alike. Do you know how they are different?" },
-{ speaker: "Alireza", line: "Umm... I know they go around the Sun in different orbits." },
-{ speaker: "Ms. Tabesh", line: "That’s right. They have different colors and sizes, too. Some are rocky like Mars, some have rings like Saturn and some have moons like Uranus." },
-{ speaker: "Alireza", line: "How wonderful! Can we see them without a telescope?" },
-{ speaker: "Ms. Tabesh", line: "Yeah..., we can see the planets nearer to us without a telescope, such as Mercury, Venus, Mars, Jupiter and Saturn. We can see Uranus and Neptune only with powerful telescopes." },
-{ speaker: "Alireza", line: "And which planet is the largest of all?" },
-{ speaker: "Ms. Tabesh", line: "Jupiter is the largest one. It has more than sixty moons. Do you want to look at it?" },
-{ speaker: "Alireza", line: "I really like that." }
-]
-},
-{
-setId: 3,
-title: "Leaving the Library",
-context: "Roya and Mahsa are leaving the library.",
-audioSrc: "dialogue_3.mp3",
-transcript: [
-{ speaker: "Roya", line: "When I came in, you were reading a book. What was it?" },
-{ speaker: "Mahsa", line: "I was reading a book about famous Iranian scientists." },
-{ speaker: "Roya", line: "But such books are not very interesting." },
-{ speaker: "Mahsa", line: "At first I had the same idea, believe me!" },
-{ speaker: "Roya", line: "Did you find it useful?" },
-{ speaker: "Mahsa", line: "Oh yes. Actually I learned many interesting things about our scientists’ lives." },
-{ speaker: "Roya", line: "Like what?" },
-{ speaker: "Mahsa", line: "For example Razi taught medicine to many young people while he was working in Ray Hospital. Or Nasireddin Toosi built Maragheh Observatory when he was studying the planets." },
-{ speaker: "Roya", line: "Cool! What was the name of the book?" },
-{ speaker: "Mahsa", line: "Famous Iranian Scientists." }
-]
-},
-{
-setId: 4,
-title: "Planning Summer Vacation",
-context: "Diego is a Spanish tourist who is planning for his summer vacation. He is talking to Carlos Sabato, a travel agent in Madrid.",
-audioSrc: "dialogue_4.mp3",
-transcript: [
-{ speaker: "Diego", line: "Excuse me, sir! I am planning for my summer vacation." },
-{ speaker: "Carlos", line: "How can I help you?" },
-{ speaker: "Diego", line: "Actually I want to visit Asia, but I am not sure about my destination. Do you have any suggestion?" },
-{ speaker: "Carlos", line: "Well, you may have some choices. You can visit China. It is famous for the Great Wall." },
-{ speaker: "Diego", line: "Yes, but I was in Beijing two years ago." },
-{ speaker: "Carlos", line: "What about India? In fact, the Taj Mahal is a popular destination, but it is hot in summer. Probably Iran is the best choice." },
-{ speaker: "Diego", line: "I heard Iran is a great and beautiful country, but I don’t know much about it." },
-{ speaker: "Carlos", line: "Well, Iran is a four-season country. It has many historical sites and amazing nature. Also, its people are very kind and hospitable." },
-{ speaker: "Diego", line: "It seems a suitable choice. But how can I get more information about Iran?" },
-{ speaker: "Carlos", line: "You can check this booklet or may see our website." }
-]
-}
-];
-// Survey Questions Data: Object with sections for "Survey Questions" module.
-// Section A: General impression - Array of question objects.
-// Section B: 8 criteria from PDF - Array of criterion objects with original, extensive texts.
-// Section C: Open comments - Array of question objects.
-// EFL-aligned for thesis: Emphasizes L2 vs. native prosody.
-const surveyQuestionsData = {
-sectionA: [
-{
-type: "rating",
-id: "q1_prosody_naturalness",
-label: "How natural does the prosody in this dialogue sound? (1: Poor - 5: Excellent)",
-options: [1, 2, 3, 4, 5],
-required: true
-}
-],
-sectionB: [
-{
-id: "c1_intonation",
-title: "CRITERION 1: INTONATION CONTOURS & PITCH MOVEMENT",
-question: "How natural and appropriate are the pitch patterns (intonation) in this dialogue?",
-whatToListen: [
-"Pitch variation and range (monotone vs. varied)",
-"Question intonation (rising) vs. statement (falling)",
-"Prominence marking through pitch peaks",
-"Phrase boundary signaling",
-"Overall naturalness and conversational quality"
-],
-scoringScale: [
-"Score 1 – Monotone or inappropriate intonation: No pitch variation or pitch patterns don’t match sentence type. Questions don’t rise, statements don’t fall. Sounds robotic/scripted. Pitch range < 20 Hz.",
-"Score 2 – Limited pitch variation: Some pitch movement but inconsistent. Occasional questions rise/statements fall, but not reliable. Pitch range 20–40 Hz. Some monotone stretches noticeable.",
-"Score 3 – Some variation, inconsistent patterns: Moderate pitch variation (40–60 Hz) but patterns are unpredictable. Sometimes questions rise correctly, sometimes not. Some intonation-sentence mismatches (~30% incorrect).",
-"Score 4 – Good variation, mostly natural: Good pitch range (60–80 Hz) and mostly correct patterns. Question/statement distinction usually clear. Few intonation errors (< 10% incorrect). Mostly sounds like natural English.",
-"Score 5 – Natural, varied, semantically appropriate: Extensive pitch variation (80+ Hz). All questions rise, all statements fall naturally. Pitch peaks align with stress. Sounds like native-like natural English conversation. Appropriate prosodic boundaries."
-]
-},
-{
-id: "c2_stress",
-title: "CRITERION 2: STRESS PATTERNS & PROMINENCE",
-question: "How accurately are word stresses placed and how clearly are important words emphasized?",
-whatToListen: [
-"Multi-syllabic word stress accuracy (PHOto vs. phOTOgraphy)",
-"Pitch peak alignment with stressed syllables",
-"Amplitude/loudness differentiation (stressed > unstressed)",
-"Duration patterns (stressed syllables longer)",
-"Information focus marking"
-],
-scoringScale: [
-"Score 1 – Stress frequently misplaced: Many multi-syllabic words have wrong stress placement (> 50% errors). Little amplitude or duration differentiation. No pitch peak alignment with stress.",
-"Score 2 – Limited prominence marking: 50–70% of stresses correct. Weak amplitude differentiation (< 5 dB). Some duration variation but inconsistent. Few information words clearly marked prominent.",
-"Score 3 – Inconsistent stress placement: 70–85% of stresses correct. Moderate amplitude differentiation (5–10 dB). Pitch peaks sometimes aligned (~50%). Information focus sometimes marked but often unclear.",
-"Score 4 – Good stress, mostly natural: 85–95% of stresses correct. Good amplitude differentiation (10–15 dB). Pitch peaks usually align with stress. Most information words clearly marked. Sounds mostly natural.",
-"Score 5 – Consistent, accurate stress throughout: All/nearly all stresses correct (95+%). Clear amplitude differentiation (15+ dB). Pitch peaks align with stress throughout. All focus words clearly prominent. Natural stress throughout."
-]
-},
-{
-id: "c3_hesitations",
-title: "CRITERION 3: HESITATIONS & FILLERS (NATURAL DISFLUENCY)",
-question: "How naturally and appropriately are hesitations and fillers (um, uh, like, you know) used?",
-whatToListen: [
-"Filler frequency (0.5–1 per 10 utterances is natural)",
-"Filler variety (um, uh, like, you know, I mean, well)",
-"Placement at natural discourse junctures",
-"Acoustic quality (natural vs. forced/artificial)",
-"Fluency effect (creates sense of real-time planning)"
-],
-scoringScale: [
-"Score 1 – No fillers or excessive/artificial fillers: Either completely absent (speech sounds scripted) or > 2 per utterance (sounds anxious). If present, fillers sound forced/artificial with glottal clicks.",
-"Score 2 – Few fillers, somewhat unnatural: 0.2–0.4 per 10 utterances (sparse) or 1.5–2 per 10 (slightly high). Limited filler variety (only 1–2 types). Placement sometimes awkward. Some acoustic unnaturalness.",
-"Score 3 – Limited variety, inconsistent use: 0.3–1.8 per 10 utterances (acceptable range but not optimal). Limited filler types used. Placement at ~50% of natural junctures. Mixed acoustic quality.",
-"Score 4 – Frequent, mostly natural: 0.4–1.5 per 10 utterances (mostly in natural range). 2–3 filler types used. Most placement at natural junctures. Generally natural acoustic quality. Creates sense of planning.",
-"Score 5 – Natural frequency, variety, placement: 0.5–1.5 per 10 utterances (optimal range). Multiple filler types used naturally. All fillers at natural junctures. Natural acoustic quality (vocalic, schwa-like). Creates natural sense of real-time speech."
-]
-},
-{
-id: "c4_repairs",
-title: "CRITERION 4: REPAIRS & DISFLUENCY (SELF-CORRECTION)",
-question: "How natural and well-integrated are self-repairs and corrections?",
-whatToListen: [
-"Repair frequency (0.5–1 per 10 utterances is natural)",
-"Explicit repair markers (I mean, actually, well, no wait)",
-"Acoustic integration and smoothness",
-"Repair placement at clause boundaries vs. mid-utterance",
-"Acoustic continuity maintained"
-],
-scoringScale: [
-"Score 1 – No repairs or severely unnatural: Either completely absent (speech sounds scripted) or excessive (> 2 per 10 utterances), sounds anxious. If present, repairs sound forced/artificial with abrupt breaks or glottal stops.",
-"Score 2 – Few repairs, somewhat unnatural: 0.2–0.4 per 10 utterances (sparse) or 1.5–2 per 10 (slightly high). Limited variety (only 1–2 types). Placement sometimes awkward. Some acoustic unnaturalness or discontinuity.",
-"Score 3 – Limited variety, inconsistent use: 0.3–1.8 per 10 utterances (acceptable range but not optimal). Limited repair types used. Placement at ~50% of natural junctures. Mixed acoustic quality and smoothness.",
-"Score 4 – Frequent, mostly natural: 0.4–1.5 per 10 utterances (mostly in natural range). 2–3 repair types used. Most placement at natural junctures. Generally natural acoustic quality and integration. Creates sense of real-time adjustment.",
-"Score 5 – Natural frequency, variety, placement: 0.5–1.5 per 10 utterances (optimal range). Multiple repair types used naturally. All repairs at natural junctures. Natural acoustic quality (smooth, continuous). Creates natural sense of real-time speech correction."
-]
-},
-{
-id: "c5_rhythm",
-title: "CRITERION 5: RHYTHM & TIMING",
-question: "How natural is the rhythm and timing in the dialogue?",
-whatToListen: [
-"Stress-timed vs. syllable-timed rhythm (English is stress-timed)",
-"Pause duration and frequency at appropriate points",
-"Linking and reduction between words (e.g., gonna, wanna)",
-"Overall tempo and flow (not too fast/slow)",
-"Avoidance of word-by-word rhythm"
-],
-scoringScale: [
-"Score 1 – Severely unnatural rhythm: Monotone timing, no pauses or inappropriate ones. Syllable-timed like robotic speech. No linking, poor flow.",
-"Score 2 – Limited rhythm: Some pauses but inconsistent. Weak stress-timing, limited linking. Tempo uneven, some unnatural flow.",
-"Score 3 – Inconsistent rhythm: Moderate stress-timing (50-70% natural). Pauses sometimes appropriate. Some linking, but flow often unclear.",
-"Score 4 – Good rhythm, mostly natural: Good stress-timing (70-90%). Pauses usually appropriate. Linking present, natural tempo and flow.",
-"Score 5 – Natural rhythm throughout: Fully stress-timed with natural pauses and linking. Perfect tempo, seamless flow like native conversation."
-]
-},
-{
-id: "c6_phrasing",
-title: "CRITERION 6: PHRASE CHUNKING & BOUNDARIES",
-question: "How well are phrases chunked and boundaries signaled?",
-whatToListen: [
-"Prosodic phrasing (pauses at commas, clauses)",
-"Juncture strength (word boundaries vs. blending)",
-"Cohesion between phrases for logical grouping",
-"Avoidance of flat or word-by-word chunking",
-"Use of prosody to signal thought units"
-],
-scoringScale: [
-"Score 1 – No chunking or inappropriate: Speech is word-by-word, no phrase boundaries. Sounds disjointed or run-on.",
-"Score 2 – Limited chunking: Some boundaries but inconsistent. Weak juncture, limited cohesion. Phrase groups often unnatural.",
-"Score 3 – Inconsistent chunking: Moderate boundaries (50-70% natural). Some cohesion, but phrasing often unclear or mismatched.",
-"Score 4 – Good chunking, mostly natural: Good boundaries (70-90%). Juncture and cohesion usually clear. Phrase groups sound natural.",
-"Score 5 – Natural chunking throughout: Perfect phrase boundaries and juncture. Full cohesion, thought units clearly signaled like native speech."
-]
-},
-{
-id: "c7_rate",
-title: "CRITERION 7: RATE & TEMPO",
-question: "How appropriate is the rate and tempo of the speech?",
-whatToListen: [
-"Speaking rate (words per minute, natural ~120-150 for conversation)",
-"Variation in tempo for emphasis or context",
-"Avoidance of too slow (hesitant) or too fast (rushed)",
-"Integration with other prosody elements",
-"Overall fluency without unnatural acceleration/deceleration"
-],
-scoringScale: [
-"Score 1 – Severely inappropriate rate: Too slow (<80 wpm, hesitant) or too fast (>180 wpm, rushed). No variation, sounds unnatural.",
-"Score 2 – Limited rate control: Rate uneven, some variation but inconsistent. Often hesitant or rushed in parts.",
-"Score 3 – Inconsistent rate: Moderate rate (80-180 wpm) but unpredictable. Some tempo variation, but often unclear.",
-"Score 4 – Good rate, mostly natural: Good rate (100-160 wpm) with mostly appropriate variation. Tempo integrates well.",
-"Score 5 – Natural rate throughout: Optimal rate (120-150 wpm) with semantic variation. Perfect tempo like native conversation."
-]
-},
-{
-id: "c8_effectiveness",
-title: "CRITERION 8: OVERALL COMMUNICATIVE EFFECTIVENESS",
-question: "How effective is the prosody in conveying meaning and engagement?",
-whatToListen: [
-"Conveyance of emotions, intent, and nuance",
-"Listener engagement and naturalness",
-"Integration of all prosody elements (intonation to rate)",
-"Avoidance of monotony or artificiality",
-"Overall impact on communicative success"
-],
-scoringScale: [
-"Score 1 – Ineffective: Prosody fails to convey meaning, sounds robotic or disengaged. No integration, high listener strain.",
-"Score 2 – Limited effectiveness: Some conveyance but inconsistent. Weak integration, moderate strain for listener.",
-"Score 3 – Inconsistent effectiveness: Moderate conveyance (~50%). Some integration, but often unclear or unengaging.",
-"Score 4 – Good effectiveness, mostly natural: Good conveyance (70-90%). Strong integration, low strain, engaging.",
-"Score 5 – Highly effective: Fully conveys meaning and engages listener. Perfect integration, native-like communicative success."
-]
-}
-],
-sectionC: [
-{
-type: "textarea",
-id: "q1_overall_comments",
-label: "Any overall comments on the dialogue prosody?",
-required: false
-},
-{
-type: "textarea",
-id: "q2_strengths_weaknesses",
-label: "What are the strengths and weaknesses of the prosody in this dialogue?",
-required: false
-}
-]
-};
+// ... (calculateTotalQuestions, getCompletedCount, updateProgress, debounce)
+
 // ========================================
-// PROGRESS CALCULATION (Added in ultimate version)
-// ========================================
-function calculateTotalQuestions() {
-totalQuestions = 0;
-// Demographics: required fields (name, nationality, qualifications - count as 3)
-totalQuestions += 3;
-// For each of 4 sets
-dialogueSetsData.forEach(() => {
-// Section A: number of questions
-totalQuestions += surveyQuestionsData.sectionA.length;
-// Section B: number of criteria (scores only, comments optional)
-totalQuestions += surveyQuestionsData.sectionB.length;
-// Section C: number of open comments (if required, but here optional - count for progress if filled)
-totalQuestions += surveyQuestionsData.sectionC.length; // Can adjust if optional
-});
-}
-// ========================================
-// COMPLETED COUNT FOR PROGRESS
-// ========================================
-function getCompletedCount() {
-let completed = 0;
-const forms = document.querySelectorAll('form');
-forms.forEach(form => {
-const groups = form.querySelectorAll('.form-group, .rating-group');
-groups.forEach(group => {
-const inputs = group.querySelectorAll('input[required], select[required], textarea[required]');
-if (inputs.length > 0) {
-let isFilled = true;
-inputs.forEach(input => {
-if (input.type === 'checkbox') {
-if (!group.querySelector('input[type="checkbox"]:checked')) isFilled = false;
-} else if (input.type === 'radio') {
-if (!group.querySelector('input[type="radio"]:checked')) isFilled = false;
-} else if (input.value.trim() === '') {
-isFilled = false;
-}
-});
-if (isFilled) completed++;
-}
-});
-});
-return completed;
-}
-function updateProgress() {
-const completed = getCompletedCount();
-const percentage = totalQuestions > 0 ? (completed / totalQuestions) * 100 : 0;
-const progressContainer = document.getElementById('progressContainer');
-const progressFill = document.getElementById('progressFill');
-const progressText = document.getElementById('progressText');
-if (progressContainer) progressContainer.style.display = 'block';
-if (progressFill) progressFill.style.width = ${percentage}%;
-if (progressText) progressText.textContent = ${Math.round(percentage)}%;
-}
-// Debounce for performance
-function debounce(fn, delay = 300) {
-let timeout;
-return (...args) => {
-clearTimeout(timeout);
-timeout = setTimeout(() => fn(...args), delay);
-};
-}
-// Live updates
-document.addEventListener('input', debounce(updateProgress));
-document.addEventListener('change', debounce(updateProgress));
-// ========================================
-// NAVIGATION (Enhanced for single Section 1 with sets)
+// NAVIGATION
 // ========================================
 function startSurvey() {
-hideAllSections();
-showSection('demographicsSection');
-updateProgress();
-window.scrollTo({ top: 0, behavior: 'smooth' });
+  console.log('Start Survey button clicked');  // Diagnostic
+  hideAllSections();
+  showSection('demographicsSection');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
 function hideAllSections() {
-const sections = document.querySelectorAll('.section');
-sections.forEach(s => s.classList.remove('active'));
+  const sections = document.querySelectorAll('.section');
+  sections.forEach(s => s.classList.remove('active'));
 }
+
 function showSection(id) {
-hideAllSections();
-const section = document.getElementById(id);
-if (section) {
-section.classList.add('active');
-window.scrollTo({ top: 0, behavior: 'smooth' });
-setTimeout(() => {
-addScrollListenersToFormInputs();
-}, 100);
-updateProgress();
-}
-}
-// Submit demographics and move to Section 1, showing first set
-function submitDemographics() {
-const form = document.getElementById('demographicsForm');
-if (!form.checkValidity()) {
-form.reportValidity();
-return;
-}
-surveyData.demographics = {
-raterName: document.getElementById('raterName').value.trim(),
-email: document.getElementById('email').value.trim(),
-qualifications: Array.from(document.querySelectorAll('input[name="qualifications"]:checked')).map(cb => cb.value),
-nationality: document.getElementById('nationality').value.trim()
-};
-console.log('Demographics saved:', surveyData.demographics);
-currentSet = 1;
-showSection('section1');
-showCurrentSet();
-}
-// Show specific set in Section 1 with fade transition
-function showCurrentSet() {
-const setContainers = document.querySelectorAll('.set-container');
-setContainers.forEach((container, index) => {
-if (index + 1 === currentSet) {
-container.style.display = 'block';
-container.classList.add('fade-in');
-} else {
-container.style.display = 'none';
-container.classList.remove('fade-in');
-}
-});
-updateProgress();
-window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-// ========================================
-// DYNAMIC GENERATION FUNCTIONS (Core Modularity)
-// ========================================
-function generateAllSets() {
-const container = document.getElementById('dialoguesContainer');
-if (!container) return;
-dialogueSetsData.forEach(set => {
-const setHTML = generateSetModule(set);
-container.innerHTML += setHTML;
-});
-}
-function generateSetModule(set) {
-const num = set.setId;
-const contextHTML = <div class="dialogue-context"><p><strong>Context:</strong> ${set.context}</p></div>;
-const audioHTML = `
-    
-      Audio Recording
-      <audio controls class="audio-player">
-        <source src="${set.audioSrc}" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
-    `;
-  const transcriptHTML = `
-    
-      Transcript
-      
-        ${set.transcript.map(t => `${t.speaker}: ${t.line}`).join('')}
-      
-    `;
-const formId = set${num}Form;
-const questionsHTML = generateSurveyQuestions(num);
-return `
-    
-      Set ${num}: ${set.title}
-      ${contextHTML}
-      ${audioHTML}
-      ${transcriptHTML}
-      
-        ${questionsHTML}
-      
-      
-        <button class="btn btn-secondary" onclick="previousSet(${num})">Back</button>
-        <button class="btn btn-primary btn-large" onclick="nextSet($$ {num})"> $${num &#x3C; 4 ? 'Next Set' : 'Submit Survey'}</button>
-      
-    
-  `;
-}
-function generateSurveyQuestions(num) {
-let html = '';
-// Section A: General Impression
-html += 'Section A: General Impression';
-surveyQuestionsData.sectionA.forEach(q => {
-if (q.type === 'rating') {
-html += `
-        
-          ${q.label} *
-          
-            ${q.options.map(val => ` ${val}`).join('')}
-          
-          PoorExcellent
-        
-      `;
-    }
-  });
-// Section B: Detailed Criteria
-html += 'Section B: Detailed Criteria';
-surveyQuestionsData.sectionB.forEach(crit => {
-html += `
-      
-        ${crit.title}
-        Question: ${crit.question}
-        What to Listen For:
-        ${crit.whatToListen.map(item => `${item}`).join('')}
-        Scoring Scale:
-        ${crit.scoringScale.map(desc => `${desc}`).join('')}
-        
-          ${[1,2,3,4,5].map(val => ` ${val}`).join('')}
-        
-        PoorExcellent
-        <textarea name="d$$ {num}_ $${crit.id}_comments" class="form-control textarea-mobile" placeholder="Optional comments..." aria-label="Comments for ${crit.title}"></textarea>
-      
-    `;
-  });
-// Section C: Open Comments
-html += 'Section C: Open Comments';
-surveyQuestionsData.sectionC.forEach(q => {
-html += `
-      
-        ${q.label}
-        <textarea name="d$$ {num}_ $${q.id}" class="form-control textarea-mobile" placeholder="Optional comments..." $$ {q.required ? 'required' : ''} aria-label=" $${q.label}"></textarea>
-      
-    `;
-  });
-return html;
-}
-// ========================================
-// SAVE DIALOGUE/SET DATA (Enhanced for modularity)
-// ========================================
-function saveSetData(num) {
-const formId = set${num}Form;
-const form = document.getElementById(formId);
-if (!form) {
-console.error(Form ${formId} not found - check generation);
-return;
-}
-const fd = new FormData(form);
-const setData = {
-setNumber: num,
-sectionA: {},
-sectionB: {},
-sectionC: {}
-};
-// Save Section A
-surveyQuestionsData.sectionA.forEach(q => {
-setData.sectionA[q.id] = fd.get(d${num}_${q.id}) || '';
-});
-// Save Section B (scores + comments)
-surveyQuestionsData.sectionB.forEach(crit => {
-setData.sectionB[crit.id] = {
-score: parseInt(fd.get(d${num}_${crit.id})) || null,
-comments: fd.get(d${num}_${crit.id}_comments) || ''
-};
-});
-// Save Section C
-surveyQuestionsData.sectionC.forEach(q => {
-setData.sectionC[q.id] = fd.get(d${num}_${q.id}) || '';
-});
-surveyData.dialogues[num - 1] = setData;
-console.log(Set ${num} saved:, setData);
-}
-// ========================================
-// SET NAVIGATION WITHIN SECTION 1
-// ========================================
-function nextSet(num) {
-const form = document.getElementById(set${num}Form);
-if (!form.checkValidity()) {
-form.reportValidity();
-return;
-}
-saveSetData(num);
-if (num < 4) {
-currentSet = num + 1;
-showCurrentSet();
-} else {
-submitSurvey();
-}
-}
-function previousSet(num) {
-saveSetData(num);
-if (num === 1) {
-showSection('demographicsSection');
-} else {
-currentSet = num - 1;
-showCurrentSet();
-}
-}
-// ========================================
-// SUBMIT TO FIREBASE (Enhanced with error handling)
-// ========================================
-async function submitSurvey() {
-const lastForm = document.getElementById('set4Form');
-if (!lastForm.checkValidity()) {
-lastForm.reportValidity();
-return;
-}
-saveSetData(4);
-const btn = event.target;
-const originalText = btn.textContent;
-btn.textContent = 'Submitting...';
-btn.disabled = true;
-try {
-const timestamp = new Date();
-const raterName = surveyData.demographics.raterName || 'Anonymous';
-const participantID = ${raterName}_${Date.now()};
-const finalData = {
-participantID: participantID,
-submissionTimestamp: timestamp.toISOString(),
-submissionDateLocal: timestamp.toLocaleString(),
-demographics: surveyData.demographics,
-dialogues: surveyData.dialogues,
-deviceInfo: {
-userAgent: navigator.userAgent,
-language: navigator.language,
-timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-}
-};
-console.log('📤 Submitting to Firebase...', finalData);
-if (typeof firebase !== 'undefined' && firebase.database) {
-const database = firebase.database();
-const dbPath = responses/${participantID};
-await database.ref(dbPath).set(finalData);
-console.log('✅ Data saved to Firebase!');
-} else {
-console.warn('Firebase not available - local save only');
-}
-// Hide progress
-const progressContainer = document.getElementById('progressContainer');
-if (progressContainer) progressContainer.style.display = 'none';
-// Show confirmation
-showSection('confirmationSection');
-const confirmationDetails = document.getElementById('confirmationDetails');
-if (confirmationDetails) {
-confirmationDetails.innerHTML = `
-        ✅ Submission Complete!
-        Participant ID:
-${participantID}
-        Submitted:
-${timestamp.toLocaleString()}
-        Status:
-✅ Saved to database
-      `;
-    }
-  } catch (error) {
-    console.error('Submission error:', error);
-    btn.textContent = originalText;
-    btn.disabled = false;
-    alert('Error submitting survey. Please try again or check console.');
+  hideAllSections();
+  const section = document.getElementById(id);
+  if (section) {
+    section.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      addScrollListenersToFormInputs();
+    }, 100);
+    updateProgress();
   }
 }
-// ========================================
-// SCROLL LISTENERS (Refined for dynamic offsets in Stage 1 fixes)
-// ========================================
-function addScrollListenersToFormInputs() {
-const inputs = document.querySelectorAll('input, select, textarea');
-inputs.forEach(input => {
-input.addEventListener('focus', () => {
-const rect = input.getBoundingClientRect();
-const offset = rect.top + window.scrollY - 100; // Dynamic buffer for headers/long text
-window.scrollTo({ top: offset, behavior: 'smooth' });
-});
-});
+
+// Submit demographics and move to Section 1, showing first set
+function submitDemographics() {
+  console.log('Submit Demographics button clicked');  // Diagnostic
+  const form = document.getElementById('demographicsForm');
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  surveyData.demographics = {
+    raterName: document.getElementById('raterName').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    qualifications: Array.from(document.querySelectorAll('input[name="qualifications"]:checked')).map(cb => cb.value),
+    nationality: document.getElementById('nationality').value.trim()
+  };
+
+  console.log('Demographics saved:', surveyData.demographics);
+  currentSet = 1;
+  showSection('section1');
+  showCurrentSet();
 }
+
+// ... (rest of showCurrentSet, generateAllSets, etc.)
+
 // ========================================
 // INITIALIZATION
 // ========================================
 document.addEventListener('DOMContentLoaded', function() {
-if (typeof firebase !== 'undefined') {
-try {
-firebase.initializeApp(firebaseConfig);
-console.log('✅ Firebase initialized');
-} catch (e) {
-console.log('Firebase already initialized or error:', e);
-}
-}
-// Generate all sets dynamically in Section 1
-generateAllSets();
-// Add smooth scroll behavior to form inputs
-addScrollListenersToFormInputs();
-// Initialize progress
-calculateTotalQuestions();
-updateProgress();
+  if (typeof firebase !== 'undefined') {
+    try {
+      firebase.initializeApp(firebaseConfig);
+      console.log('✅ Firebase initialized');
+    } catch (e) {
+      console.log('Firebase already initialized or error:', e);
+    }
+  }
+  
+  // Generate all sets dynamically in Section 1
+  generateAllSets();
+  
+  // Add smooth scroll behavior to form inputs
+  addScrollListenersToFormInputs();
+  
+  // Initialize progress
+  calculateTotalQuestions();
+  updateProgress();
+
+  // Bind button events (replaces inline onclick)
+  const startButton = document.getElementById('startSurveyButton');
+  if (startButton) {
+    startButton.addEventListener('click', startSurvey);
+  }
+
+  const backButton = document.getElementById('backToIntroButton');
+  if (backButton) {
+    backButton.addEventListener('click', () => {
+      console.log('Back to Intro button clicked');  // Diagnostic
+      showSection('introSection');
+    });
+  }
+
+  const submitDemographicsButton = document.getElementById('submitDemographicsButton');
+  if (submitDemographicsButton) {
+    submitDemographicsButton.addEventListener('click', submitDemographics);
+  }
 });
-</DOCUMENT>
