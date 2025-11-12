@@ -227,16 +227,15 @@ body {
   background-color: var(--color-background);
 }
 
-/* Progress Bar - Now fixed at bottom */
+/* Progress Bar - Fixed at bottom */
 .progress-bar-container {
-  position: fixed;  /* Changed from sticky for true bottom fixation */
-  bottom: 0;        /* Anchor to bottom */
-  top: auto;        /* Override any top positioning */
+  position: fixed;
+  bottom: 0;
   left: 0;
   width: 100%;
   background-color: var(--color-surface);
-  z-index: 1000;    /* Ensure it stays above content */
-  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.05);  /* Enhanced: Upward shadow for depth */
+  z-index: 1000;
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.05);
   padding: var(--space-8) var(--space-12);
 }
 
@@ -269,10 +268,10 @@ body {
   text-align: right;
 }
 
-/* Main Content - Added bottom padding to prevent overlap */
+/* Main Content - Increased bottom padding for safe zone in Stage 1 fixes */
 .main-content {
   flex: 1;
-  padding: var(--space-16) var(--space-16) var(--space-48);  /* Enhanced bottom padding for bar + buffer */
+  padding: var(--space-16) var(--space-16) max(80px, calc(var(--space-48) + env(safe-area-inset-bottom)));
   max-width: var(--container-sm);
   margin: 0 auto;
   width: 100%;
@@ -281,75 +280,40 @@ body {
 /* Sections */
 .section {
   display: none;
-  flex-direction: column;
-  gap: var(--space-20);
 }
 
 .section.active {
-  display: flex;
+  display: block;
 }
 
 /* Survey Container */
 .survey-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-20);
   padding: var(--space-16);
   background-color: var(--color-surface);
-  border: 1px solid var(--color-card-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-}
-
-/* Headings */
-h1, h2, h3 {
-  color: var(--color-text);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: var(--letter-spacing-tight);
-}
-
-h1 {
-  font-size: var(--font-size-3xl);
-  margin-bottom: var(--space-16);
-}
-
-h2 {
-  font-size: var(--font-size-2xl);
-  margin-bottom: var(--space-12);
-}
-
-h3 {
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--space-8);
+  box-shadow: var(--shadow-md);
 }
 
 /* Form Elements */
-.survey-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-20);
-}
-
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
+  margin-bottom: var(--space-20);
 }
 
 .form-label {
-  font-size: var(--font-size-md);
+  display: block;
+  margin-bottom: var(--space-8);
   font-weight: var(--font-weight-medium);
   color: var(--color-text);
 }
 
 .form-control {
   width: 100%;
-  padding: var(--space-12) var(--space-16);
+  padding: var(--space-12);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-base);
-  background-color: var(--color-surface);
+  background-color: var(--color-background);
   color: var(--color-text);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-base);
   transition: border-color var(--duration-fast) ease;
 }
 
@@ -359,46 +323,27 @@ h3 {
   box-shadow: var(--focus-ring);
 }
 
+.checkbox-group, .radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
 .textarea-mobile {
   min-height: 100px;
   resize: vertical;
 }
 
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
-.checkbox-group label {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
-  font-size: var(--font-size-sm);
-  cursor: pointer;
-}
-
-.checkbox-group input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--color-primary);
-}
-
-/* Rating Groups - Updated for segmented rectangular spectrum */
+/* Rating Group */
 .rating-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-12);
-  padding: var(--space-20); /* Increased padding for rubric details */
+  margin-bottom: var(--space-24);
+  padding: var(--space-16);
   background-color: var(--color-secondary);
   border-radius: var(--radius-base);
-  margin-bottom: var(--space-16);
-  font-size: var(--font-size-sm);
 }
 
-.rating-group ul {
-  list-style-type: disc;
-  padding-left: var(--space-20);
+.rating-group label {
+  font-weight: var(--font-weight-bold);
   margin-bottom: var(--space-8);
 }
 
@@ -409,34 +354,34 @@ h3 {
 .rating-scale {
   display: flex;
   justify-content: space-between;
-  gap: 0;  /* No gap for connected segments */
-  border: 1px solid var(--color-border);  /* Outer border for single rectangle */
-  border-radius: var(--radius-base);  /* Slight rounding for polish, but rectangular feel */
-  overflow: hidden;  /* Hide internal overflows for clean segments */
-  margin-bottom: var(--space-8);  /* Space before labels */
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  overflow: hidden;
+  margin-bottom: var(--space-8);
 }
 
 .rating-label {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;  /* Equal width segments */
-  height: 48px;  /* Enhanced: Taller for better touch targets */
-  border-right: 1px solid var(--color-border);  /* Internal dividers, prominent borders */
-  background-color: var(--color-surface);  /* Neutral base */
+  flex: 1;
+  height: 48px;
+  border-right: 1px solid var(--color-border);
+  background-color: var(--color-surface);
   cursor: pointer;
   transition: all var(--duration-fast) ease;
-  font-size: var(--font-size-md);  /* Larger numbers for visibility */
-  color: var(--color-text-secondary);  /* Subtle text */
-  position: relative;  /* For absolute positioning of input */
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+  position: relative;
 }
 
 .rating-label:last-child {
-  border-right: none;  /* No divider on last segment */
+  border-right: none;
 }
 
 .rating-label:hover {
-  background: linear-gradient(to bottom, var(--color-secondary-hover), var(--color-secondary));  /* Enhanced: Subtle gradient for spectrum feel */
+  background: linear-gradient(to bottom, var(--color-secondary-hover), var(--color-secondary));
 }
 
 .rating-label input[type="radio"] {
@@ -452,8 +397,8 @@ h3 {
 .rating-label:has(input[type="radio"]:checked) {
   background-color: var(--color-primary);
   color: var(--color-btn-primary-text);
-  border-color: var(--color-primary-hover);  /* Prominent border on select */
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);  /* Enhanced: Inset shadow for depth */
+  border-color: var(--color-primary-hover);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
 }
 
 .scale-labels {
@@ -462,8 +407,8 @@ h3 {
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
   margin-top: var(--space-4);
-  padding: 0 var(--space-8);  /* Align with segments */
-  font-weight: var(--font-weight-medium); /* Improved contrast for labels */
+  padding: 0 var(--space-8);
+  font-weight: var(--font-weight-medium);
 }
 
 /* Buttons */
@@ -581,10 +526,7 @@ audio.audio-player::-webkit-media-controls-timeline {
   font-weight: var(--font-weight-semibold);
 }
 
-/* ========================================
-   CONFIRMATION SECTION
-   ======================================== */
-
+/* Confirmation Section */
 .confirmation-content {
   flex: 1;
   display: flex;
@@ -626,10 +568,7 @@ audio.audio-player::-webkit-media-controls-timeline {
   margin-top: var(--space-16);
 }
 
-/* ========================================
-   RESPONSIVE DESIGN - MOBILE PORTRAIT
-   ======================================== */
-
+/* Responsive Design - Mobile Portrait */
 @media (max-width: 480px) {
   .survey-container {
     padding: var(--space-12);
@@ -679,10 +618,7 @@ audio.audio-player::-webkit-media-controls-timeline {
   }
 }
 
-/* ========================================
-   RESPONSIVE DESIGN - TABLETS & LARGER
-   ======================================== */
-
+/* Responsive Design - Tablets & Larger */
 @media (min-width: 600px) {
   .survey-container {
     padding: var(--space-20);
@@ -729,10 +665,7 @@ audio.audio-player::-webkit-media-controls-timeline {
   }
 }
 
-/* ========================================
-   ACCESSIBILITY & TOUCH-FRIENDLY
-   ======================================== */
-
+/* Accessibility & Touch-Friendly */
 @media (hover: hover) {
   .btn:hover {
     opacity: 0.9;
@@ -763,10 +696,7 @@ audio.audio-player::-webkit-media-controls-timeline {
   }
 }
 
-/* ========================================
-   LANDSCAPE MODE OPTIMIZATION
-   ======================================== */
-
+/* Landscape Mode Optimization */
 @media (max-height: 600px) and (orientation: landscape) {
   .survey-container {
     padding: var(--space-12);
@@ -793,14 +723,11 @@ audio.audio-player::-webkit-media-controls-timeline {
   }
 
   .rating-group {
-    font-size: var(--font-size-base);  /* Enhanced: Larger text for rubric in landscape */
+    font-size: var(--font-size-base);  /* Larger text for rubric in landscape */
   }
 }
 
-/* ========================================
-   INPUT HELPERS FOR ANDROID
-   ======================================== */
-
+/* Input Helpers for Android */
 /* Prevent zoom on iOS when input is focused */
 input[type="text"],
 input[type="number"],
@@ -816,10 +743,7 @@ select {
   color: var(--color-text);
 }
 
-/* ========================================
-   SAFE AREA SUPPORT (iPhone notch, etc.)
-   ======================================== */
-
+/* Safe Area Support (iPhone notch, etc.) */
 @supports (padding: max(0px)) {
   body {
     padding-left: max(0px, env(safe-area-inset-left));
@@ -832,10 +756,7 @@ select {
   }
 }
 
-/* ========================================
-   SCROLLING OPTIMIZATION
-   ======================================== */
-
+/* Scrolling Optimization */
 html {
   scroll-behavior: smooth;
 }
@@ -852,10 +773,7 @@ a {
   touch-action: manipulation;
 }
 
-/* ========================================
-   PRINT STYLES
-   ======================================== */
-
+/* Print Styles */
 @media print {
   .progress-bar-container,
   .button-group {
