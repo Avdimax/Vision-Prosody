@@ -286,6 +286,20 @@ body {
   display: block;
 }
 
+/* Fade-In Animation (Added for JS classList.add('fade-in') */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Survey Container */
 .survey-container {
   padding: var(--space-16);
@@ -318,6 +332,7 @@ body {
 }
 
 .form-control:focus {
+  border-color: var(--color-primary);
   border-color: var(--color-primary);
   outline: none;
   box-shadow: var(--focus-ring);
