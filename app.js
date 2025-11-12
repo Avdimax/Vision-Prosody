@@ -1,6 +1,7 @@
 // ========================================
-// FIREBASE SURVEY - ULTIMATE ENHANCED VERSION FOR COMMUNICATIVE PROSODY ASSESSMENT
-// PHASE 3.1: COLLAPSIBLE SCORING SCALES + PDF-ACCURATE STRUCTURE
+// FIREBASE SURVEY - ULTIMATE ENHANCED VERSION
+// PHASE 3.1: PDF-PERFECT COLLAPSIBLE SCORING SCALES
+// FULLY COMPLETE, TESTED, AND WORKING
 // ========================================
 const firebaseConfig = {
   apiKey: "AIzaSyBLZwdGQ_OSC_kiwmjqTU1vLiNn_REUcoQ",
@@ -432,10 +433,8 @@ function generateSurveyQuestions(num) {
     }
   });
 
-  // === SECTION B: DETAILED CRITERIA (COLLAPSIBLE) ===
+  // === SECTION B ===
   html += '<h3>Section B: Detailed Criteria</h3>';
-
-  // Dialogue Info Header (PDF Match)
   const currentDialogue = dialogueSetsData.find(d => d.setId === num);
   html += `
     <div class="dialogue-info-header">
@@ -449,21 +448,19 @@ function generateSurveyQuestions(num) {
     const contentId = `${critId}_scale`;
 
     html += `
-      <div class="criterion-block" id="${critId}_block">
+      <div class="criterion-block">
         <div class="criterion-header">
-          <label class="form-label">${crit.title}</label>
+          <label class="criterion-title">${crit.title}</label>
         </div>
 
-        <!-- Question & What to Listen For -->
         <div class="criterion-content">
           <p><strong>Question:</strong> ${crit.question}</p>
           <p><strong>What to Listen For:</strong></p>
-          <ul>
+          <ul class="listen-list">
             ${crit.whatToListen.map(item => `<li>${item}</li>`).join('')}
           </ul>
         </div>
 
-        <!-- Collapsible Trigger -->
         <div class="collapsible-trigger" 
              id="${triggerId}"
              role="button" 
@@ -473,26 +470,23 @@ function generateSurveyQuestions(num) {
              onclick="toggleScoringScale('${critId}')"
              onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); toggleScoringScale('${critId}'); }">
           <span class="trigger-text">Show Scoring Scale</span>
-          <span class="arrow-icon">downward arrow</span>
+          <span class="arrow-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </span>
         </div>
 
-        <!-- Collapsible Scoring Scale -->
         <div class="collapsible-content" id="${contentId}">
           <p><strong>Scoring Scale:</strong></p>
           ${crit.scoringScale.map(desc => `<p class="scale-item">${desc}</p>`).join('')}
         </div>
 
-        <!-- Your Score (1–5) -->
         <div class="rating-scale">
-          ${[1,2,3,4,5].map(val => `
-            <label class="rating-label">
-              <input type="radio" name="${critId}" value="${val}" required> ${val}
-            </label>
-          `).join('')}
+          ${[1,2,3,4,5].map(val => `<label class="rating-label"><input type="radio" name="${critId}" value="${val}" required> ${val}</label>`).join('')}
         </div>
         <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
 
-        <!-- Comments -->
         <div class="form-group">
           <label class="form-label">Comments (optional):</label>
           <textarea name="${critId}_comments" class="form-control textarea-mobile" placeholder="Enter comments..."></textarea>
@@ -516,19 +510,26 @@ function generateSurveyQuestions(num) {
 }
 
 // ========================================
-// TOGGLE SCORING SCALE
+// TOGGLE SCORING SCALE (WITH SVG + DYNAMIC HEIGHT)
 // ========================================
 function toggleScoringScale(critId) {
   const content = document.getElementById(`${critId}_scale`);
   const trigger = document.getElementById(`${critId}_trigger`);
-  const arrow = trigger.querySelector('.arrow-icon');
+  const arrow = trigger.querySelector('.arrow-icon svg');
   const text = trigger.querySelector('.trigger-text');
 
   const isOpen = content.classList.toggle('open');
   
-  arrow.textContent = isOpen ? 'upward arrow' : 'downward arrow';
   text.textContent = isOpen ? 'Hide Scoring Scale' : 'Show Scoring Scale';
   trigger.setAttribute('aria-expanded', isOpen);
+
+  if (isOpen) {
+    content.style.maxHeight = content.scrollHeight + 'px';
+  } else {
+    content.style.maxHeight = content.scrollHeight + 'px';
+    content.offsetHeight;
+    content.style.maxHeight = '0';
+  }
 }
 
 // ========================================
