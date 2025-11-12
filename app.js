@@ -1,5 +1,5 @@
 // ========================================
-// FIREBASE SURVEY - COMPLETE WORKING VERSION
+// FIREBASE SURVEY - COMPLETE WORKING VERSION FOR COMMUNICATIVE PROSODY ASSESSMENT
 // ========================================
 const firebaseConfig = {
   apiKey: "AIzaSyBLZwdGQ_OSC_kiwmjqTU1vLiNn_REUcoQ",
@@ -14,10 +14,12 @@ const firebaseConfig = {
 
 const surveyData = {
   demographics: {},
-  dialogues: [{}, {}, {}, {}, {}]
+  dialogues: [{}, {}, {}, {}]  // Adjusted for 4 dialogues
 };
 
 let currentDialogue = 0;
+let totalQuestions = 0;
+const totalSteps = 5;  // Demographics + 4 dialogues
 
 document.addEventListener('DOMContentLoaded', function() {
   if (typeof firebase !== 'undefined') {
@@ -31,15 +33,16 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Add smooth scroll behavior to form inputs
   addScrollListenersToFormInputs();
+  
+  // Initialize progress
+  calculateTotalQuestions();
+  updateProgress();
 });
 
 // ========================================
 // AUTO-SCROLL FUNCTIONALITY
 // ========================================
-// ======================================
-// SMOOTH SCROLLING - AUTO SCROLL FEATURE
-// ======================================
-document.addEventListener('DOMContentLoaded', function() {
+function addScrollListenersToFormInputs() {
   const inputs = document.querySelectorAll('input, textarea, select');
   inputs.forEach(input => {
     input.addEventListener('focus', function() {
@@ -48,8 +51,75 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 100);
     });
   });
-});
+}
 
+// ========================================
+// PROGRESS BAR UPDATE - Question-Based
+// ========================================
+function calculateTotalQuestions() {
+  const allRequired = document.querySelectorAll('input[required], textarea[required], select[required]');
+  const groups = {};
+  allRequired.forEach(input => {
+    const name = input.name || input.id;
+    if (!groups[name]) groups[name] = [];
+    groups[name].push(input);
+  });
+  totalQuestions = Object.keys(groups).length;
+  console.log('Total questions:', totalQuestions);
+}
+
+function getCompletedCount() {
+  let completed = 0;
+  const allRequired = document.querySelectorAll('input[required], textarea[required], select[required]');
+  const groups = {};
+  allRequired.forEach(input => {
+    const name = input.name || input.id;
+    if (!groups[name]) groups[name] = [];
+    groups[name].push(input);
+  });
+
+  for (let name in groups) {
+    const inputs = groups[name];
+    let isFilled = false;
+    const type = inputs[0].type;
+
+    if (type === 'radio' || type === 'checkbox') {
+      isFilled = inputs.some(i => i.checked);
+    } else if (inputs[0].tagName === 'TEXTAREA' || type === 'text' || type === 'date' || type === 'email') {
+      isFilled = inputs[0].value.trim() !== '';
+    } else if (inputs[0].tagName === 'SELECT') {
+      isFilled = inputs[0].value !== '';
+    }
+
+    if (isFilled) completed++;
+  }
+  return completed;
+}
+
+function updateProgress() {
+  const completed = getCompletedCount();
+  const percentage = totalQuestions > 0 ? (completed / totalQuestions) * 100 : 0;
+  const progressContainer = document.getElementById('progressContainer');
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('progressText');
+
+  if (progressContainer) progressContainer.style.display = 'block';
+  if (progressFill) progressFill.style.width = `${percentage}%`;
+  if (progressText) progressText.textContent = `${Math.round(percentage)}%`;
+}
+
+// Debounce function for performance
+function debounce(fn, delay = 300) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn(...args), delay);
+  };
+}
+
+// Live updates
+document.addEventListener('input', debounce(updateProgress));
+document.addEventListener('change', debounce(updateProgress));
 
 // ========================================
 // NAVIGATION
@@ -57,6 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function startSurvey() {
   hideAllSections();
   showSection('demographicsSection');
+  updateProgress();  // Initial update
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -71,10 +142,12 @@ function showSection(id) {
     section.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // Re-attach scroll listeners to newly visible inputs
+    // Re-attach scroll listeners
     setTimeout(() => {
       addScrollListenersToFormInputs();
     }, 100);
+    
+    updateProgress();  // Update on section show
   }
 }
 
@@ -89,10 +162,12 @@ function submitDemographics() {
   }
 
   surveyData.demographics = {
-    firstName: document.getElementById('firstName').value.trim(),
-    age: document.getElementById('age').value.trim(),
+    raterName: document.getElementById('raterName').value.trim(),
+    date: document.getElementById('date').value,
+    raterID: document.getElementById('raterID').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    qualifications: Array.from(document.querySelectorAll('input[name="qualifications"]:checked')).map(cb => cb.value),
     nationality: document.getElementById('nationality').value.trim(),
-    educationLevel: document.getElementById('educationLevel').value,
     nativeLanguageVariety: document.getElementById('nativeLanguageVariety').value
   };
 
@@ -114,10 +189,12 @@ function nextDialogue(num) {
   }
 
   saveDialogueData(num);
-  if (num < 5) {
+  if (num < 4) {  // Adjusted for 4 dialogues
     currentDialogue = num + 1;
     hideAllSections();
     showSection(`dialogue${currentDialogue}Section`);
+  } else {
+    submitSurvey();
   }
 }
 
@@ -145,16 +222,42 @@ function saveDialogueData(num) {
   surveyData.dialogues[num - 1] = {
     dialogueNumber: num,
     sectionA: {
-      q1_naturalness: fd.get(`d${num}_q1_naturalness`) || '',
+      q1_prosody_naturalness: fd.get(`d${num}_q1_prosody_naturalness`) || '',
       q2_expectancy: fd.get(`d${num}_q2_expectancy`) || ''
     },
     sectionB: {
-      q1_grammar: parseInt(fd.get(`d${num}_q1_grammar`)) || null,
-      q3_pacing: parseInt(fd.get(`d${num}_q3_pacing`)) || null,
-      q5_pragmatics: parseInt(fd.get(`d${num}_q5_pragmatics`)) || null,
-      q7_prosodic: parseInt(fd.get(`d${num}_q7_prosodic`)) || null,
-      q8_cultural: parseInt(fd.get(`d${num}_q8_cultural`)) || null,
-      q9_dynamics: parseInt(fd.get(`d${num}_q9_dynamics`)) || null
+      c1_intonation: {
+        score: parseInt(fd.get(`d${num}_c1_intonation`)) || null,
+        comments: fd.get(`d${num}_c1_comments`) || ''
+      },
+      c2_stress: {
+        score: parseInt(fd.get(`d${num}_c2_stress`)) || null,
+        comments: fd.get(`d${num}_c2_comments`) || ''
+      },
+      c3_rhythm: {
+        score: parseInt(fd.get(`d${num}_c3_rhythm`)) || null,
+        comments: fd.get(`d${num}_c3_comments`) || ''
+      },
+      c4_pacing: {
+        score: parseInt(fd.get(`d${num}_c4_pacing`)) || null,
+        comments: fd.get(`d${num}_c4_comments`) || ''
+      },
+      c5_chunking: {
+        score: parseInt(fd.get(`d${num}_c5_chunking`)) || null,
+        comments: fd.get(`d${num}_c5_comments`) || ''
+      },
+      c6_emotion: {
+        score: parseInt(fd.get(`d${num}_c6_emotion`)) || null,
+        comments: fd.get(`d${num}_c6_comments`) || ''
+      },
+      c7_information: {
+        score: parseInt(fd.get(`d${num}_c7_information`)) || null,
+        comments: fd.get(`d${num}_c7_comments`) || ''
+      },
+      c8_overall: {
+        score: parseInt(fd.get(`d${num}_c8_overall`)) || null,
+        comments: fd.get(`d${num}_c8_comments`) || ''
+      }
     },
     sectionC: {
       q4_suggestions: fd.get(`d${num}_q4_suggestions`) || ''
@@ -168,13 +271,13 @@ function saveDialogueData(num) {
 // SUBMIT TO FIREBASE
 // ========================================
 async function submitSurvey() {
-  const form = document.getElementById('dialogue5Form');
+  const form = document.getElementById('dialogue4Form');  // Adjusted for Dialogue 4
   if (!form.checkValidity()) {
     form.reportValidity();
     return;
   }
 
-  saveDialogueData(5);
+  saveDialogueData(4);
 
   const btn = event.target;
   const originalText = btn.textContent;
@@ -183,8 +286,8 @@ async function submitSurvey() {
 
   try {
     const timestamp = new Date();
-    const firstName = surveyData.demographics.firstName || 'Anonymous';
-    const participantID = `${firstName}_${Date.now()}`;
+    const raterName = surveyData.demographics.raterName || surveyData.demographics.raterID || 'Anonymous';
+    const participantID = `${raterName}_${Date.now()}`;
 
     const finalData = {
       participantID: participantID,
@@ -202,16 +305,18 @@ async function submitSurvey() {
     console.log('📤 Submitting to Firebase...');
 
     if (typeof firebase !== 'undefined' && firebase.database) {
-      try {
-        const database = firebase.database();
-        const dbPath = `responses/${participantID}`;
-        await database.ref(dbPath).set(finalData);
-        console.log('✅ Data saved to Firebase!');
-      } catch (firebaseError) {
-        console.error('Firebase error:', firebaseError);
-      }
+      const database = firebase.database();
+      const dbPath = `responses/${participantID}`;
+      await database.ref(dbPath).set(finalData);
+      console.log('✅ Data saved to Firebase!');
     } else {
       console.warn('Firebase not available');
+    }
+
+    // Hide progress bar
+    const progressContainer = document.getElementById('progressContainer');
+    if (progressContainer) {
+      progressContainer.style.display = 'none';
     }
 
     // Show confirmation
