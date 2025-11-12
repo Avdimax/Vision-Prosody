@@ -628,42 +628,111 @@ async function submitSurvey() {
 }
 
 // ========================================
-// REVISED SMART AUTO-SCROLLING (MOBILE-OPTIMIZED)
+// PHASE 2: FULL-SCREEN SMART AUTO-SCROLLING
+// PDF-PERFECT, MOBILE + PC
+// ========================================
+
+let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+// ========================================
+// REVISED SMART SCROLLING
 // ========================================
 function addScrollListenersToFormInputs() {
-  // Remove existing listeners to avoid duplicates
-  document.querySelectorAll('input[type="radio"], .collapsible-trigger').forEach(el => {
+  // Remove old listeners
+  document.querySelectorAll('input[type="radio"], .collapsible-trigger, textarea').forEach(el => {
     el.removeEventListener('change', handleRadioChange);
-    el.removeEventListener('touchstart', handleTouchStart);
+    el.removeEventListener('click', handleTriggerClick);
+    el.removeEventListener('focus', handleFocus);
   });
 
-  document.querySelectorAll('textarea').forEach(textarea => {
-    textarea.removeEventListener('focus', handleFocus);
-    textarea.addEventListener('focus', handleFocus);
-  });
-
-  // Add listeners
+  // Radio buttons → next trigger
   document.querySelectorAll('input[type="radio"]').forEach(radio => {
-    radio.addEventListener('change', debounce(handleRadioChange, 200));
+    radio.addEventListener('change', debounce(handleRadioChange, 150));
   });
 
+  // Scoring scale trigger
   document.querySelectorAll('.collapsible-trigger').forEach(trigger => {
-    trigger.addEventListener('click', debounce(handleTriggerClick, 200));
-    if (isMobile) {
-      trigger.addEventListener('touchstart', debounce(handleTouchStart, 200));
-    }
+    trigger.addEventListener('click', debounce(handleTriggerClick, 150));
   });
 
-  // ResizeObserver for dynamic content (collapsibles, resizes)
-  const resizeObserver = new ResizeObserver(debounce(entries => {
-    if (document.activeElement && entries.length > 0) {
-      setTimeout(() => scrollToNextUnanswered(), 400); // Wait for animation
+  // Comments textarea
+  document.querySelectorAll('textarea').forEach(textarea => {
+    textarea.addEventListener('focus', debounce(handleFocus, 100));
+  });
+
+  // ResizeObserver for collapsible expansion
+  const resizeObserver = new ResizeObserver(debounce(() => {
+    const active = document.activeElement;
+    if (active) {
+      const block = active.closest('.criterion-block');
+      if (block) fullScreenCenter(block);
     }
   }, 300));
 
-  document.querySelectorAll('.criterion-block, .form-group').forEach(el => resizeObserver.observe(el));
+  document.querySelectorAll('.criterion-block').forEach(block => resizeObserver.observe(block));
 }
 
+// After rating → go to next "Show Scoring Scale"
+function handleRadioChange(e) {
+  const currentBlock = e.target.closest('.criterion-block');
+  const allBlocks = Array.from(document.querySelectorAll('.criterion-block'));
+  const currentIndex = allBlocks.indexOf(currentBlock);
+  const nextBlock = allBlocks[currentIndex + 1];
+
+  if (nextBlock) {
+    const nextTrigger = nextBlock.querySelector('.collapsible-trigger');
+    if (nextTrigger) {
+      setTimeout(() => fullScreenCenter(nextTrigger), 200);
+    }
+  } else {
+    // Last criterion → go to Section C
+    const sectionC = document.querySelector('h3:contains("Section C")');
+    if (sectionC) fullScreenCenter(sectionC.parentElement);
+  }
+}
+
+// Trigger click → expand + center the whole block
+function handleTriggerClick(e) {
+  const trigger = e.currentTarget;
+  const critId = trigger.id.replace('_trigger', '');
+  toggleScoringScale(critId);
+
+  // Re-center after expansion
+  setTimeout(() => {
+    const block = trigger.closest('.criterion-block');
+    fullScreenCenter(block);
+  }, 400);
+}
+
+// Comment focus → center the block
+function handleFocus(e) {
+  const block = e.target.closest('.criterion-block') || e.target.closest('.form-group');
+  fullScreenCenter(block);
+}
+
+// ========================================
+// FULL-SCREEN CENTERING (MOBILE + PC)
+// ========================================
+function fullScreenCenter(element) {
+  if (!element) return;
+
+  const rect = element.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+  const elementHeight = rect.height;
+
+  // If element is taller than viewport, align to top
+  if (elementHeight > viewportHeight * 0.9) {
+    const top = window.scrollY + rect.top - 20;
+    window.scrollTo({ top, behavior: 'smooth' });
+  } else {
+    // Center in viewport
+    const centerOffset = (viewportHeight - elementHeight) / 2;
+    const top = window.scrollY + rect.top - centerOffset;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+}
+
+// Debounce
 function debounce(fn, delay) {
   let timeout;
   return (...args) => {
@@ -672,59 +741,27 @@ function debounce(fn, delay) {
   };
 }
 
-function handleRadioChange(e) {
-  const group = e.target.closest('.criterion-block') || e.target.closest('.form-group');
-  setTimeout(() => scrollToNextUnanswered(group), 200);
-}
+// ========================================
+// TOGGLE SCORING SCALE (UNCHANGED)
+// ========================================
+function toggleScoringScale(critId) {
+  const content = document.getElementById(`${critId}_scale`);
+  const trigger = document.getElementById(`${critId}_trigger`);
+  const arrow = trigger.querySelector('.arrow-icon svg');
+  const text = trigger.querySelector('.trigger-text');
 
-function handleTriggerClick(e) {
-  const trigger = e.currentTarget;
-  const critId = trigger.id.replace('_trigger', '');
-  toggleScoringScale(critId);
-  // Re-scroll after expansion
-  setTimeout(() => smoothScrollToElement(trigger.closest('.criterion-block'), 100), 400);
-}
+  const isOpen = content.classList.toggle('open');
+  
+  text.textContent = isOpen ? 'Hide Scoring Scale' : 'Show Scoring Scale';
+  trigger.setAttribute('aria-expanded', isOpen);
 
-function handleTouchStart(e) {
-  e.preventDefault(); // Prevent double-touch
-  handleTriggerClick(e);
-}
-
-function handleFocus(e) {
-  const parent = e.target.closest('.criterion-block') || e.target.closest('.form-group');
-  // Center for textareas on mobile
-  const offset = isMobile ? window.innerHeight / 2 : 120;
-  smoothScrollToElement(parent, offset);
-}
-
-function scrollToNextUnanswered(startAfter = null) {
-  const all = Array.from(document.querySelectorAll('.criterion-block, .form-group'));
-  const startIdx = startAfter ? all.indexOf(startAfter) : -1;
-  const next = all.slice(startIdx + 1).find(group => {
-    const radio = group.querySelector('input[type="radio"]:checked');
-    const textarea = group.querySelector('textarea[required]');
-    return !radio && (!textarea || !textarea.value.trim());
-  });
-
-  if (next) {
-    // Check if already visible (avoid jitter)
-    const rect = next.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) return;
-
-    smoothScrollToElement(next, isMobile ? window.innerHeight / 2 : 100);
-    const firstRadio = next.querySelector('input[type="radio"]');
-    if (firstRadio) firstRadio.focus();
+  if (isOpen) {
+    content.style.maxHeight = content.scrollHeight + 'px';
   } else {
-    const target = document.querySelector('h3:contains("Section C")')?.parentElement || document.querySelector('.btn-large');
-    if (target) smoothScrollToElement(target, 80);
+    content.style.maxHeight = content.scrollHeight + 'px';
+    content.offsetHeight;
+    content.style.maxHeight = '0';
   }
-}
-
-function smoothScrollToElement(el, offset = 100) {
-  if (!el) return;
-  const rect = el.getBoundingClientRect();
-  const top = window.scrollY + rect.top - offset;
-  window.scrollTo({ top, behavior: 'smooth' });
 }
 
 // ========================================
