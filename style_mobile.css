@@ -753,10 +753,26 @@ select {
     padding-right: max(0px, env(safe-area-inset-right));
   }
 
-  .progress-bar-container {
-    padding-top: max(var(--space-12), env(safe-area-inset-top));
-    padding-bottom: max(var(--space-12), env(safe-area-inset-bottom));
-  }
+/* Progress Bar - Now fixed at bottom */
+.progress-bar-container {
+  position: fixed;  /* Changed from sticky for true bottom fixation */
+  bottom: 0;        /* Anchor to bottom */
+  top: auto;        /* Override any top positioning */
+  left: 0;
+  width: 100%;
+  background-color: var(--color-surface);
+  z-index: 1000;    /* Ensure it stays above content */
+  box-shadow: var(--shadow-xs);  /* Optional: Add subtle shadow for depth */
+  padding: var(--space-8) var(--space-12);
+}
+
+/* Main Content - Add bottom padding to prevent overlap with fixed progress bar */
+.main-content {
+  flex: 1;
+  padding: var(--space-16) var(--space-16) var(--space-48);  /* Increased bottom padding (e.g., 48px) to accommodate bar height + buffer */
+  max-width: var(--container-sm);
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* Scrolling Optimization */
