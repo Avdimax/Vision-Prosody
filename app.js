@@ -113,8 +113,15 @@ const surveyQuestionsData = {
       label: "How natural does the prosody in this dialogue sound? (1: Poor - 5: Excellent)",
       options: [1, 2, 3, 4, 5],
       required: true
+    },
+    
+    {
+      type: "textarea",
+      id: "prosody_naturalness",
+      label: "How natural does the prosody in this dialogue sound? (Open response) *",
+      required: true
     }
-  ],
+    ],
   sectionB: [
     {
       id: "c1_intonation",
