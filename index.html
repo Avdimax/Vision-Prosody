@@ -29,10 +29,13 @@
             <div id="introSection" class="section active">
                 <div class="container">
                     <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                        
                         <h2 style="margin-bottom: 15px;">Welcome to the Research Study</h2>
+                        
                         <p style="margin-bottom: 30px; line-height: 1.6; color: #555;">
                             Thank you for participating in this communicative prosody assessment study. This research evaluates 8 key prosodic features in dialogues for naturalness and appropriateness in EFL contexts.
                         </p>
+
                         <h3 style="margin-top: 30px; margin-bottom: 20px; text-align: center;">What You'll Be Doing:</h3>
                         <ul style="margin: 0 auto 30px auto; padding-left: 20px; text-align: left; max-width: 450px; line-height: 1.8;">
                             <li style="margin-bottom: 12px;">Assess <strong>4 different dialogues</strong> using <strong>8 detailed prosody criteria</strong> with ratings and comments</li>
@@ -40,11 +43,13 @@
                             <li style="margin-bottom: 12px;">Listen while reading; rate on a 1-5 scale per criterion</li>
                             <li style="margin-bottom: 12px;">Complete in ~15-20 minutes</li>
                         </ul>
+
                         <div style="padding: 20px; background-color: #f8f9ff; border-left: 4px solid #2196F3; margin: 30px auto; border-radius: 4px; max-width: 450px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <p style="margin: 0; line-height: 1.6; color: #333; font-size: 0.95em;">
                                 Participation is <strong>voluntary</strong>; responses <strong>confidential</strong>.
                             </p>
                         </div>
+
                         <button id="startSurveyButton" onclick="startSurvey()" class="btn btn-primary" style="margin-top: 20px; padding: 14px 40px; font-size: 1em;">
                             Start Survey
                         </button>
@@ -54,18 +59,18 @@
             <!-- END INTRO -->
 
             <!-- Demographics Section -->
-            <section id="demographicsSection" class="section" aria-label="Demographics Section">
+            <section id="demographicsSection" class="section">
                 <div class="survey-container">
                     <h2>Rater Information</h2>
                     <form id="demographicsForm" class="survey-form">
                         <div class="form-group">
                             <label for="raterName" class="form-label">Rater Name *</label>
-                            <input type="text" id="raterName" name="raterName" class="form-control" placeholder="Enter your name" required aria-required="true">
+                            <input type="text" id="raterName" name="raterName" class="form-control" placeholder="Enter your name" required>
                         </div>
 
                         <div class="form-group">
                             <label for="date" class="form-label">Date *</label>
-                            <input type="date" id="date" name="date" class="form-control" required aria-required="true">
+                            <input type="date" id="date" name="date" class="form-control" required>
                         </div>
 
                         <div class="form-group">
@@ -80,7 +85,7 @@
 
                         <div class="form-group">
                             <label class="form-label">Qualifications (check all that apply) *</label>
-                            <div class="checkbox-group" role="group" aria-required="true">
+                            <div class="checkbox-group">
                                 <label><input type="checkbox" name="qualifications" value="phonetics"> Phonetics/Linguistics training</label>
                                 <label><input type="checkbox" name="qualifications" value="pathology"> Speech Pathology training</label>
                                 <label><input type="checkbox" name="qualifications" value="native"> Native English speaker</label>
@@ -91,12 +96,12 @@
 
                         <div class="form-group">
                             <label for="nationality" class="form-label">Nationality *</label>
-                            <input type="text" id="nationality" name="nationality" class="form-control" placeholder="Enter your nationality" required aria-required="true">
+                            <input type="text" id="nationality" name="nationality" class="form-control" placeholder="Enter your nationality" required>
                         </div>
 
                         <div class="form-group">
                             <label for="nativeLanguageVariety" class="form-label">Native English variety *</label>
-                            <select id="nativeLanguageVariety" name="nativeLanguageVariety" class="form-control" required aria-required="true">
+                            <select id="nativeLanguageVariety" name="nativeLanguageVariety" class="form-control" required>
                                 <option value="">-- Select Variety --</option>
                                 <option value="british">British English</option>
                                 <option value="american">American English</option>
@@ -114,302 +119,24 @@
                 </div>
             </section>
 
-            <!-- Dialogue 1 Section -->
-            <section id="dialogue1Section" class="section" aria-label="Dialogue 1 Section">
+            <!-- Section 1: Unified section for all dynamic sets -->
+            <section id="section1" class="section">
                 <div class="survey-container">
-                    <h2>Dialogue 1: Museum of Nature and Wildlife</h2>
-                    
-                    <div class="dialogue-context">
-                        <p><strong>Context:</strong> Maryam is visiting the Museum of Nature and Wildlife. She's talking to Mr. Razavi who works in the museum.</p>
-                    </div>
-
-                    <div class="audio-container">
-                        <h3>Audio Recording</h3>
-                        <audio controls class="audio-player" style="width: 100%; margin: 16px 0;">
-                            <source src="dialogue_1.mp3" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                    </div>
-
-                    <div class="dialogue-transcript">
-                        <h3>Transcript</h3>
-                        <div class="transcript-content">
-                            <p><strong>Maryam:</strong> Excuse me, what is it? Is it a leopard?</p>
-                            <p><strong>Mr. Razavi:</strong> No, it is a cheetah.</p>
-                            <p><strong>Maryam:</strong> Oh, a cheetah?</p>
-                            <p><strong>Mr. Razavi:</strong> Yeah, an Iranian cheetah. It is an endangered animal.</p>
-                            <p><strong>Maryam:</strong> I know. I heard around 70 of them are alive. Yes?</p>
-                            <p><strong>Mr. Razavi:</strong> Right, but the number will increase.</p>
-                            <p><strong>Maryam:</strong> Really?! How?</p>
-                            <p><strong>Mr. Razavi:</strong> Well, we have some plans. For example, we are going to protect their homes, to make movies about their life, and to teach people how to take more care of them.</p>
-                        </div>
-                    </div>
-
-                    <form id="dialogue1Form" class="survey-form">
-                        <h3>Section A: General Impression</h3>
-                        <div class="form-group">
-                            <label for="d1_q1_prosody_naturalness" class="form-label">How natural does the prosody in this dialogue sound? *</label>
-                            <select id="d1_q1_prosody_naturalness" name="d1_q1_prosody_naturalness" class="form-control" required>
-                                <option value="">-- Select --</option>
-                                <option value="very_unnatural">Very unnatural</option>
-                                <option value="unnatural">Unnatural</option>
-                                <option value="neutral">Neutral</option>
-                                <option value="natural">Natural</option>
-                                <option value="very_natural">Very natural</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="d1_q2_expectancy" class="form-label">How well does the prosody match what you expect in this context? *</label>
-                            <select id="d1_q2_expectancy" name="d1_q2_expectancy" class="form-control" required>
-                                <option value="">-- Select --</option>
-                                <option value="poor_match">Poor match</option>
-                                <option value="fair_match">Fair match</option>
-                                <option value="good_match">Good match</option>
-                                <option value="excellent_match">Excellent match</option>
-                            </select>
-                        </div>
-
-                        <h3>Section B: Detailed Criteria</h3>
-                        <div class="rating-group">
-                            <label class="form-label">Criterion 1: Intonation Contours & Pitch Movement *</label>
-                            <p><strong>What to Listen For:</strong></p>
-                            <ul>
-                                <li>Pitch variation and range (monotone vs. varied)</li>
-                                <li>Question intonation (rising) vs. statement (falling)</li>
-                                <li>Prominence marking through pitch peaks</li>
-                                <li>Phrase boundary signaling</li>
-                                <li>Overall naturalness and conversational quality</li>
-                            </ul>
-                            <p><strong>Scoring Scale:</strong></p>
-                            <p>Score 1 – Monotone or inappropriate intonation: No pitch variation or pitch patterns don’t match sentence type. Questions don’t rise, statements don’t fall. Sounds robotic/scripted. Pitch range < 20 Hz.</p>
-                            <p>Score 2 – Limited pitch variation: Some pitch movement but inconsistent. Occasional questions rise/statements fall, but not reliable. Pitch range 20–40 Hz. Some monotone stretches noticeable.</p>
-                            <p>Score 3 – Some variation, inconsistent patterns: Moderate pitch variation (40–60 Hz) but patterns are unpredictable. Sometimes questions rise correctly, sometimes not. Some intonation-sentence mismatches (~30% incorrect).</p>
-                            <p>Score 4 – Good variation, mostly natural: Good pitch range (60–80 Hz) and mostly correct patterns. Question/statement distinction usually clear. Few intonation errors (< 10% incorrect). Mostly sounds like natural English.</p>
-                            <p>Score 5 – Natural, varied, semantically appropriate: Extensive pitch variation (80+ Hz). All questions rise, all statements fall naturally. Pitch peaks align with stress. Sounds like native-like natural English conversation. Appropriate prosodic boundaries.</p>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d1_c1_intonation" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d1_c1_intonation" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d1_c1_intonation" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d1_c1_intonation" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d1_c1_intonation" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                            <textarea id="d1_c1_comments" name="d1_c1_comments" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
-                        </div>
-
-                        <div class="rating-group">
-                            <label class="form-label">Criterion 2: Stress Patterns & Prominence *</label>
-                            <p><strong>What to Listen For:</strong></p>
-                            <ul>
-                                <li>Multi-syllabic word stress accuracy (PHOto vs. phoTOgraphy)</li>
-                                <li>Pitch peak alignment with stressed syllables</li>
-                                <li>Amplitude/loudness differentiation (stressed > unstressed)</li>
-                                <li>Duration patterns (stressed syllables longer)</li>
-                            </ul>
-                            <p><strong>Scoring Scale:</strong></p>
-                            <p>Score 1 – No stress patterns: Stressed/unstressed syllables indistinguishable. Prominence not marked. Sounds flat/monosyllabic.</p>
-                            <p>Score 2 – Inconsistent stress: Frequent misplacements (e.g., phoTOgraPHY). Weak prominence marking.</p>
-                            <p>Score 3 – Moderate accuracy: Some correct word stress, but inconsistent prominence. ~50% alignment.</p>
-                            <p>Score 4 – Mostly accurate: Good stress placement, clear prominence on key words. Minor errors.</p>
-                            <p>Score 5 – Native-like stress: Perfect alignment, natural emphasis enhances meaning.</p>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d1_c2_stress" value="1" required> 1</label>
-                                <label class="rating-label"><input type="radio" name="d1_c2_stress" value="2"> 2</label>
-                                <label class="rating-label"><input type="radio" name="d1_c2_stress" value="3"> 3</label>
-                                <label class="rating-label"><input type="radio" name="d1_c2_stress" value="4"> 4</label>
-                                <label class="rating-label"><input type="radio" name="d1_c2_stress" value="5"> 5</label>
-                            </div>
-                            <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
-                            <textarea id="d1_c2_comments" name="d1_c2_comments" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
-                        </div>
-
-                        <!-- Repeat for Criteria 3-8 with similar structure, based on rubric. For brevity, assuming you have them; expand as needed. Example for Criterion 3: -->
-
-                        <div class="rating-group">
-                            <label class="form-label">Criterion 3: Rhythm *</label>
-                            <p><strong>What to Listen For:</strong> Stress-timed vs. syllable-timed rhythm, natural flow.</p>
-                            <p><strong>Scoring Scale:</strong> [Detailed scales similar to above]</p>
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d1_c3_rhythm" value="1" required> 1</label>
-                                <!-- ... -->
-                            </div>
-                            <textarea id="d1_c3_comments" name="d1_c3_comments" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
-                        </div>
-
-                        <!-- ... (Criteria 4: Pacing, 5: Chunking, 6: Emotion, 7: Information, 8: Overall - copy from your original truncated HTML) ... -->
-
-                        <h3>Section C: Open Comments</h3>
-                        <div class="form-group">
-                            <label for="d1_q4_suggestions" class="form-label">Any suggestions for improvement?</label>
-                            <textarea id="d1_q4_suggestions" name="d1_q4_suggestions" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
-                        </div>
-                    </form>
-
-                    <div class="button-group">
-                        <button class="btn btn-secondary" onclick="previousDialogue(1)">Back</button>
-                        <button class="btn btn-primary btn-large" onclick="nextDialogue(1)">Next</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Dialogue 2 Section - Fully expanded -->
-            <section id="dialogue2Section" class="section" aria-label="Dialogue 2 Section">
-                <div class="survey-container">
-                    <h2>Dialogue 2: Booking a Flight</h2>
-                    
-                    <div class="dialogue-context">
-                        <p><strong>Context:</strong> A customer is booking a flight with an agent at a travel agency.</p>
-                    </div>
-
-                    <div class="audio-container">
-                        <h3>Audio Recording</h3>
-                        <audio controls class="audio-player" style="width: 100%; margin: 16px 0;">
-                            <source src="dialogue_2.mp3" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                    </div>
-
-                    <div class="dialogue-transcript">
-                        <h3>Transcript</h3>
-                        <div class="transcript-content">
-                            <p><strong>Customer:</strong> Hello, I'd like to book a flight to London.</p>
-                            <p><strong>Agent:</strong> Sure, when would you like to travel?</p>
-                            <p><strong>Customer:</strong> Next Friday, if possible.</p>
-                            <p><strong>Agent:</strong> Let me check availability. Yes, there's a direct flight at 8 AM.</p>
-                            <p><strong>Customer:</strong> Great! How much is it?</p>
-                            <p><strong>Agent:</strong> It's $500 round trip.</p>
-                            <p><strong>Customer:</strong> Okay, book it for me please.</p>
-                        </div>
-                    </div>
-
-                    <form id="dialogue2Form" class="survey-form">
-                        <h3>Section A: General Impression</h3>
-                        <div class="form-group">
-                            <label for="d2_q1_prosody_naturalness" class="form-label">How natural does the prosody in this dialogue sound? *</label>
-                            <select id="d2_q1_prosody_naturalness" name="d2_q1_prosody_naturalness" class="form-control" required>
-                                <option value="">-- Select --</option>
-                                <option value="very_unnatural">Very unnatural</option>
-                                <option value="unnatural">Unnatural</option>
-                                <option value="neutral">Neutral</option>
-                                <option value="natural">Natural</option>
-                                <option value="very_natural">Very natural</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="d2_q2_expectancy" class="form-label">How well does the prosody match what you expect in this context? *</label>
-                            <select id="d2_q2_expectancy" name="d2_q2_expectancy" class="form-control" required>
-                                <option value="">-- Select --</option>
-                                <option value="poor_match">Poor match</option>
-                                <option value="fair_match">Fair match</option>
-                                <option value="good_match">Good match</option>
-                                <option value="excellent_match">Excellent match</option>
-                            </select>
-                        </div>
-
-                        <h3>Section B: Detailed Criteria</h3>
-                        <!-- Duplicate the 8 rating-groups from Dialogue 1, changing d1_ to d2_ for all names/IDs -->
-                        <div class="rating-group">
-                            <label class="form-label">Criterion 1: Intonation Contours & Pitch Movement *</label>
-                            <!-- Same content as above -->
-                            <div class="rating-scale">
-                                <label class="rating-label"><input type="radio" name="d2_c1_intonation" value="1" required> 1</label>
-                                <!-- ... -->
-                            </div>
-                            <textarea id="d2_c1_comments" name="d2_c1_comments" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
-                        </div>
-                        <!-- Repeat for c2 to c8 with d2_ prefixes -->
-
-                        <h3>Section C: Open Comments</h3>
-                        <div class="form-group">
-                            <label for="d2_q4_suggestions" class="form-label">Any suggestions for improvement?</label>
-                            <textarea id="d2_q4_suggestions" name="d2_q4_suggestions" class="form-control textarea-mobile" placeholder="Optional comments..."></textarea>
-                        </div>
-                    </form>
-
-                    <div class="button-group">
-                        <button class="btn btn-secondary" onclick="previousDialogue(2)">Back</button>
-                        <button class="btn btn-primary btn-large" onclick="nextDialogue(2)">Next</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Dialogue 3 Section - Similar to above, with d3_ prefixes -->
-            <section id="dialogue3Section" class="section" aria-label="Dialogue 3 Section">
-                <div class="survey-container">
-                    <h2>Dialogue 3: Discussing a Movie</h2>
-                    <div class="dialogue-context">
-                        <p><strong>Context:</strong> Two friends are discussing a movie they just watched.</p>
-                    </div>
-                    <div class="audio-container">
-                        <h3>Audio Recording</h3>
-                        <audio controls class="audio-player" style="width: 100%; margin: 16px 0;">
-                            <source src="dialogue_3.mp3" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                    </div>
-                    <div class="dialogue-transcript">
-                        <h3>Transcript</h3>
-                        <div class="transcript-content">
-                            <p><strong>Friend A:</strong> What did you think of the movie?</p>
-                            <p><strong>Friend B:</strong> It was amazing! The plot twists were unexpected.</p>
-                            <p><strong>Friend A:</strong> Really? I thought the ending was predictable.</p>
-                            <p><strong>Friend B:</strong> No way, it surprised me.</p>
-                            <p><strong>Friend A:</strong> Well, the acting was great though.</p>
-                        </div>
-                    </div>
-                    <form id="dialogue3Form" class="survey-form">
-                        <!-- Same as Dialogue 2, with d3_ prefixes -->
-                    </form>
-                    <div class="button-group">
-                        <button class="btn btn-secondary" onclick="previousDialogue(3)">Back</button>
-                        <button class="btn btn-primary btn-large" onclick="nextDialogue(3)">Next</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Dialogue 4 Section - Similar, with d4_ prefixes -->
-            <section id="dialogue4Section" class="section" aria-label="Dialogue 4 Section">
-                <div class="survey-container">
-                    <h2>Dialogue 4: Ordering Food</h2>
-                    <div class="dialogue-context">
-                        <p><strong>Context:</strong> A customer is ordering food at a restaurant.</p>
-                    </div>
-                    <div class="audio-container">
-                        <h3>Audio Recording</h3>
-                        <audio controls class="audio-player" style="width: 100%; margin: 16px 0;">
-                            <source src="dialogue_4.mp3" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                    </div>
-                    <div class="dialogue-transcript">
-                        <h3>Transcript</h3>
-                        <div class="transcript-content">
-                            <p><strong>Customer:</strong> I'd like the pasta, please.</p>
-                            <p><strong>Waiter:</strong> With sauce?</p>
-                            <p><strong>Customer:</strong> Yes, tomato sauce.</p>
-                            <p><strong>Waiter:</strong> Anything to drink?</p>
-                            <p><strong>Customer:</strong> Water is fine.</p>
-                        </div>
-                    </div>
-                    <form id="dialogue4Form" class="survey-form">
-                        <!-- Same as above, with d4_ prefixes -->
-                    </form>
-                    <div class="button-group">
-                        <button class="btn btn-secondary" onclick="previousDialogue(4)">Back</button>
-                        <button class="btn btn-primary btn-large" onclick="submitSurvey()">Submit Survey</button>
-                    </div>
+                    <h2>Prosody Assessment: Dialogues</h2>
+                    <p>Evaluate each dialogue set below using the provided rubric. Progress through sets sequentially.</p>
+                    <div id="dialoguesContainer"></div>  <!-- JS dynamically appends sets here -->
                 </div>
             </section>
 
             <!-- Confirmation Section -->
-            <section id="confirmationSection" class="section" aria-label="Confirmation Section">
+            <section id="confirmationSection" class="section">
                 <div class="survey-container">
                     <div class="confirmation-content">
                         <div class="success-icon" style="width: 80px; height: 80px; background-color: #218093; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 48px; color: white;">✓</div>
                         <h2>Thank You!</h2>
                         <p>Thank you for completing the communicative prosody assessment survey. Your feedback is invaluable to our research.</p>
                         <div id="confirmationDetails" class="confirmation-details"></div>
-                        <p class="confirmation-note">Your responses have been securely saved to our database.</p>
+                        <p class="confirmation-note">Your responses have been securely saved to our database and also downloaded to your device.</p>
                     </div>
                 </div>
             </section>
