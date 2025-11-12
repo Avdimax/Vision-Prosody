@@ -44,7 +44,7 @@
                   Participation is voluntary and responses are confidential. Your input advances EFL prosody research.
                 </p>
               </div>
-              <button id="startSurveyButton" onclick="startSurvey()" class="btn btn-primary" style="margin-top: 20px; padding: 14px 40px; font-size: 1em;">
+              <button id="startSurveyButton" onclick="startSurvey()" class="btn btn-primary" style="margin-top: 20px; padding: 14px 40px; font-size: 1em;" aria-label="Start the survey">
                 Start Survey
               </button>
             </div>
@@ -116,7 +116,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-    <!-- Survey Script -->
-    <script src="app.js"></script>
+    <!-- Survey Script (defer for better loading) -->
+    <script src="app.js" defer></script>
   </body>
 </html>
