@@ -21,20 +21,110 @@ let currentSet = 0;  // Track current set within Section 1
 let totalQuestions = 0;
 const totalSteps = 3;  // Welcome/Demographics + Section 1 (all sets) + Confirmation
 
-console.log('app.js loaded');  // Diagnostic to confirm script execution
+console.log('app.js loaded');  // Diagnostic
 
-// ... (rest of the data structures: dialogueSetsData, surveyQuestionsData)
+// ... (dialogueSetsData remains the same)
+
+const surveyQuestionsData = {
+  sectionA: [
+    {
+      type: "rating",
+      id: "q1_prosody_naturalness",
+      label: "How natural does the prosody in this dialogue sound? (1: Poor - 5: Excellent)",
+      options: [1, 2, 3, 4, 5],
+      required: true
+    }
+  ],
+  sectionB: [
+    // ... (c1_intonation, c2_stress, etc., remain the same, matching PDF)
+  ],
+  sectionC: [
+    // ... (open comments remain the same)
+  ]
+};
 
 // ========================================
-// PROGRESS CALCULATION
+// PROGRESS CALCULATION (Fixed undefined with defaults)
 // ========================================
-// ... (calculateTotalQuestions, getCompletedCount, updateProgress, debounce)
+function calculateTotalQuestions() {
+  totalQuestions = 0;
+
+  // Demographics: required fields (name, nationality, qualifications - count as 3)
+  totalQuestions += 3;
+
+  // For each of 4 sets
+  dialogueSetsData.forEach(() => {
+    // Section A: number of questions (safe check for length)
+    totalQuestions += surveyQuestionsData.sectionA?.length || 0;
+
+    // Section B: number of criteria (scores only, comments optional)
+    totalQuestions += surveyQuestionsData.sectionB?.length || 0;
+
+    // Section C: number of open comments (optional, but count for progress)
+    totalQuestions += surveyQuestionsData.sectionC?.length || 0;
+  });
+  console.log('Total questions calculated:', totalQuestions);  // Diagnostic
+}
+
+// ========================================
+// COMPLETED COUNT FOR PROGRESS
+// ========================================
+function getCompletedCount() {
+  let completed = 0;
+  const forms = document.querySelectorAll('form');
+  forms.forEach(form => {
+    const groups = form.querySelectorAll('.form-group, .rating-group');
+    groups.forEach(group => {
+      const inputs = group.querySelectorAll('input[required], select[required], textarea[required]');
+      if (inputs.length > 0) {
+        let isFilled = true;
+        inputs.forEach(input => {
+          if (input.type === 'checkbox') {
+            if (!group.querySelector('input[type="checkbox"]:checked')) isFilled = false;
+          } else if (input.type === 'radio') {
+            if (!group.querySelector('input[type="radio"]:checked')) isFilled = false;
+          } else if (input.value.trim() === '') {
+            isFilled = false;
+          }
+        });
+        if (isFilled) completed++;
+      }
+    });
+  });
+  return completed;
+}
+
+function updateProgress() {
+  const completed = getCompletedCount();
+  const percentage = totalQuestions > 0 ? (completed / totalQuestions) * 100 : 0;
+  const progressContainer = document.getElementById('progressContainer');
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('progressText');
+
+  if (progressContainer) progressContainer.style.display = 'block';
+  if (progressFill) progressFill.style.width = `${percentage}%`;
+  if (progressText) progressText.textContent = `${Math.round(percentage)}%`;
+  console.log('Progress updated:', percentage + '%');  // Diagnostic
+}
+
+// Debounce for performance
+function debounce(fn, delay = 300) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn(...args), delay);
+  };
+}
+
+// Live updates
+document.addEventListener('input', debounce(updateProgress));
+document.addEventListener('change', debounce(updateProgress));
 
 // ========================================
 // NAVIGATION
 // ========================================
 function startSurvey() {
-  console.log('Start Survey button clicked');  // Diagnostic
+  console.log('Start Survey button clicked');
   hideAllSections();
   showSection('demographicsSection');
   updateProgress();
@@ -61,7 +151,7 @@ function showSection(id) {
 
 // Submit demographics and move to Section 1, showing first set
 function submitDemographics() {
-  console.log('Submit Demographics button clicked');  // Diagnostic
+  console.log('Submit Demographics button clicked');
   const form = document.getElementById('demographicsForm');
   if (!form.checkValidity()) {
     form.reportValidity();
@@ -69,10 +159,10 @@ function submitDemographics() {
   }
 
   surveyData.demographics = {
-    raterName: document.getElementById('raterName').value.trim(),
-    email: document.getElementById('email').value.trim(),
+    raterName: document.getElementById('raterName')?.value.trim() || '',
+    email: document.getElementById('email')?.value.trim() || '',
     qualifications: Array.from(document.querySelectorAll('input[name="qualifications"]:checked')).map(cb => cb.value),
-    nationality: document.getElementById('nationality').value.trim()
+    nationality: document.getElementById('nationality')?.value.trim() || ''
   };
 
   console.log('Demographics saved:', surveyData.demographics);
@@ -81,11 +171,8 @@ function submitDemographics() {
   showCurrentSet();
 }
 
-// ... (rest of showCurrentSet, generateAllSets, etc.)
+// ... (rest of the JS code: showCurrentSet, generateAllSets, generateSetModule, generateSurveyQuestions, saveSetData, nextSet, previousSet, submitSurvey, addScrollListenersToFormInputs)
 
-// ========================================
-// INITIALIZATION
-// ========================================
 document.addEventListener('DOMContentLoaded', function() {
   if (typeof firebase !== 'undefined') {
     try {
@@ -102,11 +189,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Add smooth scroll behavior to form inputs
   addScrollListenersToFormInputs();
   
-  // Initialize progress
+  // Initialize progress (call calculate first to avoid undefined)
   calculateTotalQuestions();
   updateProgress();
 
-  // Bind button events (replaces inline onclick)
+  // Bind button events
   const startButton = document.getElementById('startSurveyButton');
   if (startButton) {
     startButton.addEventListener('click', startSurvey);
@@ -114,10 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const backButton = document.getElementById('backToIntroButton');
   if (backButton) {
-    backButton.addEventListener('click', () => {
-      console.log('Back to Intro button clicked');  // Diagnostic
-      showSection('introSection');
-    });
+    backButton.addEventListener('click', () => showSection('introSection'));
   }
 
   const submitDemographicsButton = document.getElementById('submitDemographicsButton');
