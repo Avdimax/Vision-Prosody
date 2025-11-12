@@ -656,38 +656,37 @@ let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.
 // REVISED SMART SCROLLING
 // ========================================
 function addScrollListenersToFormInputs() {
-  // Remove old listeners
+  // Remove old listeners safely (check if functions exist)
   document.querySelectorAll('input[type="radio"], .collapsible-trigger, textarea').forEach(el => {
-    el.removeEventListener('change', handleRadioChange);
-    el.removeEventListener('click', handleTriggerClick);
-    el.removeEventListener('focus', handleFocus);
+    if (typeof handleRadioChange === 'function') el.removeEventListener('change', handleRadioChange);
+    if (typeof handleTriggerClick === 'function') el.removeEventListener('click', handleTriggerClick);
+    if (typeof handleFocus === 'function') el.removeEventListener('focus', handleFocus);
   });
 
-  // Radio buttons → next trigger
+  // Add listeners
   document.querySelectorAll('input[type="radio"]').forEach(radio => {
-    radio.addEventListener('change', debounce(handleRadioChange, 150));
+    radio.addEventListener('change', debounce(handleRadioChange, 200));
   });
 
-  // Scoring scale trigger
   document.querySelectorAll('.collapsible-trigger').forEach(trigger => {
-    trigger.addEventListener('click', debounce(handleTriggerClick, 150));
+    trigger.addEventListener('click', debounce(handleTriggerClick, 200));
+    if (isMobile) {
+      trigger.addEventListener('touchstart', debounce(handleTouchStart, 200));
+    }
   });
 
-  // Comments textarea
   document.querySelectorAll('textarea').forEach(textarea => {
     textarea.addEventListener('focus', debounce(handleFocus, 100));
   });
 
-  // ResizeObserver for collapsible expansion
-  const resizeObserver = new ResizeObserver(debounce(() => {
-    const active = document.activeElement;
-    if (active) {
-      const block = active.closest('.criterion-block');
-      if (block) fullScreenCenter(block);
+  // ResizeObserver for dynamic content (collapsibles, resizes)
+  const resizeObserver = new ResizeObserver(debounce(entries => {
+    if (document.activeElement && entries.length > 0) {
+      setTimeout(() => scrollToNextUnanswered(), 400); // Wait for animation
     }
   }, 300));
 
-  document.querySelectorAll('.criterion-block').forEach(block => resizeObserver.observe(block));
+  document.querySelectorAll('.criterion-block').forEach(el => resizeObserver.observe(el));
 }
 
 // After rating → go to next "Show Scoring Scale"
