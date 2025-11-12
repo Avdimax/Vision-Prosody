@@ -628,12 +628,13 @@ async function submitSurvey() {
 }
 
 // ========================================
-// SMART AUTO-SCROLLING
+// REVISED SMART AUTO-SCROLLING (MOBILE-OPTIMIZED)
 // ========================================
 function addScrollListenersToFormInputs() {
-  document.querySelectorAll('input[type="radio"]').forEach(radio => {
-    radio.removeEventListener('change', handleRadioChange);
-    radio.addEventListener('change', handleRadioChange);
+  // Remove existing listeners to avoid duplicates
+  document.querySelectorAll('input[type="radio"], .collapsible-trigger').forEach(el => {
+    el.removeEventListener('change', handleRadioChange);
+    el.removeEventListener('touchstart', handleTouchStart);
   });
 
   document.querySelectorAll('textarea').forEach(textarea => {
@@ -641,21 +642,59 @@ function addScrollListenersToFormInputs() {
     textarea.addEventListener('focus', handleFocus);
   });
 
-  const resizeObserver = new ResizeObserver(() => {
-    if (document.activeElement) setTimeout(scrollToNextUnanswered, 100);
+  // Add listeners
+  document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', debounce(handleRadioChange, 200));
   });
+
+  document.querySelectorAll('.collapsible-trigger').forEach(trigger => {
+    trigger.addEventListener('click', debounce(handleTriggerClick, 200));
+    if (isMobile) {
+      trigger.addEventListener('touchstart', debounce(handleTouchStart, 200));
+    }
+  });
+
+  // ResizeObserver for dynamic content (collapsibles, resizes)
+  const resizeObserver = new ResizeObserver(debounce(entries => {
+    if (document.activeElement && entries.length > 0) {
+      setTimeout(() => scrollToNextUnanswered(), 400); // Wait for animation
+    }
+  }, 300));
 
   document.querySelectorAll('.criterion-block, .form-group').forEach(el => resizeObserver.observe(el));
 }
 
+function debounce(fn, delay) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn(...args), delay);
+  };
+}
+
 function handleRadioChange(e) {
   const group = e.target.closest('.criterion-block') || e.target.closest('.form-group');
-  setTimeout(() => scrollToNextUnanswered(group), 150);
+  setTimeout(() => scrollToNextUnanswered(group), 200);
+}
+
+function handleTriggerClick(e) {
+  const trigger = e.currentTarget;
+  const critId = trigger.id.replace('_trigger', '');
+  toggleScoringScale(critId);
+  // Re-scroll after expansion
+  setTimeout(() => smoothScrollToElement(trigger.closest('.criterion-block'), 100), 400);
+}
+
+function handleTouchStart(e) {
+  e.preventDefault(); // Prevent double-touch
+  handleTriggerClick(e);
 }
 
 function handleFocus(e) {
   const parent = e.target.closest('.criterion-block') || e.target.closest('.form-group');
-  smoothScrollToElement(parent, 120);
+  // Center for textareas on mobile
+  const offset = isMobile ? window.innerHeight / 2 : 120;
+  smoothScrollToElement(parent, offset);
 }
 
 function scrollToNextUnanswered(startAfter = null) {
@@ -668,7 +707,11 @@ function scrollToNextUnanswered(startAfter = null) {
   });
 
   if (next) {
-    smoothScrollToElement(next, 100);
+    // Check if already visible (avoid jitter)
+    const rect = next.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) return;
+
+    smoothScrollToElement(next, isMobile ? window.innerHeight / 2 : 100);
     const firstRadio = next.querySelector('input[type="radio"]');
     if (firstRadio) firstRadio.focus();
   } else {
@@ -679,7 +722,8 @@ function scrollToNextUnanswered(startAfter = null) {
 
 function smoothScrollToElement(el, offset = 100) {
   if (!el) return;
-  const top = el.getBoundingClientRect().top + window.scrollY - offset;
+  const rect = el.getBoundingClientRect();
+  const top = window.scrollY + rect.top - offset;
   window.scrollTo({ top, behavior: 'smooth' });
 }
 
