@@ -973,6 +973,13 @@ a {
   touch-action: manipulation;
 }
 
+.criterion-block {
+  min-height: calc(100vh - 120px); /* Force full-screen feel */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
 /* ========================================
    PRINT STYLES
    ======================================== */
