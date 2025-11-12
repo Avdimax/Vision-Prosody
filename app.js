@@ -17,7 +17,7 @@ const surveyData = {
   dialogues: [{}, {}, {}, {}]  // For 4 sets/dialogues
 };
 
-let currentSet = 0;  // Enhanced: Track current set within Section 1
+let currentSet = 0;  // Track current set within Section 1
 let totalQuestions = 0;
 const totalSteps = 3;  // Welcome/Demographics + Section 1 (all sets) + Confirmation
 
@@ -26,7 +26,7 @@ const totalSteps = 3;  // Welcome/Demographics + Section 1 (all sets) + Confirma
 // ========================================
 // Dialogue Sets Data: Array of 4 objects for "Set x Content" modules.
 // Each includes setId, title, context, audioSrc, and transcript (array of {speaker, line} for easy looping).
-// Updated with EFL focus for thesis: Natural dialogues for prosody evaluation.
+// EFL-aligned: Authentic L2 dialogues for prosody evaluation in thesis.
 const dialogueSetsData = [
   {
     setId: 1,
@@ -102,7 +102,7 @@ const dialogueSetsData = [
 
 // Survey Questions Data: Object with sections for "Survey Questions" module.
 // Section A: General impression - Array of question objects.
-// Section B: 8 criteria from PDF - Array of criterion objects (now with exact original texts from rubric).
+// Section B: 8 criteria from PDF - Array of criterion objects with original, extensive texts.
 // Section C: Open comments - Array of question objects.
 // EFL-aligned for thesis: Emphasizes L2 vs. native prosody.
 const surveyQuestionsData = {
@@ -158,7 +158,7 @@ const surveyQuestionsData = {
         "Score 2 – Limited prominence marking: 50–70% of stresses correct. Weak amplitude differentiation (< 5 dB). Some duration variation but inconsistent. Few information words clearly marked prominent.",
         "Score 3 – Inconsistent stress placement: 70–85% of stresses correct. Moderate amplitude differentiation (5–10 dB). Pitch peaks sometimes aligned (~50%). Information focus sometimes marked but often unclear.",
         "Score 4 – Good stress, mostly natural: 85–95% of stresses correct. Good amplitude differentiation (10–15 dB). Pitch peaks usually align with stress. Most information words clearly marked. Sounds mostly natural.",
-        "Score 5 – Consistent, accurate stress throughout: All/nearly all stresses correct (95+%). Clear amplitude differentiation (15+ dB). Pitch peaks align with stress throughout. Pitch peaks align with stress throughout. All focus words clearly prominent. Natural stress throughout."
+        "Score 5 – Consistent, accurate stress throughout: All/nearly all stresses correct (95+%). Clear amplitude differentiation (15+ dB). Pitch peaks align with stress throughout. All focus words clearly prominent. Natural stress throughout."
       ]
     },
     {
@@ -426,12 +426,15 @@ function showCurrentSet() {
 }
 
 // ========================================
-// DYNAMIC GENERATION FUNCTIONS (Core Modularity)
+// DYNAMIC GENERATION FUNCTIONS (Core Modularity - Step 3 Implementation)
 // ========================================
-// Generate all sets in Section 1 container on load
+// Generate all sets in Section 1 container on load (loops over dialogueSetsData)
 function generateAllSets() {
   const container = document.getElementById('dialoguesContainer');
-  if (!container) return;
+  if (!container) {
+    console.error('dialoguesContainer not found - check HTML structure');
+    return;
+  }
 
   dialogueSetsData.forEach(set => {
     const setHTML = generateSetModule(set);
@@ -479,11 +482,11 @@ function generateSetModule(set) {
   `;
 }
 
-// Generate questions HTML by looping over surveyQuestionsData
+// Generate questions HTML by looping over surveyQuestionsData (EFL rubric integration)
 function generateSurveyQuestions(num) {
   let html = '';
 
-  // Section A
+  // Section A: General Impression (loop over array for rating/radio)
   html += '<h3>Section A: General Impression</h3>';
   surveyQuestionsData.sectionA.forEach(q => {
     if (q.type === 'rating') {
@@ -508,7 +511,7 @@ function generateSurveyQuestions(num) {
     }
   });
 
-  // Section B
+  // Section B: Detailed Criteria (loop over 8 criteria with extensive rubric texts)
   html += '<h3>Section B: Detailed Criteria</h3>';
   surveyQuestionsData.sectionB.forEach(crit => {
     html += `
@@ -528,7 +531,7 @@ function generateSurveyQuestions(num) {
     `;
   });
 
-  // Section C
+  // Section C: Open Comments (loop over array for textarea)
   html += '<h3>Section C: Open Comments</h3>';
   surveyQuestionsData.sectionC.forEach(q => {
     html += `
@@ -543,12 +546,15 @@ function generateSurveyQuestions(num) {
 }
 
 // ========================================
-// SAVE DIALOGUE/SET DATA (Enhanced for modularity)
+// SAVE DIALOGUE/SET DATA (Enhanced for modularity - loops over data structures)
 // ========================================
 function saveSetData(num) {
   const formId = `set${num}Form`;
   const form = document.getElementById(formId);
-  if (!form) return;
+  if (!form) {
+    console.error(`Form ${formId} not found - check generation`);
+    return;
+  }
 
   const fd = new FormData(form);
   const setData = {
@@ -558,12 +564,12 @@ function saveSetData(num) {
     sectionC: {}
   };
 
-  // Save Section A
+  // Loop to save Section A
   surveyQuestionsData.sectionA.forEach(q => {
     setData.sectionA[q.id] = fd.get(`d${num}_${q.id}`) || '';
   });
 
-  // Save Section B
+  // Loop to save Section B (scores + comments)
   surveyQuestionsData.sectionB.forEach(crit => {
     setData.sectionB[crit.id] = {
       score: parseInt(fd.get(`d${num}_${crit.id}`)) || null,
@@ -571,7 +577,7 @@ function saveSetData(num) {
     };
   });
 
-  // Save Section C
+  // Loop to save Section C
   surveyQuestionsData.sectionC.forEach(q => {
     setData.sectionC[q.id] = fd.get(`d${num}_${q.id}`) || '';
   });
@@ -636,7 +642,7 @@ async function submitSurvey() {
       submissionTimestamp: timestamp.toISOString(),
       submissionDateLocal: timestamp.toLocaleString(),
       demographics: surveyData.demographics,
-      dialogues: surveyData.dialogues,  // Now modular sets
+      dialogues: surveyData.dialogues,  // Modular sets for EFL prosody data
       deviceInfo: {
         userAgent: navigator.userAgent,
         language: navigator.language,
@@ -692,7 +698,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Generate all sets dynamically in Section 1
+  // Generate all sets dynamically in Section 1 (core of Step 3)
   generateAllSets();
   
   // Add smooth scroll behavior to form inputs
