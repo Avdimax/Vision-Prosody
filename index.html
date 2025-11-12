@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <meta name="theme-color" content="#218093">
@@ -9,134 +9,114 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Communicative Prosody Assessment Survey</title>
     <link rel="stylesheet" href="style_mobile.css">
-</head>
-<body>
+  </head>
+  <body>
     <div class="app-container">
-        <!-- Progress Bar (Fixed at Bottom via CSS) -->
-        <div id="progressContainer" class="progress-bar-container" style="display: none;">
-            <div class="progress-wrapper">
-                <div class="progress-bar">
-                    <div id="progressFill" class="progress-fill"></div>
-                </div>
-                <p id="progressText" class="progress-text">0%</p>
-            </div>
+      <!-- Progress Bar (Fixed at Bottom via CSS) -->
+      <div id="progressContainer" class="progress-bar-container" style="display: none;">
+        <div class="progress-wrapper">
+          <div class="progress-bar">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+          <p id="progressText" class="progress-text">0%</p>
         </div>
+      </div>
 
-        <!-- Main Content -->
-        <main class="main-content">
-
-            <!-- INTRO SECTION (Enhanced for Engagement) -->
-            <div id="introSection" class="section active">
-                <div class="container">
-                    <div style="text-align: center; max-width: 600px; margin: 0 auto;">
-                        <h2 style="margin-bottom: 15px;">Welcome to the Communicative Prosody Assessment Study</h2>
-                        <p style="margin-bottom: 30px; line-height: 1.6; color: #555;">
-                            Thank you for participating in this EFL-focused research. Based on the Communicative Prosody V4.0 rubric, you'll evaluate 4 dialogues across 8 prosodic criteria for naturalness and appropriateness.
-                        </p>
-                        <h3 style="margin-top: 30px; margin-bottom: 20px; text-align: center;">Your Role:</h3>
-                        <ul style="margin: 0 auto 30px auto; padding-left: 20px; text-align: left; max-width: 450px; line-height: 1.8;">
-                            <li style="margin-bottom: 12px;">Review audio and transcript for each dialogue.</li>
-                            <li style="margin-bottom: 12px;">Rate prosody on a 1-5 scale using detailed rubrics.</li>
-                            <li style="margin-bottom: 12px;">Provide optional comments.</li>
-                            <li style="margin-bottom: 12px;">Estimated time: 15-20 minutes.</li>
-                        </ul>
-                        <div style="padding: 20px; background-color: #f8f9ff; border-left: 4px solid #2196F3; margin: 30px auto; border-radius: 4px; max-width: 450px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                            <p style="margin: 0; line-height: 1.6; color: #333; font-size: 0.95em;">
-                                Participation is voluntary and responses are confidential. Your input advances EFL prosody research.
-                            </p>
-                        </div>
-                        <button id="startSurveyButton" onclick="startSurvey()" class="btn btn-primary" style="margin-top: 20px; padding: 14px 40px; font-size: 1em;">
-                            Start Survey
-                        </button>
-                    </div>
-                </div>
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- INTRO SECTION (Enhanced for Engagement) -->
+        <div id="introSection" class="section active">
+          <div class="container">
+            <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+              <h2 style="margin-bottom: 15px;">Welcome to the Communicative Prosody Assessment Study</h2>
+              <p style="margin-bottom: 30px; line-height: 1.6; color: #555;">
+                Thank you for participating in this EFL-focused research. Based on the Communicative Prosody V4.0 rubric, you'll evaluate 4 dialogues across 8 prosodic criteria for naturalness and appropriateness.
+              </p>
+              <h3 style="margin-top: 30px; margin-bottom: 20px; text-align: center;">Your Role:</h3>
+              <ul style="margin: 0 auto 30px auto; padding-left: 20px; text-align: left; max-width: 450px; line-height: 1.8;">
+                <li style="margin-bottom: 12px;">Review audio and transcript for each dialogue.</li>
+                <li style="margin-bottom: 12px;">Rate prosody on a 1-5 scale using detailed rubrics.</li>
+                <li style="margin-bottom: 12px;">Provide optional comments.</li>
+                <li style="margin-bottom: 12px;">Estimated time: 15-20 minutes.</li>
+              </ul>
+              <div style="padding: 20px; background-color: #f8f9ff; border-left: 4px solid #2196F3; margin: 30px auto; border-radius: 4px; max-width: 450px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <p style="margin: 0; line-height: 1.6; color: #333; font-size: 0.95em;">
+                  Participation is voluntary and responses are confidential. Your input advances EFL prosody research.
+                </p>
+              </div>
+              <button id="startSurveyButton" onclick="startSurvey()" class="btn btn-primary" style="margin-top: 20px; padding: 14px 40px; font-size: 1em;">
+                Start Survey
+              </button>
             </div>
-            <!-- END INTRO -->
+          </div>
+        </div>
+        <!-- END INTRO -->
 
-            <!-- Demographics Section (Matched to PDF Rater Info) -->
-            <section id="demographicsSection" class="section">
-                <div class="survey-container">
-                    <h2>Rater Information</h2>
-                    <form id="demographicsForm" class="survey-form">
-                        <div class="form-group">
-                            <label for="raterName" class="form-label">Rater Name *</label>
-                            <input type="text" id="raterName" name="raterName" class="form-control" placeholder="Enter your name" required aria-required="true">
-                        </div>
-                        <div class="form-group">
-                            <label for="date" class="form-label">Date *</label>
-                            <input type="date" id="date" name="date" class="form-control" required aria-required="true">
-                        </div>
-                        <div class="form-group">
-                            <label for="raterID" class="form-label">Rater ID (if anonymous)</label>
-                            <input type="text" id="raterID" name="raterID" class="form-control" placeholder="Enter ID (optional)">
-                        </div>
-                        <div class="form-group">
-                            <label for="email" class="form-label">Email/Contact</label>
-                            <input type="email" id="email" name="email" class="form-control" placeholder="Enter email (optional)">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Qualifications (check all that apply) *</label>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" name="qualifications" value="phonetics"> Phonetics/Linguistics training</label>
-                                <label><input type="checkbox" name="qualifications" value="pathology"> Speech Pathology training</label>
-                                <label><input type="checkbox" name="qualifications" value="native"> Native English speaker</label>
-                                <label><input type="checkbox" name="qualifications" value="near_native"> Near-native English speaker</label>
-                                <label><input type="checkbox" name="qualifications" value="experience"> Experience with L2/EFL speech evaluation</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="nationality" class="form-label">Nationality *</label>
-                            <input type="text" id="nationality" name="nationality" class="form-control" placeholder="Enter your nationality" required aria-required="true">
-                        </div>
-                        <div class="form-group">
-                            <label for="nativeLanguageVariety" class="form-label">Native English Variety *</label>
-                            <select id="nativeLanguageVariety" name="nativeLanguageVariety" class="form-control" required aria-required="true">
-                                <option value="">-- Select Variety --</option>
-                                <option value="british">British English</option>
-                                <option value="american">American English</option>
-                                <option value="australian">Australian English</option>
-                                <option value="canadian">Canadian English</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                    </form>
-                    <div class="button-group">
-                        <button class="btn btn-secondary" onclick="showSection('introSection')">Back</button>
-                        <button class="btn btn-primary btn-large" onclick="submitDemographics()">Next</button>
-                    </div>
+        <!-- Demographics Section (Matched to PDF Rater Info, updated for Stage 1 fixes) -->
+        <section id="demographicsSection" class="section">
+          <div class="survey-container">
+            <h2>Rater Information</h2>
+            <form id="demographicsForm" class="survey-form">
+              <div class="form-group">
+                <label for="raterName" class="form-label">Rater Name *</label>
+                <input type="text" id="raterName" name="raterName" class="form-control" placeholder="Enter your name" required aria-required="true">
+              </div>
+              <div class="form-group">
+                <label for="email" class="form-label">Email/Contact</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="Enter email (optional)">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Qualifications (check all that apply) *</label>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" name="qualifications" value="phonetics"> Phonetics/Linguistics training</label>
+                  <label><input type="checkbox" name="qualifications" value="pathology"> Speech Pathology training</label>
+                  <label><input type="checkbox" name="qualifications" value="native"> Native English speaker</label>
+                  <label><input type="checkbox" name="qualifications" value="near_native"> Near-native English speaker</label>
+                  <label><input type="checkbox" name="qualifications" value="experience"> Experience with L2/EFL speech evaluation</label>
                 </div>
-            </section>
+              </div>
+              <div class="form-group">
+                <label for="nationality" class="form-label">Nationality *</label>
+                <input type="text" id="nationality" name="nationality" class="form-control" placeholder="Enter your nationality" required aria-required="true">
+              </div>
+            </form>
+            <div class="button-group">
+              <button class="btn btn-secondary" onclick="showSection('introSection')">Back</button>
+              <button class="btn btn-primary btn-large" onclick="submitDemographics()">Next</button>
+            </div>
+          </div>
+        </section>
 
-            <!-- Section 1: Unified for All Dynamic Sets (Modular Placeholder) -->
-            <section id="section1" class="section">
-                <div class="survey-container">
-                    <h2>Prosody Assessment: Dialogues</h2>
-                    <p>Evaluate each dialogue using the V4.0 rubric. Listen to audio, review transcript, and rate.</p>
-                    <div id="dialoguesContainer"></div>  <!-- Dynamic generation via JS -->
-                </div>
-            </section>
+        <!-- Section 1: Unified for All Dynamic Sets (Modular Placeholder) -->
+        <section id="section1" class="section">
+          <div class="survey-container">
+            <h2>Prosody Assessment: Dialogues</h2>
+            <p>Evaluate each dialogue using the V4.0 rubric. Listen to audio, review transcript, and rate.</p>
+            <div id="dialoguesContainer"></div>  <!-- Dynamic generation via JS -->
+          </div>
+        </section>
 
-            <!-- Confirmation Section (Enhanced with Details) -->
-            <section id="confirmationSection" class="section">
-                <div class="survey-container">
-                    <div class="confirmation-content">
-                        <div class="success-icon">✓</div>
-                        <h2>Thank You!</h2>
-                        <p>Your prosody assessments have been submitted. This contributes to EFL research on communicative naturalness.</p>
-                        <div id="confirmationDetails" class="confirmation-details"></div>
-                        <p class="confirmation-note">Responses saved securely. Contact your supervisor for questions.</p>
-                    </div>
-                </div>
-            </section>
+        <!-- Confirmation Section (Enhanced with Details) -->
+        <section id="confirmationSection" class="section">
+          <div class="survey-container">
+            <div class="confirmation-content">
+              <div class="success-icon">✓</div>
+              <h2>Thank You!</h2>
+              <p>Your prosody assessments have been submitted. This contributes to EFL research on communicative naturalness.</p>
+              <div id="confirmationDetails" class="confirmation-details"></div>
+              <p class="confirmation-note">Responses saved securely. Contact your supervisor for questions.</p>
+            </div>
+          </div>
+        </section>
 
-        </main>
+      </main>
     </div>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-    <!-- Survey Script (Update app.js with Below Changes) -->
+    <!-- Survey Script -->
     <script src="app.js"></script>
-</body>
+  </body>
 </html>
