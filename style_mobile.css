@@ -64,7 +64,6 @@
   --color-info: var(--color-slate-500);
   --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
   --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
-  --color-accent: var(--color-teal-300); /* New for highlights */
 
   /* Common style patterns */
   --focus-ring: 0 0 0 3px var(--color-focus-ring);
@@ -81,23 +80,25 @@
   --color-info-rgb: 98, 108, 113;
 
   /* Typography */
-  --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; /* Simplified fallback, assume Google Fonts if linked */
-  --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, monospace;
   --font-size-xs: 11px;
-  --font-size-sm: 13px; /* Slightly larger for readability */
-  --font-size-base: 15px;
-  --font-size-md: 15px;
-  --font-size-lg: 17px;
-  --font-size-xl: 20px;
-  --font-size-2xl: 22px;
-  --font-size-3xl: 26px;
-  --font-size-4xl: 32px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 30px;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
-  --font-weight-semibold: 600; /* Adjusted for bolder headings */
-  --font-weight-bold: 700;
-  --line-height-tight: 1.3; /* Improved for dense text */
-  --line-height-normal: 1.6;
+  --font-weight-semibold: 550;
+  --font-weight-bold: 600;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
   --letter-spacing-tight: -0.01em;
 
   /* Spacing */
@@ -113,7 +114,6 @@
   --space-20: 20px;
   --space-24: 24px;
   --space-32: 32px;
-  --space-40: 40px; /* New for larger sections */
 
   /* Border Radius */
   --radius-sm: 6px;
@@ -125,9 +125,12 @@
   /* Shadows */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04),
+    0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04),
+    0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
 
   /* Animation */
   --duration-fast: 150ms;
@@ -141,15 +144,53 @@
   --container-xl: 1280px;
 }
 
-/* Dark mode colors (for future expansion if needed) */
+/* Dark mode colors */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* ... (keep as is, but not focusing on dark mode now) */
+    /* RGB versions for opacity control (Dark Mode) */
+    --color-gray-400-rgb: 119, 124, 124;
+    --color-teal-300-rgb: 50, 184, 198;
+    --color-gray-300-rgb: 167, 169, 169;
+    --color-gray-200-rgb: 245, 245, 245;
+
+    /* Background color tokens (Dark Mode) */
+    --color-bg-1: rgba(29, 78, 216, 0.15); /* Dark blue */
+    --color-bg-2: rgba(180, 83, 9, 0.15); /* Dark yellow */
+    --color-bg-3: rgba(21, 128, 61, 0.15); /* Dark green */
+    --color-bg-4: rgba(185, 28, 28, 0.15); /* Dark red */
+    --color-bg-5: rgba(107, 33, 168, 0.15); /* Dark purple */
+    --color-bg-6: rgba(194, 65, 12, 0.15); /* Dark orange */
+    --color-bg-7: rgba(190, 24, 93, 0.15); /* Dark pink */
+    --color-bg-8: rgba(8, 145, 178, 0.15); /* Dark cyan */
+
+    /* Semantic Color Tokens (Dark Mode) */
+    --color-background: var(--color-charcoal-700);
+    --color-surface: var(--color-charcoal-800);
+    --color-text: var(--color-gray-200);
+    --color-text-secondary: var(--color-gray-400);
+    --color-primary: var(--color-teal-300);
+    --color-primary-hover: var(--color-teal-400);
+    --color-primary-active: var(--color-teal-300);
+    --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+    --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.2);
+    --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.25);
+    --color-border: rgba(var(--color-gray-300-rgb), 0.15);
+    --color-btn-primary-text: var(--color-charcoal-800);
+    --color-card-border: rgba(var(--color-gray-400-rgb), 0.15);
+    --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.1);
+    --color-error: var(--color-red-400);
+    --color-success: var(--color-teal-300);
+    --color-warning: var(--color-orange-400);
+    --color-info: var(--color-gray-300);
+    --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+    --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
   }
 }
 
 /* Global Reset & Base Styles */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -186,15 +227,16 @@ body {
   background-color: var(--color-background);
 }
 
-/* Progress Bar */
+/* Progress Bar - Now fixed at bottom */
 .progress-bar-container {
-  position: sticky;
-  top: 0;
+  position: fixed;  /* Changed from sticky for true bottom fixation */
+  bottom: 0;        /* Anchor to bottom */
+  top: auto;        /* Override any top positioning */
   left: 0;
   width: 100%;
   background-color: var(--color-surface);
-  z-index: 1000;
-  box-shadow: var(--shadow-xs);
+  z-index: 1000;    /* Ensure it stays above content */
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.05);  /* Enhanced: Upward shadow for depth */
   padding: var(--space-8) var(--space-12);
 }
 
@@ -227,10 +269,10 @@ body {
   text-align: right;
 }
 
-/* Main Content */
+/* Main Content - Added bottom padding to prevent overlap */
 .main-content {
   flex: 1;
-  padding: var(--space-16);
+  padding: var(--space-16) var(--space-16) var(--space-48);  /* Enhanced bottom padding for bar + buffer */
   max-width: var(--container-sm);
   margin: 0 auto;
   width: 100%;
@@ -240,7 +282,7 @@ body {
 .section {
   display: none;
   flex-direction: column;
-  gap: var(--space-24); /* Increased for better separation */
+  gap: var(--space-20);
 }
 
 .section.active {
@@ -251,12 +293,12 @@ body {
 .survey-container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-24);
-  padding: var(--space-20);
+  gap: var(--space-20);
+  padding: var(--space-16);
   background-color: var(--color-surface);
   border: 1px solid var(--color-card-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md); /* Stronger shadow for depth */
+  box-shadow: var(--shadow-sm);
 }
 
 /* Headings */
@@ -274,34 +316,29 @@ h1 {
 h2 {
   font-size: var(--font-size-2xl);
   margin-bottom: var(--space-12);
-  border-bottom: 1px solid var(--color-border); /* Added for PDF-like separation */
-  padding-bottom: var(--space-8);
 }
 
 h3 {
   font-size: var(--font-size-xl);
   margin-bottom: var(--space-8);
-  color: var(--color-primary); /* Accent color for section heads */
 }
 
 /* Form Elements */
 .survey-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-24); /* More space between groups */
+  gap: var(--space-20);
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-10);
-  border-bottom: 1px dashed var(--color-border); /* Dashed for subtle division */
-  padding-bottom: var(--space-16);
+  gap: var(--space-8);
 }
 
 .form-label {
   font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text);
 }
 
@@ -323,14 +360,14 @@ h3 {
 }
 
 .textarea-mobile {
-  min-height: 120px; /* Taller for comments */
+  min-height: 100px;
   resize: vertical;
 }
 
 .checkbox-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-10);
+  gap: var(--space-8);
 }
 
 .checkbox-group label {
@@ -342,102 +379,91 @@ h3 {
 }
 
 .checkbox-group input[type="checkbox"] {
-  width: 18px; /* Larger for touch */
-  height: 18px;
+  width: 16px;
+  height: 16px;
   accent-color: var(--color-primary);
 }
 
-/* Rating Groups (Enhanced for Rubric) */
+/* Rating Groups - Updated for segmented rectangular spectrum */
 .rating-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-16);
-  padding: var(--space-24);
-  background-color: rgba(var(--color-teal-500-rgb), 0.05); /* Light accent background */
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-20);
+  gap: var(--space-12);
+  padding: var(--space-20); /* Increased padding for rubric details */
+  background-color: var(--color-secondary);
+  border-radius: var(--radius-base);
+  margin-bottom: var(--space-16);
   font-size: var(--font-size-sm);
-  box-shadow: var(--shadow-sm); /* Added depth */
-}
-
-.rating-group h4 { /* For "Question:", "What to Listen For:", etc. */
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-accent);
-  margin-bottom: var(--space-8);
 }
 
 .rating-group ul {
   list-style-type: disc;
-  padding-left: var(--space-24);
-  margin-bottom: var(--space-12);
-  line-height: var(--line-height-normal);
-}
-
-.rating-group ul li::before {
-  content: "• "; /* Custom bullet for visual appeal */
-  color: var(--color-primary);
+  padding-left: var(--space-20);
+  margin-bottom: var(--space-8);
 }
 
 .rating-group p {
-  margin-bottom: var(--space-12);
-  line-height: var(--line-height-normal);
-}
-
-.rating-group p strong { /* For "Score 1 –" etc. */
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
+  margin-bottom: var(--space-8);
 }
 
 .rating-scale {
   display: flex;
   justify-content: space-between;
-  gap: var(--space-6);
-  margin: var(--space-12) 0;
+  gap: 0;  /* No gap for connected segments */
+  border: 1px solid var(--color-border);  /* Outer border for single rectangle */
+  border-radius: var(--radius-base);  /* Slight rounding for polish, but rectangular feel */
+  overflow: hidden;  /* Hide internal overflows for clean segments */
+  margin-bottom: var(--space-8);  /* Space before labels */
 }
 
 .rating-label {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px; /* Larger for touch */
-  height: 48px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-full);
+  flex: 1;  /* Equal width segments */
+  height: 48px;  /* Enhanced: Taller for better touch targets */
+  border-right: 1px solid var(--color-border);  /* Internal dividers, prominent borders */
+  background-color: var(--color-surface);  /* Neutral base */
   cursor: pointer;
   transition: all var(--duration-fast) ease;
-  background-color: var(--color-surface);
+  font-size: var(--font-size-md);  /* Larger numbers for visibility */
+  color: var(--color-text-secondary);  /* Subtle text */
+  position: relative;  /* For absolute positioning of input */
+}
+
+.rating-label:last-child {
+  border-right: none;  /* No divider on last segment */
+}
+
+.rating-label:hover {
+  background: linear-gradient(to bottom, var(--color-secondary-hover), var(--color-secondary));  /* Enhanced: Subtle gradient for spectrum feel */
 }
 
 .rating-label input[type="radio"] {
   appearance: none;
-  width: 24px;
-  height: 24px;
-  border: 2px solid var(--color-border);
-  border-radius: 50%;
-  background-color: transparent;
-  transition: all var(--duration-fast) ease;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
 }
 
-.rating-label input[type="radio"]:checked {
+.rating-label:has(input[type="radio"]:checked) {
   background-color: var(--color-primary);
-  border-color: var(--color-primary);
-}
-
-.rating-label:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 8px rgba(var(--color-teal-500-rgb), 0.2); /* Glow on hover */
+  color: var(--color-btn-primary-text);
+  border-color: var(--color-primary-hover);  /* Prominent border on select */
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);  /* Enhanced: Inset shadow for depth */
 }
 
 .scale-labels {
   display: flex;
   justify-content: space-between;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
-  margin-top: var(--space-6);
-  font-weight: var(--font-weight-medium);
-  font-style: italic; /* For emphasis */
+  margin-top: var(--space-4);
+  padding: 0 var(--space-8);  /* Align with segments */
+  font-weight: var(--font-weight-medium); /* Improved contrast for labels */
 }
 
 /* Buttons */
@@ -459,7 +485,6 @@ h3 {
 
 .btn-primary:hover {
   background-color: var(--color-primary-hover);
-  transform: translateY(-1px); /* Subtle lift */
 }
 
 .btn-primary:active {
@@ -488,27 +513,24 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: var(--space-12);
-  margin-top: var(--space-24);
+  margin-top: var(--space-20);
 }
 
 /* Dialogue Context */
 .dialogue-context {
   background-color: var(--color-secondary);
-  padding: var(--space-16);
+  padding: var(--space-12);
   border-radius: var(--radius-base);
-  margin-bottom: var(--space-20);
+  margin-bottom: var(--space-16);
   font-size: var(--font-size-sm);
-  border-left: 4px solid var(--color-primary); /* Accent border */
 }
 
-/* Audio Container */
 .audio-container {
-  margin: var(--space-24) 0;
-  padding: var(--space-20);
+  margin: var(--space-20) 0;
+  padding: var(--space-16);
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-base);
-  box-shadow: var(--shadow-sm);
 }
 
 .audio-container h3 {
@@ -522,13 +544,19 @@ audio.audio-player {
   height: 40px;
 }
 
-/* Transcript */
+audio.audio-player::-webkit-media-controls-panel {
+  background-color: var(--color-surface);
+}
+
+audio.audio-player::-webkit-media-controls-timeline {
+  max-height: 4px;
+}
+
 .dialogue-transcript {
   background-color: var(--color-secondary);
-  padding: var(--space-20);
+  padding: var(--space-16);
   border-radius: var(--radius-base);
-  margin-bottom: var(--space-24);
-  border-left: 4px solid var(--color-accent);
+  margin-bottom: var(--space-20);
 }
 
 .dialogue-transcript h3 {
@@ -539,7 +567,7 @@ audio.audio-player {
 .transcript-content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-16);
+  gap: var(--space-12);
 }
 
 .transcript-content p {
@@ -553,42 +581,43 @@ audio.audio-player {
   font-weight: var(--font-weight-semibold);
 }
 
-/* Confirmation Section */
+/* ========================================
+   CONFIRMATION SECTION
+   ======================================== */
+
 .confirmation-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-32);
+  padding: var(--space-24);
   text-align: center;
   background-color: var(--color-background);
 }
 
 .success-icon {
-  width: 80px; /* Larger for impact */
-  height: 80px;
-  margin: 0 auto var(--space-24);
+  width: 60px;
+  height: 60px;
+  margin: 0 auto var(--space-20);
   background-color: var(--color-success);
   color: var(--color-btn-primary-text);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 48px;
+  font-size: 32px;
   font-weight: bold;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Added shadow */
 }
 
 .confirmation-details {
   background-color: var(--color-secondary);
-  padding: var(--space-20);
+  padding: var(--space-16);
   border-radius: var(--radius-base);
-  margin: var(--space-24) 0;
+  margin: var(--space-20) 0;
   text-align: left;
   font-size: var(--font-size-sm);
   width: 100%;
-  border: 1px solid var(--color-border);
 }
 
 .confirmation-note {
@@ -597,10 +626,21 @@ audio.audio-player {
   margin-top: var(--space-16);
 }
 
-/* Responsive Design - Mobile Portrait */
+/* ========================================
+   RESPONSIVE DESIGN - MOBILE PORTRAIT
+   ======================================== */
+
 @media (max-width: 480px) {
   .survey-container {
+    padding: var(--space-12);
+  }
+
+  .welcome-box {
     padding: var(--space-16);
+  }
+
+  .welcome-title {
+    font-size: var(--font-size-2xl);
   }
 
   h1 {
@@ -630,22 +670,23 @@ audio.audio-player {
   }
 
   .rating-scale {
-    gap: var(--space-4);
-    flex-wrap: wrap; /* Prevent overflow */
-    justify-content: center;
+    gap: var(--space-2);
   }
 
-  .rating-label {
-    width: 40px;
-    height: 40px;
+  .rating-label input[type="radio"] {
+    width: 18px;
+    height: 18px;
   }
 }
 
-/* Tablets & Larger */
+/* ========================================
+   RESPONSIVE DESIGN - TABLETS & LARGER
+   ======================================== */
+
 @media (min-width: 600px) {
   .survey-container {
-    padding: var(--space-24);
-    max-width: 700px; /* Wider for better text flow */
+    padding: var(--space-20);
+    max-width: 600px;
     margin: 0 auto;
   }
 
@@ -674,7 +715,7 @@ audio.audio-player {
 
 @media (min-width: 768px) {
   .survey-container {
-    padding: var(--space-40);
+    padding: var(--space-32);
     max-width: var(--container-md);
   }
 
@@ -682,12 +723,19 @@ audio.audio-player {
     font-size: var(--font-size-lg);
     padding: var(--space-12) var(--space-16);
   }
+
+  .welcome-box {
+    padding: var(--space-32);
+  }
 }
 
-/* Accessibility & Touch-Friendly */
+/* ========================================
+   ACCESSIBILITY & TOUCH-FRIENDLY
+   ======================================== */
+
 @media (hover: hover) {
   .btn:hover {
-    opacity: 0.95;
+    opacity: 0.9;
   }
 
   .form-control:hover {
@@ -695,6 +743,7 @@ audio.audio-player {
   }
 }
 
+/* High contrast mode support */
 @media (prefers-contrast: more) {
   .btn, .form-control {
     border: 2px solid currentColor;
@@ -705,6 +754,7 @@ audio.audio-player {
   }
 }
 
+/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -713,9 +763,16 @@ audio.audio-player {
   }
 }
 
-/* Landscape Mode Optimization */
+/* ========================================
+   LANDSCAPE MODE OPTIMIZATION
+   ======================================== */
+
 @media (max-height: 600px) and (orientation: landscape) {
   .survey-container {
+    padding: var(--space-12);
+  }
+
+  .welcome-box {
     padding: var(--space-16);
   }
 
@@ -734,48 +791,51 @@ audio.audio-player {
     max-height: 300px;
     overflow-y: auto;
   }
+
+  .rating-group {
+    font-size: var(--font-size-base);  /* Enhanced: Larger text for rubric in landscape */
+  }
 }
 
-/* Input Helpers for Android/iOS */
-input[type="text"], input[type="number"], input[type="email"], textarea, select {
+/* ========================================
+   INPUT HELPERS FOR ANDROID
+   ======================================== */
+
+/* Prevent zoom on iOS when input is focused */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+textarea,
+select {
   font-size: 16px;
 }
 
+/* Improve select appearance on Android */
 select {
   background-color: var(--color-surface);
   color: var(--color-text);
 }
 
-/* Safe Area Support */
+/* ========================================
+   SAFE AREA SUPPORT (iPhone notch, etc.)
+   ======================================== */
+
 @supports (padding: max(0px)) {
   body {
     padding-left: max(0px, env(safe-area-inset-left));
     padding-right: max(0px, env(safe-area-inset-right));
   }
 
-/* Progress Bar - Now fixed at bottom */
-.progress-bar-container {
-  position: fixed;  /* Changed from sticky for true bottom fixation */
-  bottom: 0;        /* Anchor to bottom */
-  top: auto;        /* Override any top positioning */
-  left: 0;
-  width: 100%;
-  background-color: var(--color-surface);
-  z-index: 1000;    /* Ensure it stays above content */
-  box-shadow: var(--shadow-xs);  /* Optional: Add subtle shadow for depth */
-  padding: var(--space-8) var(--space-12);
+  .progress-bar-container {
+    padding-top: max(var(--space-12), env(safe-area-inset-top));
+    padding-bottom: max(var(--space-12), env(safe-area-inset-bottom));
+  }
 }
 
-/* Main Content - Add bottom padding to prevent overlap with fixed progress bar */
-.main-content {
-  flex: 1;
-  padding: var(--space-16) var(--space-16) var(--space-48);  /* Increased bottom padding (e.g., 48px) to accommodate bar height + buffer */
-  max-width: var(--container-sm);
-  margin: 0 auto;
-  width: 100%;
-}
+/* ========================================
+   SCROLLING OPTIMIZATION
+   ======================================== */
 
-/* Scrolling Optimization */
 html {
   scroll-behavior: smooth;
 }
@@ -784,14 +844,21 @@ body {
   overflow-x: hidden;
 }
 
-/* Prevent Double Tap Zoom */
-button, input[type="button"], input[type="submit"], a {
+/* Prevent double tap zoom */
+button,
+input[type="button"],
+input[type="submit"],
+a {
   touch-action: manipulation;
 }
 
-/* Print Styles */
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
 @media print {
-  .progress-bar-container, .button-group {
+  .progress-bar-container,
+  .button-group {
     display: none;
   }
 
