@@ -707,7 +707,7 @@ function handleTriggerClick(e) {
     const block = trigger.closest('.criterion-block');
     fullScreenCenter(block);
   }, 400);
-}
+
 
 // Comment focus → center the block
 function handleFocus(e) {
