@@ -7,113 +7,107 @@
   <link rel="stylesheet" href="style_mobile.css">
 </head>
 <body>
-  <div class="app-container">
-    <!-- Progress Bar - Fixed at Bottom -->
-    <div class="progress-bar-container">
-      <div class="progress-wrapper">
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
+  <!-- ========================================
+       DEMOGRAPHICS SECTION
+       ======================================== -->
+  <section id="demographicsSection" class="section active">
+    <div class="survey-container">
+      <div class="header-card">
+        <h1>EFL Dialogue Naturalness Evaluation</h1>
+        <p class="subtitle">Comprehensive rubric-based assessment of dialogue quality in English language teaching contexts</p>
+      </div>
+
+      <form id="demographicsForm" class="form-card">
+        <div class="form-group">
+          <label for="raterName" class="form-label">Rater Name *</label>
+          <input 
+            type="text" 
+            id="raterName" 
+            class="form-control" 
+            placeholder="Enter your name" 
+            required
+          >
         </div>
-        <div class="progress-text" id="progressText">0%</div>
+
+        <div class="form-group">
+          <label for="raterEmail" class="form-label">Email Address *</label>
+          <input 
+            type="email" 
+            id="raterEmail" 
+            class="form-control" 
+            placeholder="Enter your email" 
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="experienceLevel" class="form-label">Experience Level with EFL</label>
+          <select id="experienceLevel" class="form-control">
+            <option value="">Select your experience level</option>
+            <option value="beginner">Beginner (0-2 years)</option>
+            <option value="intermediate">Intermediate (2-5 years)</option>
+            <option value="advanced">Advanced (5-10 years)</option>
+            <option value="expert">Expert (10+ years)</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-full-width">
+          Start Survey
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ========================================
+       DIALOGUES CONTAINER
+       ======================================== -->
+  <div id="dialoguesContainer"></div>
+
+  <!-- ========================================
+       CONFIRMATION SECTION
+       ======================================== -->
+  <section id="confirmationSection" class="section">
+    <div class="survey-container">
+      <div class="confirmation-card">
+        <div class="confirmation-icon">✓</div>
+        <h1>Survey Submitted Successfully!</h1>
+        <p class="confirmation-message">Thank you for completing the EFL dialogue evaluation survey.</p>
+
+        <div class="confirmation-details">
+          <div class="detail-item">
+            <span class="detail-label">Rater Name:</span>
+            <span class="detail-value" id="confirmRaterName"></span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Email:</span>
+            <span class="detail-value" id="confirmRaterEmail"></span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Submission Time:</span>
+            <span class="detail-value" id="confirmTimestamp"></span>
+          </div>
+        </div>
+
+        <p class="confirmation-footer">Your responses have been securely saved to our database.</p>
       </div>
     </div>
+  </section>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      
-      <!-- PAGE 1: Welcome Section -->
-      <section id="welcomeSection" class="section active">
-        <div class="survey-container">
-          <h1 class="welcome-title">EFL Dialogue Evaluation Survey</h1>
-          <p class="welcome-subtitle">Thank you for participating in this research on EFL textbook dialogues. You'll evaluate 4 dialogues using a consolidated rubric with 3 Structure criteria and 3 Speech criteria for authenticity and communicative competence.</p>
-          
-          <div class="welcome-box">
-            <h2>Your Role:</h2>
-            <ul class="welcome-list">
-              <li>Review audio and transcript for each dialogue.</li>
-              <li>Rate each criterion on a 1-5 scale using detailed anchors.</li>
-              <li>Provide optional comments for qualitative insights.</li>
-              <li>Estimated time: 5-10 minutes per dialogue (20-40 minutes total).</li>
-            </ul>
-            <p class="welcome-note">Participation is voluntary and responses are confidential. Your input advances EFL dialogue authenticity research.</p>
-          </div>
-
-          <div class="button-group">
-            <button type="button" class="btn btn-primary btn-large" onclick="showPage('demographicsSection')">Start Survey</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- PAGE 2: Demographics Section -->
-      <section id="demographicsSection" class="section">
-        <div class="survey-container">
-          <h1>Rater Information</h1>
-          <p class="welcome-subtitle">Please provide your information to begin the evaluation.</p>
-
-          <form id="demographicsForm" class="survey-form">
-            <div class="form-group">
-              <label for="raterName" class="form-label">Full Name <span class="required">*</span></label>
-              <input type="text" id="raterName" name="raterName" class="form-control" required placeholder="Enter your full name">
-            </div>
-
-            <div class="form-group">
-              <label for="raterEmail" class="form-label">Email Address <span class="required">*</span></label>
-              <input type="email" id="raterEmail" name="raterEmail" class="form-control" required placeholder="Enter your email">
-            </div>
-
-            <div class="form-group">
-              <label for="experienceLevel" class="form-label">Years of EFL Teaching Experience</label>
-              <select id="experienceLevel" name="experienceLevel" class="form-control">
-                <option value="">-- Select --</option>
-                <option value="0-2">0-2 years</option>
-                <option value="2-5">2-5 years</option>
-                <option value="5-10">5-10 years</option>
-                <option value="10+">10+ years</option>
-              </select>
-            </div>
-
-            <div class="button-group">
-              <button type="button" class="btn btn-secondary" onclick="showPage('welcomeSection')">← Back</button>
-              <button type="submit" class="btn btn-primary btn-large">Begin Evaluation</button>
-            </div>
-          </form>
-        </div>
-      </section>
-
-      <!-- PAGES 3-6: Dialogue Sections (Dynamically Generated) -->
-      <div id="dialoguesContainer"></div>
-
-      <!-- FINAL PAGE: Confirmation Section -->
-      <section id="confirmationSection" class="section">
-        <div class="survey-container">
-          <div class="confirmation-content">
-            <div class="success-icon">✓</div>
-            <h1>Thank You!</h1>
-            <p class="welcome-subtitle">Your evaluations have been submitted successfully.</p>
-            
-            <div class="confirmation-details">
-              <p><strong>Submission Details:</strong></p>
-              <p>Rater: <span id="confirmRaterName"></span></p>
-              <p>Email: <span id="confirmRaterEmail"></span></p>
-              <p>Dialogues Evaluated: 4</p>
-              <p>Timestamp: <span id="confirmTimestamp"></span></p>
-            </div>
-
-            <p class="confirmation-note">Your responses have been saved securely to our database. This data will contribute to research on EFL dialogue authenticity and pedagogical effectiveness.</p>
-
-            <div class="button-group">
-              <button type="button" class="btn btn-secondary btn-large" onclick="location.reload()">Start New Survey</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </main>
+  <!-- ========================================
+       PROGRESS BAR
+       ======================================== -->
+  <div class="progress-bar-container">
+    <div class="progress-bar">
+      <div id="progressFill" class="progress-fill"></div>
+    </div>
+    <div class="progress-text" id="progressText">0%</div>
   </div>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js"></script>
+  <!-- ========================================
+       FIREBASE & APP SCRIPTS
+       ======================================== -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
