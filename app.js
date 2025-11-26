@@ -29,7 +29,7 @@ const dialogueSetsData = [
   {
     setId: 1,
     title: "Museum of Nature and Wildlife",
-    context: "Maryam is visiting the Museum of Nature and Wildlife. She’s talking to Mr. Razavi who works in the museum.",
+    context: "Maryam is visiting the Museum of Nature and Wildlife. Sheâ€™s talking to Mr. Razavi who works in the museum.",
     audioSrc: "dialogue_1.mp3",
     transcript: [
       { speaker: "Maryam", line: "Excuse me, what is it? Is it a leopard?" },
@@ -42,10 +42,61 @@ const dialogueSetsData = [
       { speaker: "Mr. Razavi", line: "Well, we have some plans. For example, we are going to protect their homes, to make movies about their life, and to teach people how to take more care of them." }
     ]
   },
-  // Add remaining 3 sets from original (omitted for brevity in this response, but include in your file)
-  // ...
+  {
+    setId: 2,
+    title: "Visiting an Observatory",
+    context: "Alireza is visiting an observatory. He is talking to Ms. Tabesh who works there.",
+    audioSrc: "dialogue_2.mp3",
+    transcript: [
+      { speaker: "Ms. Tabesh", line: "Are you interested in the planets?" },
+      { speaker: "Alireza", line: "Yes! They are really interesting for me, but I donâ€™t know much about them." },
+      { speaker: "Ms. Tabesh", line: "Planets are really amazing but not so much alike. Do you know how they are different?" },
+      { speaker: "Alireza", line: "Umm... I know they go around the Sun in different orbits." },
+      { speaker: "Ms. Tabesh", line: "Thatâ€™s right. They have different colors and sizes, too. Some are rocky like Mars, some have rings like Saturn and some have moons like Uranus." },
+      { speaker: "Alireza", line: "How wonderful! Can we see them without a telescope?" },
+      { speaker: "Ms. Tabesh", line: "Yeah..., we can see the planets nearer to us without a telescope, such as Mercury, Venus, Mars, Jupiter and Saturn. We can see Uranus and Neptune only with powerful telescopes." },
+      { speaker: "Alireza", line: "And which planet is the largest of all?" },
+      { speaker: "Ms. Tabesh", line: "Jupiter is the largest one. It has more than sixty moons. Do you want to look at it?" },
+      { speaker: "Alireza", line: "I really like that." }
+    ]
+  },
+  {
+    setId: 3,
+    title: "Leaving the Library",
+    context: "Roya and Mahsa are leaving the library.",
+    audioSrc: "dialogue_3.mp3",
+    transcript: [
+      { speaker: "Roya", line: "When I came in, you were reading a book. What was it?" },
+      { speaker: "Mahsa", line: "I was reading a book about famous Iranian scientists." },
+      { speaker: "Roya", line: "But such books are not very interesting." },
+      { speaker: "Mahsa", line: "At first I had the same idea, believe me!" },
+      { speaker: "Roya", line: "Did you find it useful?" },
+      { speaker: "Mahsa", line: "Oh yes. Actually I learned many interesting things about our scientistsâ€™ lives." },
+      { speaker: "Roya", line: "Like what?" },
+      { speaker: "Mahsa", line: "For example Razi taught medicine to many young people while he was working in Ray Hospital. Or Nasireddin Toosi built Maragheh Observatory when he was studying the planets." },
+      { speaker: "Roya", line: "Cool! What was the name of the book?" },
+      { speaker: "Mahsa", line: "Famous Iranian Scientists." }
+    ]
+  },
+  {
+    setId: 4,
+    title: "Planning Summer Vacation",
+    context: "Diego is a Spanish tourist who is planning for his summer vacation. He is talking to Carlos Sabato, a travel agent in Madrid.",
+    audioSrc: "dialogue_4.mp3",
+    transcript: [
+      { speaker: "Diego", line: "Excuse me, sir! I am planning for my summer vacation." },
+      { speaker: "Carlos", line: "How can I help you?" },
+      { speaker: "Diego", line: "Actually I want to visit Asia, but I am not sure about my destination. Do you have any suggestion?" },
+      { speaker: "Carlos", line: "Well, you may have some choices. You can visit China. It is famous for the Great Wall." },
+      { speaker: "Diego", line: "Yes, but I was in Beijing two years ago." },
+      { speaker: "Carlos", line: "What about India? In fact, the Taj Mahal is a popular destination, but it is hot in summer. Probably Iran is the best choice." },
+      { speaker: "Diego", line: "I heard Iran is a great and beautiful country, but I donâ€™t know much about it." },
+      { speaker: "Carlos", line: "Well, Iran is a four-season country. It has many historical sites and amazing nature. Also, its people are very kind and hospitable." },
+      { speaker: "Diego", line: "It seems a suitable choice. But how can I get more information about Iran?" },
+      { speaker: "Carlos", line: "You can check this booklet or may see our website." }
+    ]
+  }
 ];
-
 // ========================================
 // SURVEY QUESTIONS DATA (FULL FROM RUBRIC MD - NO TRUNCATION)
 // ========================================
