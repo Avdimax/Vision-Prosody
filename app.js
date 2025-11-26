@@ -1,6 +1,6 @@
 // ========================================
 // FIREBASE SURVEY - EFL DIALOGUE EVALUATION
-// FIXED: Page Flow & Auto-Scrolling
+// FIXED: Last Question Scroll & Firebase Init
 // ========================================
 
 const firebaseConfig = {
@@ -36,6 +36,7 @@ let currentDialogueIndex = 0;
 let currentTab = "structure";
 let totalQuestions = 0;
 let db = null;
+let firebaseReady = false;
 
 // ========================================
 // DIALOGUE DATA
@@ -252,17 +253,31 @@ const criteriaData = {
 };
 
 // ========================================
-// INITIALIZE FIREBASE
+// INITIALIZE FIREBASE (FIXED)
 // ========================================
 
 function initializeFirebase() {
-  if (typeof firebase !== "undefined") {
-    try {
-      firebase.initializeApp(firebaseConfig);
+  if (typeof firebase === "undefined") {
+    console.warn("Firebase SDK not loaded yet, retrying...");
+    setTimeout(initializeFirebase, 500);
+    return;
+  }
+
+  try {
+    // Check if already initialized
+    if (firebase.apps && firebase.apps.length > 0) {
       db = firebase.database();
-    } catch (error) {
-      console.log("Firebase already initialized or error:", error.message);
+      firebaseReady = true;
+      return;
     }
+
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+    firebaseReady = true;
+  } catch (error) {
+    console.error("Firebase initialization error:", error);
+    // Retry after delay
+    setTimeout(initializeFirebase, 1000);
   }
 }
 
@@ -436,50 +451,64 @@ function handleRating(dialogueIndex, type, critKey, score) {
   }, 100);
 }
 
+// ========================================
+// FIXED: SCROLL TO NEXT CRITERION
+// ========================================
+
 function scrollToNextCriterion(dialogueIndex, currentType) {
   const section = document.getElementById(`dialogueSection_${dialogueIndex}`);
   if (!section) return;
 
-  // Get current tab (Structure or Speech)
-  const activeTab = currentType === "structure" ? "structureTab" : "speechTab";
-  const currentTabSection = document.getElementById(`${activeTab}_${dialogueIndex}`);
+  // Get current tab section
+  const currentTabId = currentType === "structure" ? "structureTab" : "speechTab";
+  const currentTabSection = document.getElementById(`${currentTabId}_${dialogueIndex}`);
   if (!currentTabSection) return;
 
   // Get all criteria blocks in current tab
-  const allCriteria = Array.from(currentTabSection.querySelectorAll(".criterion-block"));
+  const allCriteriaInTab = Array.from(currentTabSection.querySelectorAll(".criterion-block"));
   
-  // Find first unrated criterion
-  const unratedCriterion = allCriteria.find((block) => {
+  // Find first unrated criterion in current tab
+  const unratedInCurrentTab = allCriteriaInTab.find((block) => {
     const inputs = block.querySelectorAll('input[type="radio"]');
     return !Array.from(inputs).some((input) => input.checked);
   });
 
   // If found unrated in current tab, scroll to it
-  if (unratedCriterion) {
-    fullScreenCenter(unratedCriterion);
+  if (unratedInCurrentTab) {
+    fullScreenCenter(unratedInCurrentTab);
     return;
   }
 
-  // If all in current tab are rated, check if there's another tab to fill
+  // All rated in current tab, check if there's another tab to fill
   const otherType = currentType === "structure" ? "speech" : "structure";
   const otherTabId = currentType === "structure" ? "speechTab" : "structureTab";
   const otherTabSection = document.getElementById(`${otherTabId}_${dialogueIndex}`);
   
-  if (otherTabSection && otherTabSection.style.display !== "none") {
-    // Switch to other tab and scroll to first criterion
-    switchTab(dialogueIndex, otherType);
-    const firstCriterionOtherTab = otherTabSection.querySelector(".criterion-block");
-    if (firstCriterionOtherTab) {
+  if (otherTabSection) {
+    // Get all criteria in other tab
+    const allCriteriaInOtherTab = Array.from(otherTabSection.querySelectorAll(".criterion-block"));
+    
+    // Check if there's an unrated criterion in the other tab
+    const unratedInOtherTab = allCriteriaInOtherTab.find((block) => {
+      const inputs = block.querySelectorAll('input[type="radio"]');
+      return !Array.from(inputs).some((input) => input.checked);
+    });
+
+    // If other tab has unrated, switch to it
+    if (unratedInOtherTab) {
+      switchTab(dialogueIndex, otherType);
       setTimeout(() => {
-        fullScreenCenter(firstCriterionOtherTab);
+        fullScreenCenter(unratedInOtherTab);
       }, 200);
+      return;
     }
-  } else {
-    // All rated, scroll to submit button area
-    const buttonGroup = section.querySelector(".button-group");
-    if (buttonGroup) {
-      fullScreenCenter(buttonGroup);
-    }
+  }
+
+  // ALL CRITERIA IN BOTH TABS ARE RATED
+  // Scroll to the button group (Next Dialogue or Submit Survey)
+  const buttonGroup = section.querySelector(".button-group");
+  if (buttonGroup) {
+    fullScreenCenter(buttonGroup);
   }
 }
 
@@ -539,7 +568,7 @@ function goToDialogue(index) {
 }
 
 // ========================================
-// SMOOTH CENTERING FUNCTION (CRITICAL FIX)
+// SMOOTH CENTERING FUNCTION
 // ========================================
 
 function fullScreenCenter(element) {
@@ -594,7 +623,10 @@ function updateProgress() {
 // ========================================
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Initialize Firebase with retry logic
   initializeFirebase();
+  
+  // Render all dialogues
   renderAllDialogues();
   calculateTotalQuestions();
 
@@ -623,8 +655,10 @@ function calculateTotalQuestions() {
 }
 
 function submitSurvey() {
-  if (!db) {
-    alert("Firebase is not initialized. Please try again later.");
+  // Check if Firebase is ready
+  if (!firebaseReady || !db) {
+    alert("Firebase is initializing. Please wait a moment and try again.");
+    console.log("Firebase status - Ready:", firebaseReady, "DB:", db ? "exists" : "null");
     return;
   }
 
@@ -668,6 +702,7 @@ function submitSurvey() {
     })
     .catch((error) => {
       alert("Error saving survey: " + error.message);
+      console.error("Firebase error:", error);
     });
 }
 
