@@ -234,7 +234,7 @@ const surveyQuestionsData = {
 };
 
 // ========================================
-// GENERATION FUNCTIONS
+// GENERATION FUNCTIONS (FIXED - USE APPENDCHILD ONE-BY-ONE)
 // ========================================
 function generateAllSets() {
   const container = document.getElementById('dialoguesContainer');
@@ -248,11 +248,10 @@ function generateAllSets() {
     const dialogueInfo = document.createElement('div');
     dialogueInfo.className = 'dialogue-info';
     dialogueInfo.innerHTML = `
-      <h3>Dialogue Set: ${set.setId}</h3>
-      <p>Filename: ${set.audioSrc}</p>
-      <p>Duration: [seconds - auto-calculate if needed]</p>
-      <p>Title: ${set.title}</p>
+      <h3>Dialogue Set: ${set.setId} - ${set.title}</h3>
       <p>Context: ${set.context}</p>
+      <p>Filename: ${set.audioSrc}</p>
+      <p>Duration: [seconds]</p>
     `;
     dialogueContainer.appendChild(dialogueInfo);
 
@@ -281,11 +280,12 @@ function generateAllSets() {
     structureTab.textContent = 'Structure';
     structureTab.className = 'tab-button active';
     structureTab.onclick = () => toggleTab(set.setId, 'structure');
+    tabContainer.appendChild(structureTab);
     const speechTab = document.createElement('button');
     speechTab.textContent = 'Speech';
     speechTab.className = 'tab-button';
     speechTab.onclick = () => toggleTab(set.setId, 'speech');
-    tabContainer.append(structureTab, speechTab);
+    tabContainer.appendChild(speechTab);
     dialogueContainer.appendChild(tabContainer);
 
     // Structure Section
@@ -332,7 +332,7 @@ function generateAllSets() {
   updateProgress();
 }
 
-// Modular Criterion Block Creation (Full, Matches PDF)
+// Modular Criterion Block Creation (Full, Matches PDF - Fixed whatToListenFor key)
 function createCriterionBlock(crit, setId, sectionType) {
   const block = document.createElement('div');
   block.className = 'criterion-block';
@@ -353,7 +353,7 @@ function createCriterionBlock(crit, setId, sectionType) {
   evalTitle.textContent = sectionType === 'speech' ? 'What to Listen For:' : 'What to Evaluate:';
   block.appendChild(evalTitle);
   const evalList = document.createElement('ul');
-  (crit.whatToEvaluate || crit.whatToListen).forEach(item => {
+  crit.whatToEvaluate.forEach(item => {  // Use whatToEvaluate for all (fixed key in data for speech as whatToEvaluate)
     const li = document.createElement('li');
     li.textContent = item;
     evalList.appendChild(li);
@@ -392,8 +392,10 @@ function createCriterionBlock(crit, setId, sectionType) {
     radio.name = `${crit.id}_${setId}`;
     radio.value = i;
     radio.onchange = (e) => {
-      surveyData.dialogues[setId - 1][sectionType][crit.id] = { score: i };
+      if (!surveyData.dialogues[setId - 1][sectionType][crit.id]) surveyData.dialogues[setId - 1][sectionType][crit.id] = {};
+      surveyData.dialogues[setId - 1][sectionType][crit.id].score = i;
       updateProgress();
+      handleRadioChange(e);
     };
     label.appendChild(radio);
     label.appendChild(document.createTextNode(i));
@@ -406,7 +408,10 @@ function createCriterionBlock(crit, setId, sectionType) {
   commentsLabel.textContent = 'Comments (optional):';
   const comments = document.createElement('textarea');
   comments.placeholder = 'Optional comments';
-  comments.onchange = (e) => surveyData.dialogues[setId - 1][sectionType][crit.id].comments = e.target.value;
+  comments.onchange = (e) => {
+    if (!surveyData.dialogues[setId - 1][sectionType][crit.id]) surveyData.dialogues[setId - 1][sectionType][crit.id] = {};
+    surveyData.dialogues[setId - 1][sectionType][crit.id].comments = e.target.value;
+  };
   block.appendChild(commentsLabel);
   block.appendChild(comments);
 
@@ -414,16 +419,74 @@ function createCriterionBlock(crit, setId, sectionType) {
 }
 
 // ========================================
-// TOGGLE SCORING SCALE
+// MISSING FUNCTIONS FROM ORIGINAL - ADDED/FIXED
+// ========================================
+function startSurvey() {
+  showSection('demographicsSection');
+  document.getElementById('progressContainer').style.display = 'block';
+}
+
+function submitDemographics() {
+  const form = document.getElementById('demographicsForm');
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+  surveyData.demographics.raterName = document.getElementById('raterName').value;
+  surveyData.demographics.date = document.getElementById('date').value;
+  surveyData.demographics.raterId = document.getElementById('raterId').value;
+  surveyData.demographics.email = document.getElementById('email').value;
+  surveyData.demographics.qualifications = Array.from(document.querySelectorAll('input[name="qualifications"]:checked')).map(checkbox => checkbox.value);
+  surveyData.demographics.nationality = document.getElementById('nationality').value;
+  showSection('section1');
+}
+
+function loadSet(index) {
+  document.getElementById(`set_${currentSet + 1}`).style.display = 'none';
+  document.getElementById(`set_${index + 1}`).style.display = 'block';
+  currentSet = index;
+  fullScreenCenter(document.getElementById(`set_${index + 1}`));
+}
+
+function submitSurvey() {
+  // Validate all ratings (optional - add if needed)
+  firebase.database().ref('responses').push(surveyData);
+  showSection('confirmationSection');
+  const details = document.getElementById('confirmationDetails');
+  details.innerHTML = `<pre>${JSON.stringify(surveyData, null, 2)}</pre>`; // For debug
+}
+
+function calculateTotalQuestions() {
+  totalQuestions = dialogueSetsData.length * 6; // 3 structure + 3 speech per set
+}
+
+function updateProgress() {
+  let answered = 0;
+  surveyData.dialogues.forEach(dialogue => {
+    Object.values(dialogue.structure).forEach(crit => { if (crit.score) answered++; });
+    Object.values(dialogue.speech).forEach(crit => { if (crit.score) answered++; });
+  });
+  const percentage = Math.round((answered / totalQuestions) * 100);
+  document.getElementById('progressFill').style.width = `${percentage}%`;
+  document.getElementById('progressText').textContent = `${percentage}%`;
+}
+
+function showSection(sectionId) {
+  document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+  document.getElementById(sectionId).classList.add('active');
+}
+
+// ========================================
+// TOGGLE SCORING SCALE (FIXED)
 // ========================================
 function toggleScoringScale(critId) {
   const content = document.getElementById(`${critId}_scale`);
   const trigger = document.getElementById(`${critId}_trigger`);
+  if (!content || !trigger) return; // Safety
   const arrow = trigger.querySelector('.arrow-icon svg');
   const text = trigger.querySelector('.trigger-text');
 
   const isOpen = content.classList.toggle('open');
-  
   text.textContent = isOpen ? 'Hide Scoring Scale' : 'Show Scoring Scale';
   trigger.setAttribute('aria-expanded', isOpen);
 
@@ -440,145 +503,28 @@ function toggleScoringScale(critId) {
 }
 
 // ========================================
-// SAVE DATA
-// ========================================
-function saveSetData(num) {
-  const form = document.getElementById(`set${num}Form`);
-  if (!form) return;
-  const fd = new FormData(form);
-  const setData = { setNumber: num, sectionA: {}, sectionB: {}, sectionC: {} };
-
-  surveyQuestionsData.sectionA.forEach(q => {
-    setData.sectionA[q.id] = fd.get(`d${num}_${q.id}`) || '';
-  });
-
-  surveyQuestionsData.sectionB.forEach(crit => {
-    setData.sectionB[crit.id] = {
-      score: parseInt(fd.get(`d${num}_${crit.id}`)) || null,
-      comments: fd.get(`d${num}_${crit.id}_comments`) || ''
-    };
-  });
-
-  surveyQuestionsData.sectionC.forEach(q => {
-    setData.sectionC[q.id] = fd.get(`d${num}_${q.id}`) || '';
-  });
-
-  surveyData.dialogues[num - 1] = setData;
-}
-
-// ========================================
-// NAVIGATION
-// ========================================
-function nextSet(num) {
-  const form = document.getElementById(`set${num}Form`);
-  if (!form.checkValidity()) { form.reportValidity(); return; }
-  saveSetData(num);
-  if (num < 4) {
-    currentSet = num + 1;
-    showCurrentSet();
-  } else {
-    submitSurvey();
-  }
-}
-
-function previousSet(num) {
-  saveSetData(num);
-  if (num === 1) {
-    showSection('demographicsSection');
-  } else {
-    currentSet = num - 1;
-    showCurrentSet();
-  }
-}
-
-// ========================================
-// SUBMIT
-// ========================================
-async function submitSurvey() {
-  const lastForm = document.getElementById('set4Form');
-  if (!lastForm.checkValidity()) { lastForm.reportValidity(); return; }
-  saveSetData(4);
-
-  const btn = event.target;
-  const originalText = btn.textContent;
-  btn.textContent = 'Submitting...'; btn.disabled = true;
-
-  try {
-    const timestamp = new Date();
-    const participantID = `${surveyData.demographics.raterName || 'Anonymous'}_${Date.now()}`;
-    const finalData = {
-      participantID,
-      submissionTimestamp: timestamp.toISOString(),
-      submissionDateLocal: timestamp.toLocaleString(),
-      demographics: surveyData.demographics,
-      dialogues: surveyData.dialogues,
-      deviceInfo: { userAgent: navigator.userAgent, language: navigator.language, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }
-    };
-
-    if (typeof firebase !== 'undefined' && firebase.database) {
-      await firebase.database().ref(`responses/${participantID}`).set(finalData);
-    }
-
-    document.getElementById('progressContainer').style.display = 'none';
-    showSection('confirmationSection');
-    document.getElementById('confirmationDetails').innerHTML = `
-      <h2>Submission Complete!</h2>
-      <p><strong>Participant ID:</strong><br><code>${participantID}</code></p>
-      <p><strong>Submitted:</strong><br>${timestamp.toLocaleString()}</p>
-      <p><strong>Status:</strong><br>Saved to database</p>
-    `;
-  } catch (error) {
-    console.error(error);
-    btn.textContent = originalText; btn.disabled = false;
-    alert('Error submitting survey.');
-  }
-}
-
-// ========================================
-// PHASE 2: FULL-SCREEN SMART AUTO-SCROLLING
-// PDF-PERFECT, MOBILE + PC
-// ========================================
-
-let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-// ========================================
-// REVISED SMART SCROLLING
+// SMART SCROLLING (ORIGINAL FIXED)
 // ========================================
 function addScrollListenersToFormInputs() {
-  // Remove old listeners safely (check if functions exist)
-  document.querySelectorAll('input[type="radio"], .collapsible-trigger, textarea').forEach(el => {
-    if (typeof handleRadioChange === 'function') el.removeEventListener('change', handleRadioChange);
-    if (typeof handleTriggerClick === 'function') el.removeEventListener('click', handleTriggerClick);
-    if (typeof handleFocus === 'function') el.removeEventListener('focus', handleFocus);
-  });
-
-  // Add listeners
-  document.querySelectorAll('input[type="radio"]').forEach(radio => {
-    radio.addEventListener('change', debounce(handleRadioChange, 200));
-  });
-
-  document.querySelectorAll('.collapsible-trigger').forEach(trigger => {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  document.querySelectorAll('input, button, textarea').forEach(trigger => {
     trigger.addEventListener('click', debounce(handleTriggerClick, 200));
     if (isMobile) {
       trigger.addEventListener('touchstart', debounce(handleTouchStart, 200));
     }
   });
-
   document.querySelectorAll('textarea').forEach(textarea => {
     textarea.addEventListener('focus', debounce(handleFocus, 100));
   });
-
-  // ResizeObserver for dynamic content (collapsibles, resizes)
   const resizeObserver = new ResizeObserver(debounce(entries => {
     if (document.activeElement && entries.length > 0) {
-      setTimeout(() => scrollToNextUnanswered(), 400); // Wait for animation
+      setTimeout(() => scrollToNextUnanswered(), 400);
     }
   }, 300));
-
   document.querySelectorAll('.criterion-block').forEach(el => resizeObserver.observe(el));
 }
 
-// After rating â†’ go to next "Show Scoring Scale"
+// After rating → go to next
 function handleRadioChange(e) {
   const currentBlock = e.target.closest('.criterion-block');
   const allBlocks = Array.from(document.querySelectorAll('.criterion-block'));
@@ -586,85 +532,47 @@ function handleRadioChange(e) {
   const nextBlock = allBlocks[currentIndex + 1];
 
   if (nextBlock) {
-    // Next criterion - center its trigger
     const nextTrigger = nextBlock.querySelector('.collapsible-trigger');
-    if (nextTrigger) {
-      setTimeout(() => fullScreenCenter(nextTrigger), 200);
-    }
+    if (nextTrigger) setTimeout(() => fullScreenCenter(nextTrigger), 200);
   } else {
-    // Last criterion - scroll to Next Set button
     const buttonGroup = document.querySelector('.button-group');
-    if (buttonGroup) {
-      setTimeout(() => fullScreenCenter(buttonGroup), 200);
-    }
+    if (buttonGroup) setTimeout(() => fullScreenCenter(buttonGroup), 200);
   }
 }
 
-// Trigger click â†’ expand + center the whole block
+// Trigger click → expand + center
 function handleTriggerClick(e) {
-  const trigger = e.currentTarget; // Define trigger here
+  const trigger = e.currentTarget;
   const critId = trigger.id.replace('_trigger', '');
- function toggleScoringScale(critId) {
-  const content = document.getElementById(`${critId}_scale`);
-  const trigger = document.getElementById(`${critId}_trigger`); // Define trigger here to fix error
-  console.log('toggleScoringScale: Trigger defined', trigger); // Debug: Confirm trigger exists
-
-  if (!trigger) {
-    console.error('Trigger not found for critId:', critId);
-    return; // Prevent further errors
-  }
-
-  const arrow = trigger.querySelector('.arrow-icon svg');
-  const text = trigger.querySelector('.trigger-text');
-
-  const isOpen = content.classList.toggle('open');
-  
-  text.textContent = isOpen ? 'Hide Scoring Scale' : 'Show Scoring Scale';
-  trigger.setAttribute('aria-expanded', isOpen);
-
-  if (isOpen) {
-    content.style.maxHeight = content.scrollHeight + 'px';
-    // Center on Score 3 after expansion
-    setTimeout(() => {
-      const score3 = content.querySelector('.scale-item:nth-child(3)');
-      if (score3) {
-        centerElementInViewport(score3);
-      } else {
-        const block = trigger.closest('.criterion-block'); // Now safe
-        fullScreenCenter(block);
-      }
-    }, 500);
-  } else {
-    content.style.maxHeight = content.scrollHeight + 'px';
-    content.offsetHeight;
-    content.style.maxHeight = '0';
-    // Re-center block on collapse
-    setTimeout(() => {
-      const block = trigger.closest('.criterion-block'); // Safe
-      fullScreenCenter(block);
-    }, 500);
-  }
+  toggleScoringScale(critId);
 }
+
 // ========================================
 // FULL-SCREEN CENTERING (MOBILE + PC)
 // ========================================
 function fullScreenCenter(element) {
   if (!element) return;
-
   const rect = element.getBoundingClientRect();
   const viewportHeight = window.innerHeight;
   const elementHeight = rect.height;
-
-  // If element is taller than viewport, align to top
   if (elementHeight > viewportHeight * 0.9) {
     const top = window.scrollY + rect.top - 20;
     window.scrollTo({ top, behavior: 'smooth' });
   } else {
-    // Center in viewport
     const centerOffset = (viewportHeight - elementHeight) / 2;
     const top = window.scrollY + rect.top - centerOffset;
     window.scrollTo({ top, behavior: 'smooth' });
   }
+}
+
+function centerElementInViewport(element) {
+  if (!element) return;
+  const rect = element.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+  const elementHeight = rect.height;
+  const keyboardAdjustment = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? viewportHeight * 0.3 : 0;
+  const targetTop = window.scrollY + rect.top - (viewportHeight / 2) + (elementHeight / 2) - keyboardAdjustment;
+  window.scrollTo({ top: targetTop, behavior: 'smooth' });
 }
 
 // Debounce
@@ -675,68 +583,19 @@ function debounce(fn, delay) {
     timeout = setTimeout(() => fn(...args), delay);
   };
 }
-function centerElementInViewport(element) {
-  if (!element) return;
-
-  const rect = element.getBoundingClientRect();
-  const viewportHeight = window.innerHeight;
-  const elementHeight = rect.height;
-  const keyboardAdjustment = isMobile ? viewportHeight * 0.3 : 0; // Account for keyboard on mobile
-
-  const targetTop = window.scrollY + rect.top - (viewportHeight / 2) + (elementHeight / 2) - keyboardAdjustment;
-
-  window.requestAnimationFrame(() => {
-    window.scrollTo({ top: targetTop, behavior: 'smooth' });
-  });
-}
-
-  // Center the element
-  const targetTop = currentTop - (viewportHeight / 2) + (elementHeight / 2);
-
-  window.scrollTo({
-    top: targetTop,
-    behavior: 'smooth'
-  });
-}
 
 // ========================================
-// TOGGLE SCORING SCALE (UNCHANGED)
+// TOGGLE TAB
 // ========================================
-function toggleScoringScale(critId) {
-  const content = document.getElementById(`${critId}_scale`);
-  const trigger = document.getElementById(`${critId}_trigger`);
-  const arrow = trigger.querySelector('.arrow-icon svg');
-  const text = trigger.querySelector('.trigger-text');
-
-  const isOpen = content.classList.toggle('open');
-  
-  text.textContent = isOpen ? 'Hide Scoring Scale' : 'Show Scoring Scale';
-  trigger.setAttribute('aria-expanded', isOpen);
-
-  if (isOpen) {
-    content.style.maxHeight = content.scrollHeight + 'px';
-
-    // === CENTER SCORE 3 AFTER EXPANSION ===
-    setTimeout(() => {
-      const score3Item = content.querySelector('.scale-item:nth-child(3)');
-      if (score3Item) {
-        centerElementInViewport(score3Item);
-      } else {
-        // Fallback: center the whole block
-        const block = trigger.closest('.criterion-block');
-        fullScreenCenter(block);
-      }
-    }, 450); // After animation
-  } else {
-    content.style.maxHeight = content.scrollHeight + 'px';
-    content.offsetHeight;
-    content.style.maxHeight = '0';
-
-    // On collapse â†’ center the trigger
-    setTimeout(() => {
-      fullScreenCenter(trigger.closest('.criterion-block'));
-    }, 450);
-  }
+function toggleTab(setId, tabName) {
+  const structureDiv = document.getElementById(`structure_${setId}`);
+  const speechDiv = document.getElementById(`speech_${setId}`);
+  structureDiv.classList.toggle('active', tabName === 'structure');
+  speechDiv.classList.toggle('active', tabName === 'speech');
+  const tabs = document.querySelectorAll(`#set_${setId} .tab-button`);
+  tabs.forEach(tab => tab.classList.toggle('active', tab.textContent.toLowerCase() === tabName));
+  addScrollListenersToFormInputs();
+  fullScreenCenter(document.querySelector(`#${tabName}_${setId} .criterion-block:first-child`));
 }
 
 // ========================================
