@@ -1,6 +1,6 @@
 // ========================================
 // FIREBASE SURVEY - EFL DIALOGUE EVALUATION
-// FIXED: Last Question Scroll & Firebase Init
+// FIXED: Collapsible Scoring Scale
 // ========================================
 
 const firebaseConfig = {
@@ -253,7 +253,7 @@ const criteriaData = {
 };
 
 // ========================================
-// INITIALIZE FIREBASE (FIXED)
+// INITIALIZE FIREBASE
 // ========================================
 
 function initializeFirebase() {
@@ -264,7 +264,6 @@ function initializeFirebase() {
   }
 
   try {
-    // Check if already initialized
     if (firebase.apps && firebase.apps.length > 0) {
       db = firebase.database();
       firebaseReady = true;
@@ -276,7 +275,6 @@ function initializeFirebase() {
     firebaseReady = true;
   } catch (error) {
     console.error("Firebase initialization error:", error);
-    // Retry after delay
     setTimeout(initializeFirebase, 1000);
   }
 }
@@ -286,12 +284,10 @@ function initializeFirebase() {
 // ========================================
 
 function showPage(pageId) {
-  // Hide all sections
   document.querySelectorAll(".section").forEach((section) => {
     section.classList.remove("active");
   });
   
-  // Show requested section
   const page = document.getElementById(pageId);
   if (page) {
     page.classList.add("active");
@@ -445,7 +441,6 @@ function handleRating(dialogueIndex, type, critKey, score) {
   surveyData.dialogues[dialogueIndex][type][critKey] = score;
   updateProgress();
   
-  // FIXED AUTO-SCROLL: Scroll to next criterion AFTER rating
   setTimeout(() => {
     scrollToNextCriterion(dialogueIndex, type);
   }, 100);
@@ -459,42 +454,34 @@ function scrollToNextCriterion(dialogueIndex, currentType) {
   const section = document.getElementById(`dialogueSection_${dialogueIndex}`);
   if (!section) return;
 
-  // Get current tab section
   const currentTabId = currentType === "structure" ? "structureTab" : "speechTab";
   const currentTabSection = document.getElementById(`${currentTabId}_${dialogueIndex}`);
   if (!currentTabSection) return;
 
-  // Get all criteria blocks in current tab
   const allCriteriaInTab = Array.from(currentTabSection.querySelectorAll(".criterion-block"));
   
-  // Find first unrated criterion in current tab
   const unratedInCurrentTab = allCriteriaInTab.find((block) => {
     const inputs = block.querySelectorAll('input[type="radio"]');
     return !Array.from(inputs).some((input) => input.checked);
   });
 
-  // If found unrated in current tab, scroll to it
   if (unratedInCurrentTab) {
     fullScreenCenter(unratedInCurrentTab);
     return;
   }
 
-  // All rated in current tab, check if there's another tab to fill
   const otherType = currentType === "structure" ? "speech" : "structure";
   const otherTabId = currentType === "structure" ? "speechTab" : "structureTab";
   const otherTabSection = document.getElementById(`${otherTabId}_${dialogueIndex}`);
   
   if (otherTabSection) {
-    // Get all criteria in other tab
     const allCriteriaInOtherTab = Array.from(otherTabSection.querySelectorAll(".criterion-block"));
     
-    // Check if there's an unrated criterion in the other tab
     const unratedInOtherTab = allCriteriaInOtherTab.find((block) => {
       const inputs = block.querySelectorAll('input[type="radio"]');
       return !Array.from(inputs).some((input) => input.checked);
     });
 
-    // If other tab has unrated, switch to it
     if (unratedInOtherTab) {
       switchTab(dialogueIndex, otherType);
       setTimeout(() => {
@@ -504,13 +491,15 @@ function scrollToNextCriterion(dialogueIndex, currentType) {
     }
   }
 
-  // ALL CRITERIA IN BOTH TABS ARE RATED
-  // Scroll to the button group (Next Dialogue or Submit Survey)
   const buttonGroup = section.querySelector(".button-group");
   if (buttonGroup) {
     fullScreenCenter(buttonGroup);
   }
 }
+
+// ========================================
+// FIXED: TOGGLE SCORING SCALE (COLLAPSIBLE)
+// ========================================
 
 function toggleScoringScale(critId) {
   const content = document.getElementById(`${critId}_scale`);
@@ -518,19 +507,23 @@ function toggleScoringScale(critId) {
 
   if (!content || !trigger) return;
 
-  const isOpen = content.classList.toggle("open");
-  const text = trigger.querySelector(".trigger-text");
-  text.textContent = isOpen ? "Hide Scoring Scale" : "Show Scoring Scale";
-
-  if (isOpen) {
-    // Calculate proper height and expand
+  const isOpen = content.classList.contains("open");
+  
+  if (!isOpen) {
+    // OPENING: Add "open" class
+    content.classList.add("open");
+    const text = trigger.querySelector(".trigger-text");
+    text.textContent = "Hide Scoring Scale";
+    
+    // Force layout recalculation and scroll into view
     setTimeout(() => {
-      content.style.maxHeight = content.scrollHeight + "px";
-      // Scroll to center the content
       fullScreenCenter(content);
-    }, 10);
+    }, 100);
   } else {
-    content.style.maxHeight = "0";
+    // CLOSING: Remove "open" class
+    content.classList.remove("open");
+    const text = trigger.querySelector(".trigger-text");
+    text.textContent = "Show Scoring Scale";
   }
 }
 
@@ -554,16 +547,13 @@ function switchTab(dialogueIndex, tab) {
 }
 
 function goToDialogue(index) {
-  // Hide all dialogue sections
   document.querySelectorAll(".dialogue-section").forEach((section) => {
     section.classList.remove("active");
   });
   
-  // Show requested dialogue
   document.getElementById(`dialogueSection_${index}`).classList.add("active");
   currentDialogueIndex = index;
   
-  // Scroll to top
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -574,25 +564,20 @@ function goToDialogue(index) {
 function fullScreenCenter(element) {
   if (!element) return;
 
-  // Wait for any layout shifts
   requestAnimationFrame(() => {
     const rect = element.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
     const elementHeight = rect.height;
 
-    // Calculate target position
     let targetScroll;
     
     if (elementHeight >= viewportHeight * 0.8) {
-      // Element is taller than 80% of viewport - just scroll to top of it
       targetScroll = window.scrollY + rect.top - 20;
     } else {
-      // Center element vertically in viewport
       const centerOffset = (viewportHeight - elementHeight) / 2;
       targetScroll = window.scrollY + rect.top - centerOffset;
     }
 
-    // Smooth scroll
     window.scrollTo({
       top: Math.max(0, targetScroll),
       behavior: "smooth"
@@ -611,7 +596,7 @@ function updateProgress() {
     answered += Object.keys(dialogue.speech).length;
   });
 
-  const totalCriteria = 24; // 4 dialogues * 6 criteria each
+  const totalCriteria = 24;
   const percentage = Math.round((answered / totalCriteria) * 100);
 
   document.getElementById("progressFill").style.width = `${percentage}%`;
@@ -623,14 +608,10 @@ function updateProgress() {
 // ========================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Initialize Firebase with retry logic
   initializeFirebase();
-  
-  // Render all dialogues
   renderAllDialogues();
   calculateTotalQuestions();
 
-  // Demographics form
   document.getElementById("demographicsForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const name = document.getElementById("raterName").value.trim();
@@ -644,25 +625,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     surveyData.demographics = { name, email, experience };
     
-    // Show first dialogue
     showPage("dialogueSection_0");
     goToDialogue(0);
   });
 });
 
 function calculateTotalQuestions() {
-  totalQuestions = 24; // 4 dialogues * 6 criteria
+  totalQuestions = 24;
 }
 
 function submitSurvey() {
-  // Check if Firebase is ready
   if (!firebaseReady || !db) {
     alert("Firebase is initializing. Please wait a moment and try again.");
     console.log("Firebase status - Ready:", firebaseReady, "DB:", db ? "exists" : "null");
     return;
   }
 
-  // Collect comments
   surveyData.dialogues.forEach((dialogue, dIdx) => {
     const section = document.getElementById(`dialogueSection_${dIdx}`);
     if (!section) return;
@@ -686,7 +664,6 @@ function submitSurvey() {
     });
   });
 
-  // Save to Firebase
   const timestamp = new Date().toISOString();
   const surveyRef = db.ref(`surveys/${timestamp.replace(/[:.]/g, "-")}`);
 
