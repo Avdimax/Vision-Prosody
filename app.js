@@ -1,6 +1,5 @@
 // ========================================
 // FIREBASE SURVEY - EFL DIALOGUE EVALUATION
-// FIXED: Collapsible Scoring Scale
 // ========================================
 
 const firebaseConfig = {
@@ -13,7 +12,6 @@ const firebaseConfig = {
   appId: "1:562335879299:web:b3d5dd2a7d532c63e80bb6",
   measurementId: "G-95LPH6SWL8"
 };
-
 // ========================================
 // SURVEY DATA STRUCTURE
 // ========================================
