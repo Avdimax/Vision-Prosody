@@ -1,8 +1,8 @@
 // ========================================
-// FIREBASE SURVEY - ULTIMATE ENHANCED VERSION
-// PHASE 3.1: PDF-PERFECT COLLAPSIBLE SCORING SCALES
-// FULLY COMPLETE, TESTED, AND WORKING
+// FIREBASE SURVEY - EFL DIALOGUE EVALUATION
+// Complete Production Version
 // ========================================
+
 const firebaseConfig = {
   apiKey: "AIzaSyBLZwdGQ_OSC_kiwmjqTU1vLiNn_REUcoQ",
   authDomain: "survey-responses-65ef0.firebaseapp.com",
@@ -14,22 +14,38 @@ const firebaseConfig = {
   measurementId: "G-95LPH6SWL8"
 };
 
+// ========================================
+// SURVEY DATA STRUCTURE
+// ========================================
+
 const surveyData = {
-  demographics: {},
-  dialogues: [{structure: {}, speech: {}}, {structure: {}, speech: {}}, {structure: {}, speech: {}}, {structure: {}, speech: {}}]
+  demographics: {
+    name: "",
+    email: "",
+    experience: ""
+  },
+  dialogues: [
+    { setId: 1, structure: {}, speech: {}, comments: {} },
+    { setId: 2, structure: {}, speech: {}, comments: {} },
+    { setId: 3, structure: {}, speech: {}, comments: {} },
+    { setId: 4, structure: {}, speech: {}, comments: {} }
+  ]
 };
 
-let currentSet = 0;
+let currentDialogueIndex = 0;
+let currentTab = "structure";
 let totalQuestions = 0;
+let db = null;
 
 // ========================================
-// DIALOGUE SETS DATA
+// DIALOGUE DATA
 // ========================================
+
 const dialogueSetsData = [
   {
     setId: 1,
     title: "Museum of Nature and Wildlife",
-    context: "Maryam is visiting the Museum of Nature and Wildlife. Sheâ€™s talking to Mr. Razavi who works in the museum.",
+    context: "Maryam is visiting the Museum of Nature and Wildlife. She's talking to Mr. Razavi who works in the museum.",
     audioSrc: "dialogue_1.mp3",
     transcript: [
       { speaker: "Maryam", line: "Excuse me, what is it? Is it a leopard?" },
@@ -49,10 +65,10 @@ const dialogueSetsData = [
     audioSrc: "dialogue_2.mp3",
     transcript: [
       { speaker: "Ms. Tabesh", line: "Are you interested in the planets?" },
-      { speaker: "Alireza", line: "Yes! They are really interesting for me, but I donâ€™t know much about them." },
+      { speaker: "Alireza", line: "Yes! They are really interesting for me, but I don't know much about them." },
       { speaker: "Ms. Tabesh", line: "Planets are really amazing but not so much alike. Do you know how they are different?" },
       { speaker: "Alireza", line: "Umm... I know they go around the Sun in different orbits." },
-      { speaker: "Ms. Tabesh", line: "Thatâ€™s right. They have different colors and sizes, too. Some are rocky like Mars, some have rings like Saturn and some have moons like Uranus." },
+      { speaker: "Ms. Tabesh", line: "That's right. They have different colors and sizes, too. Some are rocky like Mars, some have rings like Saturn and some have moons like Uranus." },
       { speaker: "Alireza", line: "How wonderful! Can we see them without a telescope?" },
       { speaker: "Ms. Tabesh", line: "Yeah..., we can see the planets nearer to us without a telescope, such as Mercury, Venus, Mars, Jupiter and Saturn. We can see Uranus and Neptune only with powerful telescopes." },
       { speaker: "Alireza", line: "And which planet is the largest of all?" },
@@ -71,7 +87,7 @@ const dialogueSetsData = [
       { speaker: "Roya", line: "But such books are not very interesting." },
       { speaker: "Mahsa", line: "At first I had the same idea, believe me!" },
       { speaker: "Roya", line: "Did you find it useful?" },
-      { speaker: "Mahsa", line: "Oh yes. Actually I learned many interesting things about our scientistsâ€™ lives." },
+      { speaker: "Mahsa", line: "Oh yes. Actually I learned many interesting things about our scientists' lives." },
       { speaker: "Roya", line: "Like what?" },
       { speaker: "Mahsa", line: "For example Razi taught medicine to many young people while he was working in Ray Hospital. Or Nasireddin Toosi built Maragheh Observatory when he was studying the planets." },
       { speaker: "Roya", line: "Cool! What was the name of the book?" },
@@ -90,61 +106,63 @@ const dialogueSetsData = [
       { speaker: "Carlos", line: "Well, you may have some choices. You can visit China. It is famous for the Great Wall." },
       { speaker: "Diego", line: "Yes, but I was in Beijing two years ago." },
       { speaker: "Carlos", line: "What about India? In fact, the Taj Mahal is a popular destination, but it is hot in summer. Probably Iran is the best choice." },
-      { speaker: "Diego", line: "I heard Iran is a great and beautiful country, but I donâ€™t know much about it." },
+      { speaker: "Diego", line: "I heard Iran is a great and beautiful country, but I don't know much about it." },
       { speaker: "Carlos", line: "Well, Iran is a four-season country. It has many historical sites and amazing nature. Also, its people are very kind and hospitable." },
       { speaker: "Diego", line: "It seems a suitable choice. But how can I get more information about Iran?" },
       { speaker: "Carlos", line: "You can check this booklet or may see our website." }
     ]
   }
 ];
+
 // ========================================
-// SURVEY QUESTIONS DATA (FULL FROM RUBRIC MD - NO TRUNCATION)
+// RUBRIC CRITERIA DATA
 // ========================================
-const surveyQuestionsData = {
-  structureSection: [
+
+const criteriaData = {
+  structure: [
     {
       id: "s1_grammar_vocab",
-      title: "CRITERION S1: Linguistic Flexibility and Lexical Naturalness",
-      question: "How natural are the grammatical structures and vocabulary choices, including flexibility and idiomatic use?",
+      title: "CRITERION S1: Grammar, Syntax, Vocabulary, and Word Choice",
+      question: "How natural and authentic are the grammatical structures and vocabulary choices, including flexibility and idiomatic use?",
       whatToEvaluate: [
         "Blend of simple/complex structures (e.g., full sentences vs. fragments/ellipsis).",
         "Avoidance of overly formal/perfect grammar (e.g., contractions, incomplete utterances).",
         "Alignment with real-life EFL speech (e.g., minor errors for authenticity in L2 contexts).",
-        "Use of everyday, idiomatic words/collocations (e.g., \"cool!\" vs. formal jargon).",
+        "Use of everyday, idiomatic words/collocations (e.g., 'cool!' vs. formal jargon).",
         "Lexical diversity (type-token ratio ∼0.4-0.6 for natural dialogues).",
         "Avoidance of rare/textbook-specific terms (e.g., cultural adaptations)."
       ],
       scoringScale: [
-        "Score 1 – Rigid, textbook-like grammar and simplistic/formal vocab: All full, error-free sentences (¿90% complete clauses); no ellipsis or fragments; limited diversity (TTR ¡0.2); rare idioms (¡10%). Sounds scripted and unnatural (e.g., \"I am going to the store.\" with formal terms like \"I am interested in planets.\").",
-        "Score 2 – Limited flexibility and basic variety: 70-90% full sentences; rare ellipsis (¡10%); TTR 0.2-0.3; occasional idioms (10-20%); some context mismatches. Overemphasis on accuracy leads to stiffness (e.g., no contractions; formal in casual settings).",
-        "Score 3 – Inconsistent mix with moderate diversity: 50-70% varied structures; some ellipsis/fragments (∼20-30%); TTR 0.3-0.4; idioms in ∼30-50% appropriate spots. Balanced but unpredictable (e.g., occasional \"Yeah... um, that's right.\"); some rare terms.",
-        "Score 4 – Good variety and mostly idiomatic: 70-90% natural blend; frequent ellipsis (∼40%); TTR 0.4-0.5; frequent idioms/collocations (∼60-80%). Sounds conversational (e.g., \"Excuse me, could you...?\"); context-appropriate with few rigid elements (¡10% unnatural).",
-        "Score 5 – Highly natural, spontaneous structures and diverse vocab: Seamless mix (¿90% varied); abundant ellipsis/fragments for real-time feel (e.g., \"Oh, a cheetah? Yeah...\"); TTR ¿0.5; abundant idioms (¿80%); perfectly fits context (e.g., \"How wonderful!\"). Indistinguishable from authentic L2 dialogue."
+        "Score 1 – Rigid, textbook-like grammar and simplistic/formal vocab: All full, error-free sentences (¿90% complete clauses); no ellipsis or fragments; limited diversity (TTR ¡0.2); rare idioms (¡10%). Sounds scripted and unnatural.",
+        "Score 2 – Limited flexibility and basic variety: 70-90% full sentences; rare ellipsis (¡10%); TTR 0.2-0.3; occasional idioms (10-20%); some context mismatches. Overemphasis on accuracy leads to stiffness.",
+        "Score 3 – Inconsistent mix with moderate diversity: 50-70% varied structures; some ellipsis/fragments (∼20-30%); TTR 0.3-0.4; idioms in ∼30-50% appropriate spots. Balanced but unpredictable.",
+        "Score 4 – Good variety and mostly idiomatic: 70-90% natural blend; frequent ellipsis (∼40%); TTR 0.4-0.5; frequent idioms/collocations (∼60-80%). Sounds conversational.",
+        "Score 5 – Highly natural, spontaneous structures and diverse vocab: Seamless mix (¿90% varied); abundant ellipsis/fragments; TTR ¿0.5; abundant idioms (¿80%); perfectly fits context."
       ]
     },
     {
       id: "s2_cohesion_pragmatics",
-      title: "CRITERION S2: Discourse Flow and Pragmatic Nuance",
+      title: "CRITERION S2: Cohesion, Coherence, and Pragmatic Considerations",
       question: "How logically do ideas progress with effective discourse markers, politeness strategies, and speech acts?",
       whatToEvaluate: [
         "Logical flow and thematic consistency (e.g., smooth topic shifts).",
-        "Use of markers (e.g., \"well,\" \"so,\" \"and also\").",
+        "Use of markers (e.g., 'well,' 'so,' 'and also').",
         "Overall discourse organization (theme-rheme structure).",
-        "Politeness (e.g., hedges like \"kind of,\" indirectness).",
+        "Politeness (e.g., hedges like 'kind of,' indirectness).",
         "Speech acts (e.g., requests, apologies) in context.",
         "Social nuance (e.g., avoidance of direct commands)."
       ],
       scoringScale: [
-        "Score 1 – Disjointed flow with inappropriate or absent pragmatics: Abrupt shifts (¿50% illogical); no connectors; direct/impolite acts (¿50% mismatches); no hedges/indirectness. Ideas feel random, disrupting comprehension (e.g., unrelated jumps or commands without softening).",
-        "Score 2 – Weak cohesion and limited pragmatics: 30-50% logical flow; rare markers (¡20%); 30-50% appropriate acts; rare hedges (¡20%). Frequent gaps in coherence or cultural/pragmatic errors (e.g., minimal linking).",
-        "Score 3 – Inconsistent flow and pragmatics: 50-70% logical; markers in ∼30-50% spots; 50-70% appropriate acts; hedges in ∼30-50%. Moderate coherence with occasional disruptions and mixed social nuance.",
-        "Score 4 – Good cohesion and mostly appropriate pragmatics: 70-90% logical; markers effectively used (∼60-80%); 70-90% fitting acts; frequent hedges (∼60-80%). Smooth progression with good contextual nuance and minor lapses.",
-        "Score 5 – Seamless coherence and highly natural pragmatics: Fully logical (¿90%); markers integrate perfectly (¿80%); fully appropriate (¿90%); seamless hedges/indirectness. Mirrors authentic dialogue flow and enhances interpersonal authenticity."
+        "Score 1 – Disjointed flow with inappropriate or absent pragmatics: Abrupt shifts (¿50% illogical); no connectors; direct/impolite acts (¿50% mismatches); no hedges/indirectness.",
+        "Score 2 – Weak cohesion and limited pragmatics: 30-50% logical flow; rare markers (¡20%); 30-50% appropriate acts; rare hedges (¡20%). Frequent gaps in coherence.",
+        "Score 3 – Inconsistent flow and pragmatics: 50-70% logical; markers in ∼30-50% spots; 50-70% appropriate acts; hedges in ∼30-50%. Moderate coherence with occasional disruptions.",
+        "Score 4 – Good cohesion and mostly appropriate pragmatics: 70-90% logical; markers effectively used (∼60-80%); 70-90% fitting acts; frequent hedges (∼60-80%).",
+        "Score 5 – Seamless coherence and highly natural pragmatics: Fully logical (¿90%); markers integrate perfectly (¿80%); fully appropriate (¿90%); seamless hedges/indirectness."
       ]
     },
     {
       id: "s3_tone_cultural",
-      title: "CRITERION S3: Contextual Tone and Cultural Harmony",
+      title: "CRITERION S3: Tone, Register, and Cultural Relevance",
       question: "How well does the tone/register align with context and cultural norms?",
       whatToEvaluate: [
         "Appropriate formality/emotion (e.g., casual with excitement).",
@@ -152,7 +170,7 @@ const surveyQuestionsData = {
         "Sentiment variation (e.g., positive/negative cues)."
       ],
       scoringScale: [
-        "Score 1 – Mismatched tone/register: Overly formal/flat (¿50% mismatches); cultural biases evident (e.g., Western-centric). No sentiment variation.",
+        "Score 1 – Mismatched tone/register: Overly formal/flat (¿50% mismatches); cultural biases evident. No sentiment variation.",
         "Score 2 – Basic alignment, some biases: 30-50% appropriate; limited emotion (¡20% varied). Noticeable cultural gaps.",
         "Score 3 – Inconsistent tone: 50-70% fitting; some emotion (∼30-50%). Moderate cultural relevance.",
         "Score 4 – Good alignment, mostly cultural: 70-90% appropriate; varied emotion (∼60-80%). Minor biases.",
@@ -160,10 +178,10 @@ const surveyQuestionsData = {
       ]
     }
   ],
-  speechSection: [
+  speech: [
     {
       id: "p1_intonation_stress",
-      title: "CRITERION P1: Prosodic Variation and Emphasis Dynamics",
+      title: "CRITERION P1: Intonation Contours, Pitch Movement, Stress Patterns, and Prominence",
       question: "How natural and appropriate are the intonation, pitch patterns, and stress/prominence in this dialogue?",
       whatToListen: [
         "Pitch variation and range (monotone vs. varied).",
@@ -171,15 +189,15 @@ const surveyQuestionsData = {
         "Prominence marking through pitch peaks.",
         "Phrase boundary signaling.",
         "Overall naturalness and conversational quality.",
-        "Multi-syllabic word stress accuracy (PHOto vs. phOTOgraphy).",
+        "Multi-syllabic word stress accuracy.",
         "Pitch peak alignment with stressed syllables.",
         "Amplitude/loudness differentiation (stressed > unstressed).",
         "Duration patterns (stressed syllables longer).",
         "Information focus marking."
       ],
       scoringScale: [
-        "Score 1 – Monotone/inappropriate intonation and misplaced stress: No pitch variation or patterns don't match sentence type; questions don't rise, statements don't fall; ¿50% stress errors; no differentiation. Sounds robotic/scripted; pitch range <20 Hz; flat/artificial.",
-        "Score 2 – Limited pitch variation and prominence: Some movement but inconsistent; occasional correct patterns; 50–70% stress correct; weak amplitude (¡5 dB). Pitch range 20–40 Hz; some monotone stretches.",
+        "Score 1 – Monotone/inappropriate intonation and misplaced stress: No pitch variation; questions don't rise; ¿50% stress errors; no differentiation. Sounds robotic/scripted; pitch range <20 Hz.",
+        "Score 2 – Limited pitch variation and prominence: Some movement but inconsistent; 50–70% stress correct; weak amplitude (¡5 dB). Pitch range 20–40 Hz; some monotone stretches.",
         "Score 3 – Some variation and inconsistent stress: Moderate range (40–60 Hz) but unpredictable; ∼30% intonation mismatches; 70–85% stress correct; moderate differentiation (5–10 dB).",
         "Score 4 – Good variation and mostly natural stress: Range 60–80 Hz; usually correct patterns (¡10% errors); 85–95% stress correct; good amplitude (10–15 dB). Mostly native-like.",
         "Score 5 – Natural, varied, semantically appropriate intonation and stress: Extensive range (80+ Hz); all patterns align; ¿95% stress correct; clear differentiation (15+ dB). Sounds like native conversation."
@@ -187,15 +205,15 @@ const surveyQuestionsData = {
     },
     {
       id: "p2_disfluency_turns",
-      title: "CRITERION P2: Markers and Interactional Rhythm",
+      title: "CRITERION P2: Hesitations, Fillers, Repairs, Turn-Taking, and Conversation Flow",
       question: "How naturally are disfluencies (hesitations, fillers, repairs) and turn-taking used to convey spontaneity and flow?",
       whatToListen: [
         "Filler/repair frequency (0.5–1 per 10 utterances natural).",
-        "Variety and placement (e.g., \"um,\" \"I mean\" at junctures).",
+        "Variety and placement (e.g., 'um,' 'I mean' at junctures).",
         "Acoustic quality (natural vs. forced).",
         "Effect on fluency (creates real-time planning feel).",
         "Inter-turn gaps (100–300 ms natural).",
-        "Overlaps/interruptions and backchannels (e.g., \"uh-huh\").",
+        "Overlaps/interruptions and backchannels (e.g., 'uh-huh').",
         "Turn-ceding signals (falling pitch, completion).",
         "Overall rhythm and engagement."
       ],
@@ -209,7 +227,7 @@ const surveyQuestionsData = {
     },
     {
       id: "p3_pause_rhythm",
-      title: "CRITERION P3: Pacing and Discourse Prominence",
+      title: "CRITERION P3: Pause Timing, Rhythm, and Information Structure",
       question: "How natural are pauses, rhythm, and the prosodic marking of information structure?",
       whatToListen: [
         "Pause duration/placement (0.3–1.2s at boundaries).",
@@ -234,379 +252,384 @@ const surveyQuestionsData = {
 };
 
 // ========================================
-// GENERATION FUNCTIONS (FIXED - USE APPENDCHILD ONE-BY-ONE)
+// INITIALIZE FIREBASE
 // ========================================
-function generateAllSets() {
-  const container = document.getElementById('dialoguesContainer');
-  dialogueSetsData.forEach((set, index) => {
-    const dialogueContainer = document.createElement('div');
-    dialogueContainer.id = `set_${set.setId}`;
-    dialogueContainer.className = 'dialogue-set';
-    dialogueContainer.style.display = index === 0 ? 'block' : 'none';
 
-    // Dialogue Info (from PDF)
-    const dialogueInfo = document.createElement('div');
-    dialogueInfo.className = 'dialogue-info';
-    dialogueInfo.innerHTML = `
-      <h3>Dialogue Set: ${set.setId} - ${set.title}</h3>
-      <p>Context: ${set.context}</p>
-      <p>Filename: ${set.audioSrc}</p>
-      <p>Duration: [seconds]</p>
-    `;
-    dialogueContainer.appendChild(dialogueInfo);
-
-    // Audio Player
-    const audioPlayer = document.createElement('audio');
-    audioPlayer.controls = true;
-    audioPlayer.src = set.audioSrc;
-    dialogueContainer.appendChild(audioPlayer);
-
-    // Transcript
-    const transcriptDiv = document.createElement('div');
-    transcriptDiv.className = 'dialogue-transcript';
-    const transcriptList = document.createElement('ul');
-    set.transcript.forEach(line => {
-      const li = document.createElement('li');
-      li.innerHTML = `<strong>${line.speaker}:</strong> ${line.line}`;
-      transcriptList.appendChild(li);
-    });
-    transcriptDiv.appendChild(transcriptList);
-    dialogueContainer.appendChild(transcriptDiv);
-
-    // Tabs
-    const tabContainer = document.createElement('div');
-    tabContainer.className = 'tab-container';
-    const structureTab = document.createElement('button');
-    structureTab.textContent = 'Structure';
-    structureTab.className = 'tab-button active';
-    structureTab.onclick = () => toggleTab(set.setId, 'structure');
-    tabContainer.appendChild(structureTab);
-    const speechTab = document.createElement('button');
-    speechTab.textContent = 'Speech';
-    speechTab.className = 'tab-button';
-    speechTab.onclick = () => toggleTab(set.setId, 'speech');
-    tabContainer.appendChild(speechTab);
-    dialogueContainer.appendChild(tabContainer);
-
-    // Structure Section
-    const structureDiv = document.createElement('div');
-    structureDiv.id = `structure_${set.setId}`;
-    structureDiv.className = 'section-container active';
-    surveyQuestionsData.structureSection.forEach(crit => {
-      const block = createCriterionBlock(crit, set.setId, 'structure');
-      structureDiv.appendChild(block);
-    });
-    dialogueContainer.appendChild(structureDiv);
-
-    // Speech Section
-    const speechDiv = document.createElement('div');
-    speechDiv.id = `speech_${set.setId}`;
-    speechDiv.className = 'section-container';
-    surveyQuestionsData.speechSection.forEach(crit => {
-      const block = createCriterionBlock(crit, set.setId, 'speech');
-      speechDiv.appendChild(block);
-    });
-    dialogueContainer.appendChild(speechDiv);
-
-    // Navigation Buttons
-    const buttonGroup = document.createElement('div');
-    buttonGroup.className = 'button-group';
-    if (index < dialogueSetsData.length - 1) {
-      const nextBtn = document.createElement('button');
-      nextBtn.className = 'btn btn-primary';
-      nextBtn.textContent = 'Next Dialogue';
-      nextBtn.onclick = () => loadSet(index + 1);
-      buttonGroup.appendChild(nextBtn);
-    } else {
-      const submitBtn = document.createElement('button');
-      submitBtn.className = 'btn btn-primary';
-      submitBtn.textContent = 'Submit Survey';
-      submitBtn.onclick = submitSurvey;
-      buttonGroup.appendChild(submitBtn);
+function initializeFirebase() {
+  if (typeof firebase !== "undefined") {
+    try {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+      console.log("Firebase initialized successfully");
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
     }
-    dialogueContainer.appendChild(buttonGroup);
+  } else {
+    console.warn("Firebase SDK not loaded");
+  }
+}
 
-    container.appendChild(dialogueContainer);
+// ========================================
+// RENDER FUNCTIONS
+// ========================================
+
+function renderAllDialogues() {
+  const container = document.getElementById("dialoguesContainer");
+  container.innerHTML = "";
+
+  dialogueSetsData.forEach((dialogue, index) => {
+    const section = document.createElement("section");
+    section.id = `dialogueSection_${index}`;
+    section.className = `section dialogue-section ${index === 0 ? "active" : ""}`;
+    section.innerHTML = renderDialogueHTML(dialogue, index);
+    container.appendChild(section);
   });
-  calculateTotalQuestions();
+}
+
+function renderDialogueHTML(dialogue, index) {
+  const transcriptHTML = dialogue.transcript
+    .map(
+      (line) =>
+        `<div class="transcript-line">
+          <strong class="speaker-name">${line.speaker}:</strong>
+          <span class="speaker-line">${escapeHtml(line.line)}</span>
+        </div>`
+    )
+    .join("");
+
+  const structureHTML = renderCriteriaHTML(criteriaData.structure, index, "structure");
+  const speechHTML = renderCriteriaHTML(criteriaData.speech, index, "speech");
+
+  return `
+    <div class="survey-container">
+      <h1>${dialogue.title}</h1>
+      <p class="dialogue-context"><strong>Context:</strong> ${dialogue.context}</p>
+
+      <div class="audio-container">
+        <h3>Audio Recording</h3>
+        <audio class="audio-player" controls>
+          <source src="${dialogue.audioSrc}" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+
+      <div class="dialogue-transcript">
+        <h3>Transcript</h3>
+        <div class="transcript-content">${transcriptHTML}</div>
+      </div>
+
+      <div class="tab-container">
+        <button type="button" class="tab-button active" onclick="switchTab(${index}, 'structure')">Structure (3)</button>
+        <button type="button" class="tab-button" onclick="switchTab(${index}, 'speech')">Speech (3)</button>
+      </div>
+
+      <div id="structureTab_${index}" class="criteria-section active">
+        ${structureHTML}
+      </div>
+
+      <div id="speechTab_${index}" class="criteria-section">
+        ${speechHTML}
+      </div>
+
+      <div class="button-group">
+        ${index > 0 ? `<button type="button" class="btn btn-secondary" onclick="previousDialogue()">← Previous</button>` : ""}
+        ${index < 3 ? `<button type="button" class="btn btn-primary" onclick="nextDialogue()">Next →</button>` : `<button type="button" class="btn btn-primary" onclick="submitSurvey()">Submit Survey</button>`}
+      </div>
+    </div>
+  `;
+}
+
+function renderCriteriaHTML(criteria, dialogueIndex, type) {
+  return criteria
+    .map((criterion) => {
+      const critKey = criterion.id;
+      const heading = criterion.whatToEvaluate ? "What to Evaluate" : "What to Listen For";
+      const itemsHTML = (criterion.whatToEvaluate || criterion.whatToListen)
+        .map((item) => `<li>${item}</li>`)
+        .join("");
+
+      return `
+        <div class="criterion-block">
+          <h3 class="criterion-title">${criterion.title}</h3>
+          <p class="criterion-question"><strong>${criterion.question}</strong></p>
+          
+          <div class="criterion-content">
+            <strong>${heading}:</strong>
+            <ul class="listen-list">${itemsHTML}</ul>
+          </div>
+
+          <div class="rating-group">
+            <label class="form-label">Rating (1-5)</label>
+            <div class="rating-scale">
+              ${[1, 2, 3, 4, 5]
+                .map(
+                  (score) => `
+                <label class="rating-label">
+                  <input type="radio" name="${type}_${dialogueIndex}_${critKey}" value="${score}" 
+                    onchange="handleRating(${dialogueIndex}, '${type}', '${critKey}', ${score})">
+                  <span class="rating-value">${score}</span>
+                </label>
+              `
+                )
+                .join("")}
+            </div>
+            <div class="scale-labels">
+              <span>Poor</span>
+              <span>Excellent</span>
+            </div>
+          </div>
+
+          <button type="button" class="collapsible-trigger" id="${critKey}_trigger_${dialogueIndex}" onclick="toggleScoringScale('${critKey}_${dialogueIndex}')">
+            <span class="trigger-text">Show Scoring Scale</span>
+            <span class="arrow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+          </button>
+
+          <div class="collapsible-content" id="${critKey}_scale_${dialogueIndex}">
+            ${criterion.scoringScale
+              .map(
+                (scale, idx) => `
+              <div class="scale-item">
+                ${escapeHtml(scale)}
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Optional Comments</label>
+            <textarea class="form-control textarea-mobile" id="${type}_${dialogueIndex}_${critKey}_comment" 
+              placeholder="Add any qualitative observations..." rows="3"></textarea>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+// ========================================
+// EVENT HANDLERS
+// ========================================
+
+function handleRating(dialogueIndex, type, critKey, score) {
+  surveyData.dialogues[dialogueIndex][type][critKey] = score;
   updateProgress();
+  scrollToNextCriterion();
 }
 
-// Modular Criterion Block Creation (Full, Matches PDF - Fixed whatToListenFor key)
-function createCriterionBlock(crit, setId, sectionType) {
-  const block = document.createElement('div');
-  block.className = 'criterion-block';
-  block.id = `${crit.id}_${setId}`;
-
-  // Title
-  const title = document.createElement('h3');
-  title.textContent = crit.title;
-  block.appendChild(title);
-
-  // Question
-  const question = document.createElement('p');
-  question.textContent = crit.question;
-  block.appendChild(question);
-
-  // What to Evaluate/Listen For (as UL)
-  const evalTitle = document.createElement('h4');
-  evalTitle.textContent = sectionType === 'speech' ? 'What to Listen For:' : 'What to Evaluate:';
-  block.appendChild(evalTitle);
-  const evalList = document.createElement('ul');
-  crit.whatToEvaluate.forEach(item => {  // Use whatToEvaluate for all (fixed key in data for speech as whatToEvaluate)
-    const li = document.createElement('li');
-    li.textContent = item;
-    evalList.appendChild(li);
-  });
-  block.appendChild(evalList);
-
-  // Collapsible Scoring Scale
-  const trigger = document.createElement('button');
-  trigger.id = `${crit.id}_trigger_${setId}`;
-  trigger.className = 'collapsible-trigger';
-  trigger.innerHTML = `<span class="trigger-text">Show Scoring Scale</span> <span class="arrow-icon"><svg width="16" height="16" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></span>`;
-  trigger.onclick = () => toggleScoringScale(`${crit.id}_${setId}`);
-  block.appendChild(trigger);
-
-  const scaleContent = document.createElement('div');
-  scaleContent.id = `${crit.id}_scale_${setId}`;
-  scaleContent.className = 'collapsible-content';
-  const scaleList = document.createElement('ol');
-  crit.scoringScale.forEach(score => {
-    const li = document.createElement('li');
-    li.className = 'scale-item';
-    li.textContent = score;
-    scaleList.appendChild(li);
-  });
-  scaleContent.appendChild(scaleList);
-  block.appendChild(scaleContent);
-
-  // Rating Radios (1-5)
-  const ratingGroup = document.createElement('div');
-  ratingGroup.className = 'rating-group';
-  for (let i = 1; i <= 5; i++) {
-    const label = document.createElement('label');
-    label.className = 'rating-label';
-    const radio = document.createElement('input');
-    radio.type = 'radio';
-    radio.name = `${crit.id}_${setId}`;
-    radio.value = i;
-    radio.onchange = (e) => {
-      if (!surveyData.dialogues[setId - 1][sectionType][crit.id]) surveyData.dialogues[setId - 1][sectionType][crit.id] = {};
-      surveyData.dialogues[setId - 1][sectionType][crit.id].score = i;
-      updateProgress();
-      handleRadioChange(e);
-    };
-    label.appendChild(radio);
-    label.appendChild(document.createTextNode(i));
-    ratingGroup.appendChild(label);
-  }
-  block.appendChild(ratingGroup);
-
-  // Comments Textarea
-  const commentsLabel = document.createElement('label');
-  commentsLabel.textContent = 'Comments (optional):';
-  const comments = document.createElement('textarea');
-  comments.placeholder = 'Optional comments';
-  comments.onchange = (e) => {
-    if (!surveyData.dialogues[setId - 1][sectionType][crit.id]) surveyData.dialogues[setId - 1][sectionType][crit.id] = {};
-    surveyData.dialogues[setId - 1][sectionType][crit.id].comments = e.target.value;
-  };
-  block.appendChild(commentsLabel);
-  block.appendChild(comments);
-
-  return block;
-}
-
-// ========================================
-// MISSING FUNCTIONS FROM ORIGINAL - ADDED/FIXED
-// ========================================
-function startSurvey() {
-  showSection('demographicsSection');
-  document.getElementById('progressContainer').style.display = 'block';
-}
-
-function submitDemographics() {
-  const form = document.getElementById('demographicsForm');
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
-  surveyData.demographics.raterName = document.getElementById('raterName').value;
-  surveyData.demographics.date = document.getElementById('date').value;
-  surveyData.demographics.raterId = document.getElementById('raterId').value;
-  surveyData.demographics.email = document.getElementById('email').value;
-  surveyData.demographics.qualifications = Array.from(document.querySelectorAll('input[name="qualifications"]:checked')).map(checkbox => checkbox.value);
-  surveyData.demographics.nationality = document.getElementById('nationality').value;
-  showSection('section1');
-}
-
-function loadSet(index) {
-  document.getElementById(`set_${currentSet + 1}`).style.display = 'none';
-  document.getElementById(`set_${index + 1}`).style.display = 'block';
-  currentSet = index;
-  fullScreenCenter(document.getElementById(`set_${index + 1}`));
-}
-
-function submitSurvey() {
-  // Validate all ratings (optional - add if needed)
-  firebase.database().ref('responses').push(surveyData);
-  showSection('confirmationSection');
-  const details = document.getElementById('confirmationDetails');
-  details.innerHTML = `<pre>${JSON.stringify(surveyData, null, 2)}</pre>`; // For debug
-}
-
-function calculateTotalQuestions() {
-  totalQuestions = dialogueSetsData.length * 6; // 3 structure + 3 speech per set
-}
-
-function updateProgress() {
-  let answered = 0;
-  surveyData.dialogues.forEach(dialogue => {
-    Object.values(dialogue.structure).forEach(crit => { if (crit.score) answered++; });
-    Object.values(dialogue.speech).forEach(crit => { if (crit.score) answered++; });
-  });
-  const percentage = Math.round((answered / totalQuestions) * 100);
-  document.getElementById('progressFill').style.width = `${percentage}%`;
-  document.getElementById('progressText').textContent = `${percentage}%`;
-}
-
-function showSection(sectionId) {
-  document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-  document.getElementById(sectionId).classList.add('active');
-}
-
-// ========================================
-// TOGGLE SCORING SCALE (FIXED)
-// ========================================
 function toggleScoringScale(critId) {
   const content = document.getElementById(`${critId}_scale`);
   const trigger = document.getElementById(`${critId}_trigger`);
-  if (!content || !trigger) return; // Safety
-  const arrow = trigger.querySelector('.arrow-icon svg');
-  const text = trigger.querySelector('.trigger-text');
 
-  const isOpen = content.classList.toggle('open');
-  text.textContent = isOpen ? 'Hide Scoring Scale' : 'Show Scoring Scale';
-  trigger.setAttribute('aria-expanded', isOpen);
+  if (!content || !trigger) return;
+
+  const isOpen = content.classList.toggle("open");
+  const text = trigger.querySelector(".trigger-text");
+  text.textContent = isOpen ? "Hide Scoring Scale" : "Show Scoring Scale";
 
   if (isOpen) {
-    content.style.maxHeight = content.scrollHeight + 'px';
+    content.style.maxHeight = content.scrollHeight + "px";
     setTimeout(() => {
-      const score3 = content.querySelector('.scale-item:nth-child(3)');
-      if (score3) centerElementInViewport(score3);
-    }, 450);
+      fullScreenCenter(content);
+    }, 300);
   } else {
-    content.style.maxHeight = '0';
-    setTimeout(() => fullScreenCenter(trigger.closest('.criterion-block')), 450);
+    content.style.maxHeight = "0";
   }
 }
 
-// ========================================
-// SMART SCROLLING (ORIGINAL FIXED)
-// ========================================
-function addScrollListenersToFormInputs() {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  document.querySelectorAll('input, button, textarea').forEach(trigger => {
-    trigger.addEventListener('click', debounce(handleTriggerClick, 200));
-    if (isMobile) {
-      trigger.addEventListener('touchstart', debounce(handleTouchStart, 200));
-    }
+function switchTab(dialogueIndex, tab) {
+  document.querySelectorAll(`#dialogueSection_${dialogueIndex} .tab-button`).forEach((btn, idx) => {
+    btn.classList.toggle("active", idx === (tab === "structure" ? 0 : 1));
   });
-  document.querySelectorAll('textarea').forEach(textarea => {
-    textarea.addEventListener('focus', debounce(handleFocus, 100));
+
+  document.querySelectorAll(`#dialogueSection_${dialogueIndex} .criteria-section`).forEach((section) => {
+    section.classList.remove("active");
   });
-  const resizeObserver = new ResizeObserver(debounce(entries => {
-    if (document.activeElement && entries.length > 0) {
-      setTimeout(() => scrollToNextUnanswered(), 400);
-    }
-  }, 300));
-  document.querySelectorAll('.criterion-block').forEach(el => resizeObserver.observe(el));
+
+  document.getElementById(`${tab}Tab_${dialogueIndex}`).classList.add("active");
+  currentTab = tab;
+
+  setTimeout(() => {
+    const firstCriterion = document.querySelector(`#${tab}Tab_${dialogueIndex} .criterion-block`);
+    if (firstCriterion) fullScreenCenter(firstCriterion);
+  }, 100);
 }
 
-// After rating → go to next
-function handleRadioChange(e) {
-  const currentBlock = e.target.closest('.criterion-block');
-  const allBlocks = Array.from(document.querySelectorAll('.criterion-block'));
-  const currentIndex = allBlocks.indexOf(currentBlock);
-  const nextBlock = allBlocks[currentIndex + 1];
+function scrollToNextCriterion() {
+  const currentSection = document.querySelector(".dialogue-section.active");
+  if (!currentSection) return;
 
-  if (nextBlock) {
-    const nextTrigger = nextBlock.querySelector('.collapsible-trigger');
-    if (nextTrigger) setTimeout(() => fullScreenCenter(nextTrigger), 200);
-  } else {
-    const buttonGroup = document.querySelector('.button-group');
-    if (buttonGroup) setTimeout(() => fullScreenCenter(buttonGroup), 200);
+  const allCriteria = Array.from(currentSection.querySelectorAll(".criterion-block"));
+  const activeCriteria = allCriteria.find((crit) => {
+    const inputs = crit.querySelectorAll("input[type='radio']");
+    return !Array.from(inputs).some((input) => input.checked);
+  });
+
+  if (activeCriteria) {
+    setTimeout(() => {
+      fullScreenCenter(activeCriteria);
+    }, 200);
   }
 }
 
-// Trigger click → expand + center
-function handleTriggerClick(e) {
-  const trigger = e.currentTarget;
-  const critId = trigger.id.replace('_trigger', '');
-  toggleScoringScale(critId);
-}
-
-// ========================================
-// FULL-SCREEN CENTERING (MOBILE + PC)
-// ========================================
 function fullScreenCenter(element) {
   if (!element) return;
+
   const rect = element.getBoundingClientRect();
   const viewportHeight = window.innerHeight;
   const elementHeight = rect.height;
+
   if (elementHeight > viewportHeight * 0.9) {
     const top = window.scrollY + rect.top - 20;
-    window.scrollTo({ top, behavior: 'smooth' });
+    window.scrollTo({ top, behavior: "smooth" });
   } else {
     const centerOffset = (viewportHeight - elementHeight) / 2;
     const top = window.scrollY + rect.top - centerOffset;
-    window.scrollTo({ top, behavior: 'smooth' });
+    window.scrollTo({ top, behavior: "smooth" });
   }
 }
 
-function centerElementInViewport(element) {
-  if (!element) return;
-  const rect = element.getBoundingClientRect();
-  const viewportHeight = window.innerHeight;
-  const elementHeight = rect.height;
-  const keyboardAdjustment = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? viewportHeight * 0.3 : 0;
-  const targetTop = window.scrollY + rect.top - (viewportHeight / 2) + (elementHeight / 2) - keyboardAdjustment;
-  window.scrollTo({ top: targetTop, behavior: 'smooth' });
-}
-
-// Debounce
-function debounce(fn, delay) {
-  let timeout;
-  return (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => fn(...args), delay);
-  };
-}
-
-// ========================================
-// TOGGLE TAB
-// ========================================
-function toggleTab(setId, tabName) {
-  const structureDiv = document.getElementById(`structure_${setId}`);
-  const speechDiv = document.getElementById(`speech_${setId}`);
-  structureDiv.classList.toggle('active', tabName === 'structure');
-  speechDiv.classList.toggle('active', tabName === 'speech');
-  const tabs = document.querySelectorAll(`#set_${setId} .tab-button`);
-  tabs.forEach(tab => tab.classList.toggle('active', tab.textContent.toLowerCase() === tabName));
-  addScrollListenersToFormInputs();
-  fullScreenCenter(document.querySelector(`#${tabName}_${setId} .criterion-block:first-child`));
-}
-
-// ========================================
-// INITIALIZATION
-// ========================================
-document.addEventListener('DOMContentLoaded', () => {
-  if (typeof firebase !== 'undefined') {
-    try { firebase.initializeApp(firebaseConfig); } catch (e) {}
+function previousDialogue() {
+  if (currentDialogueIndex > 0) {
+    showDialogue(currentDialogueIndex - 1);
   }
-  generateAllSets();
-  addScrollListenersToFormInputs();
+}
+
+function nextDialogue() {
+  if (currentDialogueIndex < 3) {
+    showDialogue(currentDialogueIndex + 1);
+  }
+}
+
+function showDialogue(index) {
+  document.querySelectorAll(".dialogue-section").forEach((section) => {
+    section.classList.remove("active");
+  });
+  document.getElementById(`dialogueSection_${index}`).classList.add("active");
+  currentDialogueIndex = index;
+  currentTab = "structure";
+
+  setTimeout(() => {
+    const firstCriterion = document.querySelector(".dialogue-section.active .criterion-block");
+    if (firstCriterion) fullScreenCenter(firstCriterion);
+  }, 100);
+}
+
+// ========================================
+// PROGRESS BAR
+// ========================================
+
+function updateProgress() {
+  let answered = 0;
+  surveyData.dialogues.forEach((dialogue) => {
+    answered += Object.keys(dialogue.structure).length;
+    answered += Object.keys(dialogue.speech).length;
+  });
+
+  const totalCriteria = 24; // 4 dialogues * 6 criteria each
+  const percentage = Math.round((answered / totalCriteria) * 100);
+
+  document.getElementById("progressFill").style.width = `${percentage}%`;
+  document.getElementById("progressText").textContent = `${percentage}%`;
+}
+
+// ========================================
+// FORM SUBMISSION
+// ========================================
+
+document.addEventListener("DOMContentLoaded", () => {
+  initializeFirebase();
+  renderAllDialogues();
   calculateTotalQuestions();
-  updateProgress();
+
+  document.getElementById("demographicsForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = document.getElementById("raterName").value.trim();
+    const email = document.getElementById("raterEmail").value.trim();
+    const experience = document.getElementById("experienceLevel").value;
+
+    if (!name || !email) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    surveyData.demographics = { name, email, experience };
+    showSection("dialogueSection_0");
+    showDialogue(0);
+  });
 });
+
+function showSection(sectionId) {
+  document.querySelectorAll(".section").forEach((section) => {
+    section.classList.remove("active");
+  });
+  document.getElementById(sectionId)?.classList.add("active");
+}
+
+function calculateTotalQuestions() {
+  totalQuestions = 24; // 4 dialogues * 6 criteria
+}
+
+function submitSurvey() {
+  if (!db) {
+    alert("Firebase is not initialized. Please try again later.");
+    return;
+  }
+
+  // Collect comments
+  surveyData.dialogues.forEach((dialogue, dIdx) => {
+    const section = document.getElementById(`dialogueSection_${dIdx}`);
+    if (!section) return;
+
+    criteriaData.structure.forEach((crit) => {
+      const commentArea = section.querySelector(
+        `#structure_${dIdx}_${crit.id}_comment`
+      );
+      if (commentArea) {
+        dialogue.comments[`${crit.id}_comment`] = commentArea.value;
+      }
+    });
+
+    criteriaData.speech.forEach((crit) => {
+      const commentArea = section.querySelector(
+        `#speech_${dIdx}_${crit.id}_comment`
+      );
+      if (commentArea) {
+        dialogue.comments[`${crit.id}_comment`] = commentArea.value;
+      }
+    });
+  });
+
+  // Save to Firebase
+  const timestamp = new Date().toISOString();
+  const surveyRef = db.ref(`surveys/${timestamp.replace(/[:.]/g, "-")}`);
+
+  surveyRef
+    .set(surveyData)
+    .then(() => {
+      document.getElementById("confirmRaterName").textContent = surveyData.demographics.name;
+      document.getElementById("confirmRaterEmail").textContent = surveyData.demographics.email;
+      document.getElementById("confirmTimestamp").textContent = new Date().toLocaleString();
+
+      showSection("confirmationSection");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    })
+    .catch((error) => {
+      alert("Error saving survey: " + error.message);
+    });
+}
+
+// ========================================
+// UTILITY FUNCTIONS
+// ========================================
+
+function escapeHtml(text) {
+  const map = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  };
+  return text.replace(/[&<>"']/g, (m) => map[m]);
+}
