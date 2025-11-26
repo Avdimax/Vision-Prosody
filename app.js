@@ -1,6 +1,6 @@
 // ========================================
 // FIREBASE SURVEY - EFL DIALOGUE EVALUATION
-// Complete Production Version
+// FIXED: Page Flow & Auto-Scrolling
 // ========================================
 
 const firebaseConfig = {
@@ -260,17 +260,32 @@ function initializeFirebase() {
     try {
       firebase.initializeApp(firebaseConfig);
       db = firebase.database();
-      console.log("Firebase initialized successfully");
     } catch (error) {
-      console.error("Firebase initialization error:", error);
+      console.log("Firebase already initialized or error:", error.message);
     }
-  } else {
-    console.warn("Firebase SDK not loaded");
   }
 }
 
 // ========================================
-// RENDER FUNCTIONS
+// PAGE NAVIGATION
+// ========================================
+
+function showPage(pageId) {
+  // Hide all sections
+  document.querySelectorAll(".section").forEach((section) => {
+    section.classList.remove("active");
+  });
+  
+  // Show requested section
+  const page = document.getElementById(pageId);
+  if (page) {
+    page.classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
+// ========================================
+// RENDER DIALOGUE PAGES
 // ========================================
 
 function renderAllDialogues() {
@@ -280,7 +295,7 @@ function renderAllDialogues() {
   dialogueSetsData.forEach((dialogue, index) => {
     const section = document.createElement("section");
     section.id = `dialogueSection_${index}`;
-    section.className = `section dialogue-section ${index === 0 ? "active" : ""}`;
+    section.className = `section dialogue-section`;
     section.innerHTML = renderDialogueHTML(dialogue, index);
     container.appendChild(section);
   });
@@ -302,7 +317,7 @@ function renderDialogueHTML(dialogue, index) {
 
   return `
     <div class="survey-container">
-      <h1>${dialogue.title}</h1>
+      <h1>Dialogue ${index + 1} of 4: ${dialogue.title}</h1>
       <p class="dialogue-context"><strong>Context:</strong> ${dialogue.context}</p>
 
       <div class="audio-container">
@@ -332,8 +347,8 @@ function renderDialogueHTML(dialogue, index) {
       </div>
 
       <div class="button-group">
-        ${index > 0 ? `<button type="button" class="btn btn-secondary" onclick="previousDialogue()">← Previous</button>` : ""}
-        ${index < 3 ? `<button type="button" class="btn btn-primary" onclick="nextDialogue()">Next →</button>` : `<button type="button" class="btn btn-primary" onclick="submitSurvey()">Submit Survey</button>`}
+        ${index > 0 ? `<button type="button" class="btn btn-secondary" onclick="goToDialogue(${index - 1})">← Previous Dialogue</button>` : ""}
+        ${index < 3 ? `<button type="button" class="btn btn-primary" onclick="goToDialogue(${index + 1})">Next Dialogue →</button>` : `<button type="button" class="btn btn-primary" onclick="submitSurvey()">Submit Survey</button>`}
       </div>
     </div>
   `;
@@ -414,7 +429,58 @@ function renderCriteriaHTML(criteria, dialogueIndex, type) {
 function handleRating(dialogueIndex, type, critKey, score) {
   surveyData.dialogues[dialogueIndex][type][critKey] = score;
   updateProgress();
-  scrollToNextCriterion();
+  
+  // FIXED AUTO-SCROLL: Scroll to next criterion AFTER rating
+  setTimeout(() => {
+    scrollToNextCriterion(dialogueIndex, type);
+  }, 100);
+}
+
+function scrollToNextCriterion(dialogueIndex, currentType) {
+  const section = document.getElementById(`dialogueSection_${dialogueIndex}`);
+  if (!section) return;
+
+  // Get current tab (Structure or Speech)
+  const activeTab = currentType === "structure" ? "structureTab" : "speechTab";
+  const currentTabSection = document.getElementById(`${activeTab}_${dialogueIndex}`);
+  if (!currentTabSection) return;
+
+  // Get all criteria blocks in current tab
+  const allCriteria = Array.from(currentTabSection.querySelectorAll(".criterion-block"));
+  
+  // Find first unrated criterion
+  const unratedCriterion = allCriteria.find((block) => {
+    const inputs = block.querySelectorAll('input[type="radio"]');
+    return !Array.from(inputs).some((input) => input.checked);
+  });
+
+  // If found unrated in current tab, scroll to it
+  if (unratedCriterion) {
+    fullScreenCenter(unratedCriterion);
+    return;
+  }
+
+  // If all in current tab are rated, check if there's another tab to fill
+  const otherType = currentType === "structure" ? "speech" : "structure";
+  const otherTabId = currentType === "structure" ? "speechTab" : "structureTab";
+  const otherTabSection = document.getElementById(`${otherTabId}_${dialogueIndex}`);
+  
+  if (otherTabSection && otherTabSection.style.display !== "none") {
+    // Switch to other tab and scroll to first criterion
+    switchTab(dialogueIndex, otherType);
+    const firstCriterionOtherTab = otherTabSection.querySelector(".criterion-block");
+    if (firstCriterionOtherTab) {
+      setTimeout(() => {
+        fullScreenCenter(firstCriterionOtherTab);
+      }, 200);
+    }
+  } else {
+    // All rated, scroll to submit button area
+    const buttonGroup = section.querySelector(".button-group");
+    if (buttonGroup) {
+      fullScreenCenter(buttonGroup);
+    }
+  }
 }
 
 function toggleScoringScale(critId) {
@@ -428,10 +494,12 @@ function toggleScoringScale(critId) {
   text.textContent = isOpen ? "Hide Scoring Scale" : "Show Scoring Scale";
 
   if (isOpen) {
-    content.style.maxHeight = content.scrollHeight + "px";
+    // Calculate proper height and expand
     setTimeout(() => {
+      content.style.maxHeight = content.scrollHeight + "px";
+      // Scroll to center the content
       fullScreenCenter(content);
-    }, 300);
+    }, 10);
   } else {
     content.style.maxHeight = "0";
   }
@@ -447,72 +515,60 @@ function switchTab(dialogueIndex, tab) {
   });
 
   document.getElementById(`${tab}Tab_${dialogueIndex}`).classList.add("active");
-  currentTab = tab;
 
   setTimeout(() => {
     const firstCriterion = document.querySelector(`#${tab}Tab_${dialogueIndex} .criterion-block`);
-    if (firstCriterion) fullScreenCenter(firstCriterion);
+    if (firstCriterion) {
+      fullScreenCenter(firstCriterion);
+    }
   }, 100);
 }
 
-function scrollToNextCriterion() {
-  const currentSection = document.querySelector(".dialogue-section.active");
-  if (!currentSection) return;
-
-  const allCriteria = Array.from(currentSection.querySelectorAll(".criterion-block"));
-  const activeCriteria = allCriteria.find((crit) => {
-    const inputs = crit.querySelectorAll("input[type='radio']");
-    return !Array.from(inputs).some((input) => input.checked);
+function goToDialogue(index) {
+  // Hide all dialogue sections
+  document.querySelectorAll(".dialogue-section").forEach((section) => {
+    section.classList.remove("active");
   });
-
-  if (activeCriteria) {
-    setTimeout(() => {
-      fullScreenCenter(activeCriteria);
-    }, 200);
-  }
+  
+  // Show requested dialogue
+  document.getElementById(`dialogueSection_${index}`).classList.add("active");
+  currentDialogueIndex = index;
+  
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+// ========================================
+// SMOOTH CENTERING FUNCTION (CRITICAL FIX)
+// ========================================
 
 function fullScreenCenter(element) {
   if (!element) return;
 
-  const rect = element.getBoundingClientRect();
-  const viewportHeight = window.innerHeight;
-  const elementHeight = rect.height;
+  // Wait for any layout shifts
+  requestAnimationFrame(() => {
+    const rect = element.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const elementHeight = rect.height;
 
-  if (elementHeight > viewportHeight * 0.9) {
-    const top = window.scrollY + rect.top - 20;
-    window.scrollTo({ top, behavior: "smooth" });
-  } else {
-    const centerOffset = (viewportHeight - elementHeight) / 2;
-    const top = window.scrollY + rect.top - centerOffset;
-    window.scrollTo({ top, behavior: "smooth" });
-  }
-}
+    // Calculate target position
+    let targetScroll;
+    
+    if (elementHeight >= viewportHeight * 0.8) {
+      // Element is taller than 80% of viewport - just scroll to top of it
+      targetScroll = window.scrollY + rect.top - 20;
+    } else {
+      // Center element vertically in viewport
+      const centerOffset = (viewportHeight - elementHeight) / 2;
+      targetScroll = window.scrollY + rect.top - centerOffset;
+    }
 
-function previousDialogue() {
-  if (currentDialogueIndex > 0) {
-    showDialogue(currentDialogueIndex - 1);
-  }
-}
-
-function nextDialogue() {
-  if (currentDialogueIndex < 3) {
-    showDialogue(currentDialogueIndex + 1);
-  }
-}
-
-function showDialogue(index) {
-  document.querySelectorAll(".dialogue-section").forEach((section) => {
-    section.classList.remove("active");
+    // Smooth scroll
+    window.scrollTo({
+      top: Math.max(0, targetScroll),
+      behavior: "smooth"
+    });
   });
-  document.getElementById(`dialogueSection_${index}`).classList.add("active");
-  currentDialogueIndex = index;
-  currentTab = "structure";
-
-  setTimeout(() => {
-    const firstCriterion = document.querySelector(".dialogue-section.active .criterion-block");
-    if (firstCriterion) fullScreenCenter(firstCriterion);
-  }, 100);
 }
 
 // ========================================
@@ -542,6 +598,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderAllDialogues();
   calculateTotalQuestions();
 
+  // Demographics form
   document.getElementById("demographicsForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const name = document.getElementById("raterName").value.trim();
@@ -554,17 +611,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     surveyData.demographics = { name, email, experience };
-    showSection("dialogueSection_0");
-    showDialogue(0);
+    
+    // Show first dialogue
+    showPage("dialogueSection_0");
+    goToDialogue(0);
   });
 });
-
-function showSection(sectionId) {
-  document.querySelectorAll(".section").forEach((section) => {
-    section.classList.remove("active");
-  });
-  document.getElementById(sectionId)?.classList.add("active");
-}
 
 function calculateTotalQuestions() {
   totalQuestions = 24; // 4 dialogues * 6 criteria
@@ -585,7 +637,7 @@ function submitSurvey() {
       const commentArea = section.querySelector(
         `#structure_${dIdx}_${crit.id}_comment`
       );
-      if (commentArea) {
+      if (commentArea && commentArea.value) {
         dialogue.comments[`${crit.id}_comment`] = commentArea.value;
       }
     });
@@ -594,7 +646,7 @@ function submitSurvey() {
       const commentArea = section.querySelector(
         `#speech_${dIdx}_${crit.id}_comment`
       );
-      if (commentArea) {
+      if (commentArea && commentArea.value) {
         dialogue.comments[`${crit.id}_comment`] = commentArea.value;
       }
     });
@@ -611,7 +663,7 @@ function submitSurvey() {
       document.getElementById("confirmRaterEmail").textContent = surveyData.demographics.email;
       document.getElementById("confirmTimestamp").textContent = new Date().toLocaleString();
 
-      showSection("confirmationSection");
+      showPage("confirmationSection");
       window.scrollTo({ top: 0, behavior: "smooth" });
     })
     .catch((error) => {
