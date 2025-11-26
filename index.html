@@ -7,7 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Communicative Prosody Assessment Survey</title>
+    <title>EFL Dialogue Evaluation Survey</title>
     <link rel="stylesheet" href="style_mobile.css">
 </head>
 <body>
@@ -25,24 +25,24 @@
         <!-- Main Content -->
         <main class="main-content">
 
-            <!-- INTRO SECTION (Enhanced for Engagement) -->
+            <!-- INTRO SECTION (Updated for New Rubric) -->
             <div id="introSection" class="section active">
                 <div class="container">
                     <div style="text-align: center; max-width: 600px; margin: 0 auto;">
-                        <h2 style="margin-bottom: 15px;">Welcome to the Communicative Prosody Assessment Study</h2>
+                        <h2 style="margin-bottom: 15px;">Welcome to the EFL Dialogue Evaluation Survey</h2>
                         <p style="margin-bottom: 30px; line-height: 1.6; color: #555;">
-                            Thank you for participating in this EFL-focused research. Based on the Communicative Prosody V4.0 rubric, you'll evaluate 4 dialogues across 8 prosodic criteria for naturalness and appropriateness.
+                            Thank you for participating in this research on EFL textbook dialogues. You'll evaluate 4 dialogues using a consolidated rubric with 3 Structure criteria and 3 Speech criteria for authenticity and competence.
                         </p>
                         <h3 style="margin-top: 30px; margin-bottom: 20px; text-align: center;">Your Role:</h3>
                         <ul style="margin: 0 auto 30px auto; padding-left: 20px; text-align: left; max-width: 450px; line-height: 1.8;">
                             <li style="margin-bottom: 12px;">Review audio and transcript for each dialogue.</li>
-                            <li style="margin-bottom: 12px;">Rate prosody on a 1-5 scale using detailed rubrics.</li>
-                            <li style="margin-bottom: 12px;">Provide optional comments.</li>
-                            <li style="margin-bottom: 12px;">Estimated time: 15-20 minutes.</li>
+                            <li style="margin-bottom: 12px;">Rate each criterion on a 1-5 scale using detailed anchors.</li>
+                            <li style="margin-bottom: 12px;">Provide optional comments for qualitative insights.</li>
+                            <li style="margin-bottom: 12px;">Estimated time: 5-10 minutes per dialogue (20-40 minutes total).</li>
                         </ul>
                         <div style="padding: 20px; background-color: #f8f9ff; border-left: 4px solid #2196F3; margin: 30px auto; border-radius: 4px; max-width: 450px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <p style="margin: 0; line-height: 1.6; color: #333; font-size: 0.95em;">
-                                Participation is voluntary and responses are confidential. Your input advances EFL prosody research.
+                                Participation is voluntary and responses are confidential. Your input advances EFL dialogue authenticity research.
                             </p>
                         </div>
                         <button id="startSurveyButton" onclick="startSurvey()" class="btn btn-primary" style="margin-top: 20px; padding: 14px 40px; font-size: 1em;">
@@ -53,7 +53,7 @@
             </div>
             <!-- END INTRO -->
 
-            <!-- Demographics Section (Updated per Phase 1: Removed Date, Rater ID, Native English Variety) -->
+            <!-- Demographics Section (Updated with Date Readonly) -->
             <section id="demographicsSection" class="section">
                 <div class="survey-container">
                     <h2>Rater Information</h2>
@@ -61,6 +61,14 @@
                         <div class="form-group">
                             <label for="raterName" class="form-label">Rater Name *</label>
                             <input type="text" id="raterName" name="raterName" class="form-control" placeholder="Enter your name" required aria-required="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="date" class="form-label">Date *</label>
+                            <input type="text" id="date" name="date" class="form-control" value="November 26, 2025" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="raterId" class="form-label">Rater ID (if anonymous)</label>
+                            <input type="text" id="raterId" name="raterId" class="form-control" placeholder="Enter ID (optional)">
                         </div>
                         <div class="form-group">
                             <label for="email" class="form-label">Email/Contact</label>
@@ -88,22 +96,22 @@
                 </div>
             </section>
 
-            <!-- Section 1: Unified for All Dynamic Sets (Modular Placeholder) -->
+            <!-- Section 1: Dialogues (Dynamic Generation) -->
             <section id="section1" class="section">
                 <div class="survey-container">
-                    <h2>Prosody Assessment: Dialogues</h2>
-                    <p>Evaluate each dialogue using the V4.0 rubric. Listen to audio, review transcript, and rate.</p>
-                    <div id="dialoguesContainer"></div>  <!-- Dynamic generation via JS -->
+                    <h2>EFL Dialogue Evaluation</h2>
+                    <p>Evaluate each dialogue using the rubric. Listen to audio, review transcript, and rate.</p>
+                    <div id="dialoguesContainer"></div>
                 </div>
             </section>
 
-            <!-- Confirmation Section (Enhanced with Details) -->
+            <!-- Confirmation Section -->
             <section id="confirmationSection" class="section">
                 <div class="survey-container">
                     <div class="confirmation-content">
-                        <div class="success-icon">Checkmark</div>
+                        <div class="success-icon">✓</div>
                         <h2>Thank You!</h2>
-                        <p>Your prosody assessments have been submitted. This contributes to EFL research on communicative naturalness.</p>
+                        <p>Your evaluations have been submitted. This contributes to EFL research on dialogue authenticity.</p>
                         <div id="confirmationDetails" class="confirmation-details"></div>
                         <p class="confirmation-note">Responses saved securely. Contact your supervisor for questions.</p>
                     </div>
@@ -117,7 +125,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-    <!-- Survey Script (Update app.js with Below Changes) -->
+    <!-- Survey Script -->
     <script src="app.js"></script>
 </body>
 </html>
