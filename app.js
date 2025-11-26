@@ -440,23 +440,308 @@ function toggleScoringScale(critId) {
 }
 
 // ========================================
+// SAVE DATA
+// ========================================
+function saveSetData(num) {
+  const form = document.getElementById(`set${num}Form`);
+  if (!form) return;
+  const fd = new FormData(form);
+  const setData = { setNumber: num, sectionA: {}, sectionB: {}, sectionC: {} };
+
+  surveyQuestionsData.sectionA.forEach(q => {
+    setData.sectionA[q.id] = fd.get(`d${num}_${q.id}`) || '';
+  });
+
+  surveyQuestionsData.sectionB.forEach(crit => {
+    setData.sectionB[crit.id] = {
+      score: parseInt(fd.get(`d${num}_${crit.id}`)) || null,
+      comments: fd.get(`d${num}_${crit.id}_comments`) || ''
+    };
+  });
+
+  surveyQuestionsData.sectionC.forEach(q => {
+    setData.sectionC[q.id] = fd.get(`d${num}_${q.id}`) || '';
+  });
+
+  surveyData.dialogues[num - 1] = setData;
+}
+
+// ========================================
+// NAVIGATION
+// ========================================
+function nextSet(num) {
+  const form = document.getElementById(`set${num}Form`);
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  saveSetData(num);
+  if (num < 4) {
+    currentSet = num + 1;
+    showCurrentSet();
+  } else {
+    submitSurvey();
+  }
+}
+
+function previousSet(num) {
+  saveSetData(num);
+  if (num === 1) {
+    showSection('demographicsSection');
+  } else {
+    currentSet = num - 1;
+    showCurrentSet();
+  }
+}
+
+// ========================================
+// SUBMIT
+// ========================================
+async function submitSurvey() {
+  const lastForm = document.getElementById('set4Form');
+  if (!lastForm.checkValidity()) { lastForm.reportValidity(); return; }
+  saveSetData(4);
+
+  const btn = event.target;
+  const originalText = btn.textContent;
+  btn.textContent = 'Submitting...'; btn.disabled = true;
+
+  try {
+    const timestamp = new Date();
+    const participantID = `${surveyData.demographics.raterName || 'Anonymous'}_${Date.now()}`;
+    const finalData = {
+      participantID,
+      submissionTimestamp: timestamp.toISOString(),
+      submissionDateLocal: timestamp.toLocaleString(),
+      demographics: surveyData.demographics,
+      dialogues: surveyData.dialogues,
+      deviceInfo: { userAgent: navigator.userAgent, language: navigator.language, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }
+    };
+
+    if (typeof firebase !== 'undefined' && firebase.database) {
+      await firebase.database().ref(`responses/${participantID}`).set(finalData);
+    }
+
+    document.getElementById('progressContainer').style.display = 'none';
+    showSection('confirmationSection');
+    document.getElementById('confirmationDetails').innerHTML = `
+      <h2>Submission Complete!</h2>
+      <p><strong>Participant ID:</strong><br><code>${participantID}</code></p>
+      <p><strong>Submitted:</strong><br>${timestamp.toLocaleString()}</p>
+      <p><strong>Status:</strong><br>Saved to database</p>
+    `;
+  } catch (error) {
+    console.error(error);
+    btn.textContent = originalText; btn.disabled = false;
+    alert('Error submitting survey.');
+  }
+}
+
+// ========================================
+// PHASE 2: FULL-SCREEN SMART AUTO-SCROLLING
+// PDF-PERFECT, MOBILE + PC
+// ========================================
+
+let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+// ========================================
 // REVISED SMART SCROLLING
 // ========================================
 function addScrollListenersToFormInputs() {
-  // ... (keep original, but ensure it handles new blocks)
+  // Remove old listeners safely (check if functions exist)
+  document.querySelectorAll('input[type="radio"], .collapsible-trigger, textarea').forEach(el => {
+    if (typeof handleRadioChange === 'function') el.removeEventListener('change', handleRadioChange);
+    if (typeof handleTriggerClick === 'function') el.removeEventListener('click', handleTriggerClick);
+    if (typeof handleFocus === 'function') el.removeEventListener('focus', handleFocus);
+  });
+
+  // Add listeners
+  document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', debounce(handleRadioChange, 200));
+  });
+
+  document.querySelectorAll('.collapsible-trigger').forEach(trigger => {
+    trigger.addEventListener('click', debounce(handleTriggerClick, 200));
+    if (isMobile) {
+      trigger.addEventListener('touchstart', debounce(handleTouchStart, 200));
+    }
+  });
+
+  document.querySelectorAll('textarea').forEach(textarea => {
+    textarea.addEventListener('focus', debounce(handleFocus, 100));
+  });
+
+  // ResizeObserver for dynamic content (collapsibles, resizes)
+  const resizeObserver = new ResizeObserver(debounce(entries => {
+    if (document.activeElement && entries.length > 0) {
+      setTimeout(() => scrollToNextUnanswered(), 400); // Wait for animation
+    }
+  }, 300));
+
+  document.querySelectorAll('.criterion-block').forEach(el => resizeObserver.observe(el));
 }
 
-// Other functions: fullScreenCenter, centerElementInViewport, debounce (keep original)
+// After rating â†’ go to next "Show Scoring Scale"
+function handleRadioChange(e) {
+  const currentBlock = e.target.closest('.criterion-block');
+  const allBlocks = Array.from(document.querySelectorAll('.criterion-block'));
+  const currentIndex = allBlocks.indexOf(currentBlock);
+  const nextBlock = allBlocks[currentIndex + 1];
+
+  if (nextBlock) {
+    // Next criterion - center its trigger
+    const nextTrigger = nextBlock.querySelector('.collapsible-trigger');
+    if (nextTrigger) {
+      setTimeout(() => fullScreenCenter(nextTrigger), 200);
+    }
+  } else {
+    // Last criterion - scroll to Next Set button
+    const buttonGroup = document.querySelector('.button-group');
+    if (buttonGroup) {
+      setTimeout(() => fullScreenCenter(buttonGroup), 200);
+    }
+  }
+}
+
+// Trigger click â†’ expand + center the whole block
+function handleTriggerClick(e) {
+  const trigger = e.currentTarget; // Define trigger here
+  const critId = trigger.id.replace('_trigger', '');
+ function toggleScoringScale(critId) {
+  const content = document.getElementById(`${critId}_scale`);
+  const trigger = document.getElementById(`${critId}_trigger`); // Define trigger here to fix error
+  console.log('toggleScoringScale: Trigger defined', trigger); // Debug: Confirm trigger exists
+
+  if (!trigger) {
+    console.error('Trigger not found for critId:', critId);
+    return; // Prevent further errors
+  }
+
+  const arrow = trigger.querySelector('.arrow-icon svg');
+  const text = trigger.querySelector('.trigger-text');
+
+  const isOpen = content.classList.toggle('open');
+  
+  text.textContent = isOpen ? 'Hide Scoring Scale' : 'Show Scoring Scale';
+  trigger.setAttribute('aria-expanded', isOpen);
+
+  if (isOpen) {
+    content.style.maxHeight = content.scrollHeight + 'px';
+    // Center on Score 3 after expansion
+    setTimeout(() => {
+      const score3 = content.querySelector('.scale-item:nth-child(3)');
+      if (score3) {
+        centerElementInViewport(score3);
+      } else {
+        const block = trigger.closest('.criterion-block'); // Now safe
+        fullScreenCenter(block);
+      }
+    }, 500);
+  } else {
+    content.style.maxHeight = content.scrollHeight + 'px';
+    content.offsetHeight;
+    content.style.maxHeight = '0';
+    // Re-center block on collapse
+    setTimeout(() => {
+      const block = trigger.closest('.criterion-block'); // Safe
+      fullScreenCenter(block);
+    }, 500);
+  }
+}
+// ========================================
+// FULL-SCREEN CENTERING (MOBILE + PC)
+// ========================================
+function fullScreenCenter(element) {
+  if (!element) return;
+
+  const rect = element.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+  const elementHeight = rect.height;
+
+  // If element is taller than viewport, align to top
+  if (elementHeight > viewportHeight * 0.9) {
+    const top = window.scrollY + rect.top - 20;
+    window.scrollTo({ top, behavior: 'smooth' });
+  } else {
+    // Center in viewport
+    const centerOffset = (viewportHeight - elementHeight) / 2;
+    const top = window.scrollY + rect.top - centerOffset;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+}
+
+// Debounce
+function debounce(fn, delay) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn(...args), delay);
+  };
+}
+function centerElementInViewport(element) {
+  if (!element) return;
+
+  const rect = element.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+  const elementHeight = rect.height;
+  const keyboardAdjustment = isMobile ? viewportHeight * 0.3 : 0; // Account for keyboard on mobile
+
+  const targetTop = window.scrollY + rect.top - (viewportHeight / 2) + (elementHeight / 2) - keyboardAdjustment;
+
+  window.requestAnimationFrame(() => {
+    window.scrollTo({ top: targetTop, behavior: 'smooth' });
+  });
+}
+
+  // Center the element
+  const targetTop = currentTop - (viewportHeight / 2) + (elementHeight / 2);
+
+  window.scrollTo({
+    top: targetTop,
+    behavior: 'smooth'
+  });
+}
 
 // ========================================
-// INITIALIZATION AND OTHER FUNCTIONS
+// TOGGLE SCORING SCALE (UNCHANGED)
 // ========================================
-// ... (keep startSurvey, submitDemographics, loadSet, submitSurvey, calculateTotalQuestions, updateProgress from original, update to use new data structure)
+function toggleScoringScale(critId) {
+  const content = document.getElementById(`${critId}_scale`);
+  const trigger = document.getElementById(`${critId}_trigger`);
+  const arrow = trigger.querySelector('.arrow-icon svg');
+  const text = trigger.querySelector('.trigger-text');
 
-// In calculateTotalQuestions: totalQuestions = dialogueSetsData.length * 6; (3 structure + 3 speech)
+  const isOpen = content.classList.toggle('open');
+  
+  text.textContent = isOpen ? 'Hide Scoring Scale' : 'Show Scoring Scale';
+  trigger.setAttribute('aria-expanded', isOpen);
 
-// In submitSurvey: firebase.database().ref('responses').push(surveyData);
+  if (isOpen) {
+    content.style.maxHeight = content.scrollHeight + 'px';
 
+    // === CENTER SCORE 3 AFTER EXPANSION ===
+    setTimeout(() => {
+      const score3Item = content.querySelector('.scale-item:nth-child(3)');
+      if (score3Item) {
+        centerElementInViewport(score3Item);
+      } else {
+        // Fallback: center the whole block
+        const block = trigger.closest('.criterion-block');
+        fullScreenCenter(block);
+      }
+    }, 450); // After animation
+  } else {
+    content.style.maxHeight = content.scrollHeight + 'px';
+    content.offsetHeight;
+    content.style.maxHeight = '0';
+
+    // On collapse â†’ center the trigger
+    setTimeout(() => {
+      fullScreenCenter(trigger.closest('.criterion-block'));
+    }, 450);
+  }
+}
+
+// ========================================
+// INITIALIZATION
+// ========================================
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof firebase !== 'undefined') {
     try { firebase.initializeApp(firebaseConfig); } catch (e) {}
