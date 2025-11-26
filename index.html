@@ -20,7 +20,8 @@
 
     <!-- Main Content -->
     <main class="main-content">
-      <!-- Welcome Section -->
+      
+      <!-- PAGE 1: Welcome Section -->
       <section id="welcomeSection" class="section active">
         <div class="survey-container">
           <h1 class="welcome-title">EFL Dialogue Evaluation Survey</h1>
@@ -37,9 +38,19 @@
             <p class="welcome-note">Participation is voluntary and responses are confidential. Your input advances EFL dialogue authenticity research.</p>
           </div>
 
+          <div class="button-group">
+            <button type="button" class="btn btn-primary btn-large" onclick="showPage('demographicsSection')">Start Survey</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE 2: Demographics Section -->
+      <section id="demographicsSection" class="section">
+        <div class="survey-container">
+          <h1>Rater Information</h1>
+          <p class="welcome-subtitle">Please provide your information to begin the evaluation.</p>
+
           <form id="demographicsForm" class="survey-form">
-            <h2>Rater Information</h2>
-            
             <div class="form-group">
               <label for="raterName" class="form-label">Full Name <span class="required">*</span></label>
               <input type="text" id="raterName" name="raterName" class="form-control" required placeholder="Enter your full name">
@@ -62,16 +73,17 @@
             </div>
 
             <div class="button-group">
-              <button type="submit" class="btn btn-primary btn-large">Start Survey</button>
+              <button type="button" class="btn btn-secondary" onclick="showPage('welcomeSection')">← Back</button>
+              <button type="submit" class="btn btn-primary btn-large">Begin Evaluation</button>
             </div>
           </form>
         </div>
       </section>
 
-      <!-- Dialogue Sections -->
+      <!-- PAGES 3-6: Dialogue Sections (Dynamically Generated) -->
       <div id="dialoguesContainer"></div>
 
-      <!-- Confirmation Section -->
+      <!-- FINAL PAGE: Confirmation Section -->
       <section id="confirmationSection" class="section">
         <div class="survey-container">
           <div class="confirmation-content">
@@ -95,6 +107,7 @@
           </div>
         </div>
       </section>
+
     </main>
   </div>
 
